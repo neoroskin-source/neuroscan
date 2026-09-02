@@ -53,8 +53,7 @@ loginForm.addEventListener('submit', async (event) => {
       return;
     }
 
-    loginMessage.textContent =
-      window.location.href = 'admin-dashboard.html';
+    window.location.href = 'admin-dashboard.html';
 
   } catch (error) {
     console.error(error);
