@@ -23,13 +23,17 @@ loginForm.addEventListener('submit', async (event) => {
   try {
     // 1. Email + password-аар нэвтрэх
     const { data, error } = await supabaseClient.auth.signInWithPassword({
-      email,
-      password
-    });
+  email,
+  password
+});
 
-    if (error) {
-      throw error;
-    }
+if (error) {
+  loginMessage.textContent =
+    'LOGIN ERROR: ' + error.message;
+  return;
+}
+
+loginMessage.textContent = 'LOGIN OK — админ эрх шалгаж байна...';
 
     // 2. Энэ хэрэглэгч admin_users хүснэгтэд байгаа эсэхийг шалгах
     const { data: adminData, error: adminError } = await supabaseClient
