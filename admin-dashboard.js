@@ -44,5 +44,13 @@ logoutButton.addEventListener('click', async () => {
   await supabaseClient.auth.signOut();
   window.location.href = 'admin.html';
 });
+const servicesButton =
+  document.getElementById('servicesButton');
 
+const servicesEditor =
+  document.getElementById('servicesEditor');
+
+servicesButton.addEventListener('click', () => {
+  servicesEditor.style.display = 'block';
+});
 checkAdminAccess();
