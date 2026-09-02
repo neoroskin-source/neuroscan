@@ -140,7 +140,74 @@ document.addEventListener('click', () => document.querySelectorAll('.nav-item.op
       }
     }
   };
+async function loadServicesFromSupabase() {
+  if (!supabaseClient) return;
 
+  const { data, error } = await supabaseClient
+    .from('services')
+    .select(`
+      slug,
+      name,
+      without_contrast_description,
+      without_contrast_about,
+      without_contrast_note,
+      without_contrast_price,
+      with_contrast_description,
+      with_contrast_about,
+      with_contrast_note,
+      with_contrast_price
+    `)
+    .eq('is_active', true)
+    .order('sort_order');
+
+  if (error) {
+    console.error('Supabase services error:', error);
+    return;
+  }
+
+  data.forEach(row => {
+    const key = row.slug.replace('-mri', '');
+
+    if (!serviceData[key]) return;
+
+    serviceData[key].title =
+      row.name || serviceData[key].title;
+
+    serviceData[key].plain.description =
+      row.without_contrast_description ||
+      serviceData[key].plain.description;
+
+    serviceData[key].plain.about =
+      row.without_contrast_about ||
+      serviceData[key].plain.about;
+
+    serviceData[key].plain.contrast =
+      row.without_contrast_note ||
+      serviceData[key].plain.contrast;
+
+    if (row.without_contrast_price !== null) {
+      serviceData[key].plain.price =
+        Number(row.without_contrast_price).toLocaleString('mn-MN') + ' ₮';
+    }
+
+    serviceData[key].contrast.description =
+      row.with_contrast_description ||
+      serviceData[key].contrast.description;
+
+    serviceData[key].contrast.about =
+      row.with_contrast_about ||
+      serviceData[key].contrast.about;
+
+    serviceData[key].contrast.contrast =
+      row.with_contrast_note ||
+      serviceData[key].contrast.contrast;
+
+    if (row.with_contrast_price !== null) {
+      serviceData[key].contrast.price =
+        Number(row.with_contrast_price).toLocaleString('mn-MN') + ' ₮';
+    }
+  });
+}
   const els = {
     title: document.getElementById('serviceDetailTitle'),
     label: document.getElementById('serviceDetailLabel'),
