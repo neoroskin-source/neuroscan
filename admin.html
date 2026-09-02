@@ -1,1 +1,163 @@
+<!doctype html>
+<html lang="mn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <title>Admin | Neuroscan MRI</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f4f7fa;
+      font-family: Arial, sans-serif;
+      color: #16202a;
+    }
+
+    .admin-login {
+      width: 100%;
+      max-width: 420px;
+      margin: 24px;
+      padding: 40px;
+      background: #ffffff;
+      border: 1px solid #e3e8ee;
+      border-radius: 18px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+    }
+
+    .admin-login h1 {
+      margin: 0 0 8px;
+      font-size: 26px;
+    }
+
+    .admin-login p {
+      margin: 0 0 30px;
+      color: #667085;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .field input {
+      width: 100%;
+      height: 48px;
+      padding: 0 14px;
+      border: 1px solid #d8dee6;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .field input:focus {
+      border-color: #344054;
+    }
+
+    .login-btn {
+      width: 100%;
+      height: 50px;
+      border: 0;
+      border-radius: 10px;
+      background: #17212b;
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    #loginMessage {
+      margin-top: 16px;
+      min-height: 20px;
+      font-size: 14px;
+    }
+
+    .back-link {
+      display: block;
+      margin-top: 24px;
+      text-align: center;
+      color: #667085;
+      text-decoration: none;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="admin-login">
+
+    <h1>NEUROSCAN MRI</h1>
+
+    <p>
+      Вэбсайтын арын удирдлагад нэвтрэх
+    </p>
+
+    <form id="adminLoginForm">
+
+      <div class="field">
+        <label for="adminEmail">И-мэйл</label>
+
+        <input
+          type="email"
+          id="adminEmail"
+          autocomplete="email"
+          required
+        >
+      </div>
+
+      <div class="field">
+        <label for="adminPassword">Нууц үг</label>
+
+        <input
+          type="password"
+          id="adminPassword"
+          autocomplete="current-password"
+          required
+        >
+      </div>
+
+      <button
+        type="submit"
+        class="login-btn"
+        id="loginButton"
+      >
+        Нэвтрэх
+      </button>
+
+      <div id="loginMessage"></div>
+
+    </form>
+
+    <a href="index.html" class="back-link">
+      ← Үндсэн сайт руу буцах
+    </a>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="admin.js"></script>
+
+</body>
+</html>
