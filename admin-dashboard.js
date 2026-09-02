@@ -1,5 +1,5 @@
-const SUPABASE_URL = 'ЭНД_PROJECT_URL';
-const SUPABASE_PUBLISHABLE_KEY = 'ЭНД_PUBLISHABLE_KEY';
+const SUPABASE_URL = 'https://fqhqmbtexxeblbnxfvzn.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_o4_UwkZbcd2tM6hVyoMRyQ_yza9Ffzs';
 
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
