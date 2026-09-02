@@ -54,7 +54,7 @@ loginForm.addEventListener('submit', async (event) => {
     }
 
     loginMessage.textContent =
-      'Амжилттай нэвтэрлээ.';
+      window.location.href = 'admin-dashboard.html';
 
   } catch (error) {
     console.error(error);
