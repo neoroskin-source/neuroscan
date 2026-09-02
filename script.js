@@ -258,5 +258,7 @@ async function loadServicesFromSupabase() {
     '#abdomen-mri': 'abdomen', '#pelvis-mri': 'pelvis', '#knee-mri': 'knee'
   };
   const initial = hashMap[window.location.hash] || 'head';
+  loadServicesFromSupabase().then(() => {
   render(initial, 'plain', false);
+});
 })();
