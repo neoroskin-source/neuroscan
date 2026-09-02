@@ -1,9 +1,15 @@
+const SUPABASE_URL = 'https://fqhqmbtexxeblbnxfvzn.supabase.co/rest/v1/';
+
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_o4_UwkZbcd2tM6hVyoMRyQ_yza9Ffzs';
+
 const supabaseClient = window.supabase
   ? window.supabase.createClient(
       SUPABASE_URL,
       SUPABASE_PUBLISHABLE_KEY
     )
   : null;
+
+const BOOKING_URL = 'appointment.html';
 document.querySelectorAll('[data-booking-link]').forEach(a => a.href = BOOKING_URL);
 
 const menuBtn = document.getElementById('menuBtn');
