@@ -1,5 +1,12 @@
 
-const BOOKING_URL = 'appointment.html'; // Google Form link-ээ өгөхөд зөвхөн энэ мөрийг солино.
+const SUPABASE_URL = 'ЭНД_PROJECT_URL';
+
+const SUPABASE_PUBLISHABLE_KEY = 'ЭНД_PUBLISHABLE_KEY';
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
 document.querySelectorAll('[data-booking-link]').forEach(a => a.href = BOOKING_URL);
 
 const menuBtn = document.getElementById('menuBtn');
