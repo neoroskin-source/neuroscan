@@ -1,12 +1,9 @@
-
-const SUPABASE_URL = 'ЭНД_PROJECT_URL';
-
-const SUPABASE_PUBLISHABLE_KEY = 'ЭНД_PUBLISHABLE_KEY';
-
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
+const supabaseClient = window.supabase
+  ? window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    )
+  : null;
 document.querySelectorAll('[data-booking-link]').forEach(a => a.href = BOOKING_URL);
 
 const menuBtn = document.getElementById('menuBtn');
