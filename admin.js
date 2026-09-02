@@ -57,11 +57,11 @@ loginForm.addEventListener('submit', async (event) => {
       'Амжилттай нэвтэрлээ.';
 
   } catch (error) {
-    console.error(error);
+  console.error(error);
 
-    loginMessage.textContent =
-      'И-мэйл эсвэл нууц үг буруу байна.';
-  } finally {
+  loginMessage.textContent =
+    'Алдаа: ' + error.message;
+} finally {
     loginButton.disabled = false;
     loginButton.textContent = 'Нэвтрэх';
   }
