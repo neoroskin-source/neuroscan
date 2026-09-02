@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="mn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Admin Dashboard | Neuroscan MRI</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      color: #17212b;
+    }
+
+    #loadingScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #667085;
+    }
+
+    #adminDashboard {
+      display: none;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 260px;
+      height: 100vh;
+      padding: 32px 22px;
+      background: #17212b;
+      color: white;
+    }
+
+    .brand {
+      margin-bottom: 40px;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .sidebar button {
+      width: 100%;
+      padding: 14px 16px;
+      margin-bottom: 8px;
+      border: 0;
+      border-radius: 9px;
+      background: transparent;
+      color: #d6dde5;
+      text-align: left;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .sidebar button:hover,
+    .sidebar button.active {
+      background: #263442;
+      color: white;
+    }
+
+    .logout-btn {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: 28px;
+      width: calc(100% - 44px) !important;
+      background: #ffffff !important;
+      color: #17212b !important;
+      text-align: center !important;
+      font-weight: 700;
+    }
+
+    .content {
+      margin-left: 260px;
+      padding: 48px;
+    }
+
+    .content h1 {
+      margin-top: 0;
+      font-size: 32px;
+    }
+
+    .subtitle {
+      color: #667085;
+      margin-bottom: 34px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #e4e9ef;
+      border-radius: 16px;
+      padding: 28px;
+    }
+
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 20px;
+    }
+
+    .card p {
+      margin: 0;
+      color: #667085;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 800px) {
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+      }
+
+      .logout-btn {
+        position: static;
+        width: 100% !important;
+        margin-top: 20px;
+      }
+
+      .content {
+        margin-left: 0;
+        padding: 24px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="loadingScreen">
+    Админ эрхийг шалгаж байна...
+  </div>
+
+  <div id="adminDashboard">
+
+    <aside class="sidebar">
+
+      <div class="brand">
+        NEUROSCAN ADMIN
+      </div>
+
+      <button class="active">
+        Үйлчилгээ
+      </button>
+
+      <button>
+        Эмч мэргэжилтэн
+      </button>
+
+      <button>
+        Мэдээ
+      </button>
+
+      <button>
+        Тохиргоо
+      </button>
+
+      <button
+        id="logoutButton"
+        class="logout-btn"
+      >
+        Гарах
+      </button>
+
+    </aside>
+
+    <main class="content">
+
+      <h1>Удирдлагын хэсэг</h1>
+
+      <p class="subtitle">
+        Neuroscan MRI вэбсайтын мэдээллийг эндээс удирдана.
+      </p>
+
+      <div class="cards">
+
+        <div class="card">
+          <h2>Үйлчилгээ</h2>
+          <p>
+            MRI үйлчилгээний тайлбар болон үнийг засах.
+          </p>
+        </div>
+
+        <div class="card">
+          <h2>Эмч мэргэжилтэн</h2>
+          <p>
+            Эмчийн нэр, мэргэжил, туршлага болон танилцуулгыг засах.
+          </p>
+        </div>
+
+        <div class="card">
+          <h2>Мэдээ</h2>
+          <p>
+            Шинэ мэдээ нэмэх, засах болон устгах.
+          </p>
+        </div>
+
+        <div class="card">
+          <h2>Тохиргоо</h2>
+          <p>
+            Холбоо барих мэдээлэл болон цаг захиалгын холбоосыг удирдах.
+          </p>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="admin-dashboard.js"></script>
+
+</body>
+</html>
