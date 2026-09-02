@@ -57,8 +57,7 @@ loginMessage.textContent = 'LOGIN OK — админ эрх шалгаж байн
     }
 
     // 4. Админ бол
-    loginMessage.textContent =
-      'Амжилттай нэвтэрлээ.';
+    window.location.href = 'admin-dashboard.html';
 
   } catch (error) {
   console.error(error);
