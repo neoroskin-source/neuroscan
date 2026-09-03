@@ -230,10 +230,7 @@
             ☎ Ерөнхий: ${esc(s.general_phone)}
           </a>
 
-          <span>
-            🚑 Яаралтай тусламж:
-            ${esc(s.emergency_text)}
-          </span>
+          
         `;
       }
     }
