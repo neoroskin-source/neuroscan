@@ -53,4 +53,52 @@ const servicesEditor =
 servicesButton.addEventListener('click', () => {
   servicesEditor.style.display = 'block';
 });
+async function loadServicesEditor() {
+  const servicesList = document.getElementById('servicesList');
+
+  servicesList.textContent = 'Мэдээлэл ачаалж байна...';
+
+  const { data, error } = await supabaseClient
+    .from('services')
+    .select('*')
+    .order('sort_order');
+
+  if (error) {
+    servicesList.textContent =
+      'Мэдээлэл ачаалахад алдаа гарлаа: ' + error.message;
+    return;
+  }
+
+  servicesList.innerHTML = '';
+
+  data.forEach(service => {
+    const item = document.createElement('div');
+
+    item.style.background = '#fff';
+    item.style.border = '1px solid #e4e9ef';
+    item.style.borderRadius = '14px';
+    item.style.padding = '20px';
+    item.style.marginBottom = '16px';
+
+    item.innerHTML = `
+      <h3>${service.name}</h3>
+
+      <p><strong>Тодосгогчгүй үнэ:</strong>
+      ${
+        service.without_contrast_price !== null
+          ? Number(service.without_contrast_price).toLocaleString() + ' ₮'
+          : 'Үнэ оруулаагүй'
+      }</p>
+
+      <p><strong>Тодосгогчтой үнэ:</strong>
+      ${
+        service.with_contrast_price !== null
+          ? Number(service.with_contrast_price).toLocaleString() + ' ₮'
+          : 'Үнэ оруулаагүй'
+      }</p>
+    `;
+
+    servicesList.appendChild(item);
+  });
+}
 checkAdminAccess();
