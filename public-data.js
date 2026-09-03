@@ -116,10 +116,7 @@
             <span>${esc(s.address)}</span>
           </div>
 
-          <div class="contact-item">
-            <b>Яаралтай тусламж</b>
-            <span>${esc(s.emergency_text)}</span>
-          </div>
+          
         `;
       }
 
