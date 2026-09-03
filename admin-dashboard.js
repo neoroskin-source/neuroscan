@@ -10,8 +10,12 @@ const loadingScreen = document.getElementById('loadingScreen');
 const adminDashboard = document.getElementById('adminDashboard');
 const logoutButton = document.getElementById('logoutButton');
 
+
+// =====================================================
+// ADMIN ACCESS
+// =====================================================
+
 async function checkAdminAccess() {
-  // 1. Login хийсэн session байгаа эсэх
   const {
     data: { session },
     error: sessionError
@@ -22,7 +26,6 @@ async function checkAdminAccess() {
     return;
   }
 
-  // 2. Энэ хэрэглэгч admin_users хүснэгтэд байгаа эсэх
   const { data: adminData, error: adminError } = await supabaseClient
     .from('admin_users')
     .select('user_id')
@@ -35,186 +38,27 @@ async function checkAdminAccess() {
     return;
   }
 
-  // 3. Админ бол dashboard харуулна
   loadingScreen.style.display = 'none';
   adminDashboard.style.display = 'block';
-  
+
   await loadServicesEditor();
 }
+
+
+// =====================================================
+// LOGOUT
+// =====================================================
 
 logoutButton.addEventListener('click', async () => {
   await supabaseClient.auth.signOut();
   window.location.href = 'admin.html';
 });
-const servicesButton =
-  document.getElementById('servicesButton');
 
-const servicesEditor =
-  document.getElementById('servicesEditor');
 
-servicesButton.addEventListener('click', async () => {
-  servicesEditor.style.display = 'block';
-  await loadServicesEditor();
-});
-async function loadServicesEditor() {
-  const servicesList = document.getElementById('servicesList');
+// =====================================================
+// HELPERS
+// =====================================================
 
-  servicesList.textContent = 'Мэдээлэл ачаалж байна...';
-
-  const { data, error } = await supabaseClient
-    .from('services')
-    .select('*')
-    .order('sort_order');
-
-  if (error) {
-    servicesList.textContent =
-      'Мэдээлэл ачаалахад алдаа гарлаа: ' + error.message;
-    return;
-  }
-
-  servicesList.innerHTML = '';
-
-  data.forEach(service => {
-    const item = document.createElement('div');
-
-    item.style.background = '#fff';
-    item.style.border = '1px solid #e4e9ef';
-    item.style.borderRadius = '14px';
-    item.style.padding = '20px';
-    item.style.marginBottom = '16px';
-
-    item.innerHTML = `
-  <h3>${service.name}</h3>
-<label>
-  Тодосгогчгүй тайлбар
-</label>
-
-<textarea
-  id="without-description-${service.id}"
-  rows="5"
-  style="
-    width:100%;
-    padding:12px;
-    margin:8px 0 18px;
-    border:1px solid #d8dee6;
-    border-radius:8px;
-    resize:vertical;
-  "
->${service.without_contrast_description ?? ''}</textarea>
-<label>
-  Тодосгогчтой тайлбар
-</label>
-
-<textarea
-  id="with-description-${service.id}"
-  rows="5"
-  style="
-    width:100%;
-    padding:12px;
-    margin:8px 0 18px;
-    border:1px solid #d8dee6;
-    border-radius:8px;
-    resize:vertical;
-  "
->${service.with_contrast_description ?? ''}</textarea>
-  <label>
-    Тодосгогчгүй үнэ
-  </label>
-
-  <input
-    type="number"
-    id="without-price-${service.id}"
-    value="${service.without_contrast_price ?? ''}"
-    placeholder="Үнэ оруулах"
-    style="
-      width:100%;
-      padding:12px;
-      margin:8px 0 18px;
-      border:1px solid #d8dee6;
-      border-radius:8px;
-    "
-  >
-
-  <label>
-    Тодосгогчтой үнэ
-  </label>
-
-  <input
-    type="number"
-    id="with-price-${service.id}"
-    value="${service.with_contrast_price ?? ''}"
-    placeholder="Үнэ оруулах"
-    style="
-      width:100%;
-      padding:12px;
-      margin:8px 0 18px;
-      border:1px solid #d8dee6;
-      border-radius:8px;
-    "
-  >
-
-  <button
-  type="button"
-  onclick="saveService(${service.id}, this)"
-  style="
-    padding:11px 18px;
-    border:0;
-    border-radius:8px;
-    background:#17212b;
-    color:#fff;
-    font-weight:700;
-    cursor:pointer;
-  "
->
-  Хадгалах
-</button>
-`;
-    servicesList.appendChild(item);
-});
-}
-window.saveService = async function(serviceId, button) {
-  const withoutDescription =
-  document.getElementById(`without-description-${serviceId}`).value.trim();
-  const withDescription =
-  document.getElementById(`with-description-${serviceId}`).value.trim();
-  const withoutPrice =
-    document.getElementById(`without-price-${serviceId}`).value.trim();
-
-  const withPrice =
-    document.getElementById(`with-price-${serviceId}`).value.trim();
-
-  button.disabled = true;
-  button.textContent = 'Хадгалж байна...';
-
-  const { error } = await supabaseClient
-    .from('services')
-    .update({
-  without_contrast_description: withoutDescription,
-  with_contrast_description: withDescription,
-  without_contrast_price:
-    withoutPrice === '' ? null : Number(withoutPrice),
-
-  with_contrast_price:
-    withPrice === '' ? null : Number(withPrice),
-
-  updated_at: new Date().toISOString()
-})
-    .eq('id', serviceId);
-
-  if (error) {
-    console.error(error);
-    button.textContent = 'Алдаа гарлаа';
-    button.disabled = false;
-    return;
-  }
-
-  button.textContent = '✓ Хадгалагдлаа';
-
-  setTimeout(() => {
-    button.textContent = 'Хадгалах';
-    button.disabled = false;
-  }, 1500);
-};
 function escapeAdminHtml(value) {
   return String(value ?? '')
     .replace(/&/g, '&amp;')
@@ -223,6 +67,32 @@ function escapeAdminHtml(value) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
+
+function editorCardStyle() {
+  return `
+    background:#fff;
+    border:1px solid #e4e9ef;
+    border-radius:14px;
+    padding:22px;
+    margin-bottom:18px;
+  `;
+}
+
+function fieldStyle() {
+  return `
+    width:100%;
+    padding:12px;
+    margin:8px 0 16px;
+    border:1px solid #d8dee6;
+    border-radius:8px;
+    font:inherit;
+  `;
+}
+
+
+// =====================================================
+// SECTION NAVIGATION
+// =====================================================
 
 window.openAdminSection = async function(section) {
   const sections = {
@@ -237,43 +107,160 @@ window.openAdminSection = async function(section) {
     if (el) el.style.display = 'none';
   });
 
-  ['servicesButton', 'doctorsButton', 'newsButton', 'settingsButton']
-    .forEach(id => {
-      document.getElementById(id)?.classList.remove('active');
-    });
+  [
+    'servicesButton',
+    'doctorsButton',
+    'newsButton',
+    'settingsButton'
+  ].forEach(id => {
+    document.getElementById(id)?.classList.remove('active');
+  });
 
-  document.getElementById('dashboardCards').style.display = 'none';
+  const cards = document.getElementById('dashboardCards');
+  if (cards) cards.style.display = 'none';
 
-  document.getElementById(sections[section]).style.display = 'block';
+  const target = document.getElementById(sections[section]);
+  if (target) target.style.display = 'block';
 
   document
     .getElementById(section + 'Button')
     ?.classList.add('active');
 
-  if (section === 'services') {
-    await loadServicesEditor();
-  }
-
-  if (section === 'doctors') {
-    await loadDoctorsEditor();
-  }
-
-  if (section === 'news') {
-    await loadNewsEditor();
-  }
-
-  if (section === 'settings') {
-    await loadSettingsEditor();
-  }
+  if (section === 'services') await loadServicesEditor();
+  if (section === 'doctors') await loadDoctorsEditor();
+  if (section === 'news') await loadNewsEditor();
+  if (section === 'settings') await loadSettingsEditor();
 };
 
 
-// =======================
+// =====================================================
+// SERVICES
+// =====================================================
+
+async function loadServicesEditor() {
+  const list = document.getElementById('servicesList');
+  if (!list) return;
+
+  list.textContent = 'Мэдээлэл ачаалж байна...';
+
+  const { data, error } = await supabaseClient
+    .from('services')
+    .select('*')
+    .order('sort_order');
+
+  if (error) {
+    list.textContent = 'Алдаа: ' + error.message;
+    return;
+  }
+
+  list.innerHTML = '';
+
+  data.forEach(service => {
+    const item = document.createElement('div');
+    item.style.cssText = editorCardStyle();
+
+    item.innerHTML = `
+      <h3>${escapeAdminHtml(service.name)}</h3>
+
+      <label>Тодосгогчгүй тайлбар</label>
+      <textarea
+        id="without-description-${service.id}"
+        rows="5"
+        style="${fieldStyle()}"
+      >${escapeAdminHtml(service.without_contrast_description)}</textarea>
+
+      <label>Тодосгогчгүй үнэ</label>
+      <input
+        type="number"
+        id="without-price-${service.id}"
+        value="${service.without_contrast_price ?? ''}"
+        placeholder="Үнэ оруулах"
+        style="${fieldStyle()}"
+      >
+
+      <label>Тодосгогчтой тайлбар</label>
+      <textarea
+        id="with-description-${service.id}"
+        rows="5"
+        style="${fieldStyle()}"
+      >${escapeAdminHtml(service.with_contrast_description)}</textarea>
+
+      <label>Тодосгогчтой үнэ</label>
+      <input
+        type="number"
+        id="with-price-${service.id}"
+        value="${service.with_contrast_price ?? ''}"
+        placeholder="Үнэ оруулах"
+        style="${fieldStyle()}"
+      >
+
+      <button
+        onclick="saveService(${service.id}, this)"
+        style="padding:11px 18px;border:0;border-radius:8px;background:#17212b;color:#fff;font-weight:700;cursor:pointer;"
+      >
+        Хадгалах
+      </button>
+    `;
+
+    list.appendChild(item);
+  });
+}
+
+window.saveService = async function(serviceId, button) {
+  const withoutDescription =
+    document.getElementById(`without-description-${serviceId}`).value.trim();
+
+  const withDescription =
+    document.getElementById(`with-description-${serviceId}`).value.trim();
+
+  const withoutPrice =
+    document.getElementById(`without-price-${serviceId}`).value.trim();
+
+  const withPrice =
+    document.getElementById(`with-price-${serviceId}`).value.trim();
+
+  button.disabled = true;
+  button.textContent = 'Хадгалж байна...';
+
+  const { error } = await supabaseClient
+    .from('services')
+    .update({
+      without_contrast_description: withoutDescription,
+      with_contrast_description: withDescription,
+
+      without_contrast_price:
+        withoutPrice === '' ? null : Number(withoutPrice),
+
+      with_contrast_price:
+        withPrice === '' ? null : Number(withPrice),
+
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', serviceId);
+
+  button.disabled = false;
+
+  if (error) {
+    console.error(error);
+    button.textContent = 'Алдаа';
+    return;
+  }
+
+  button.textContent = '✓ Хадгалагдлаа';
+
+  setTimeout(() => {
+    button.textContent = 'Хадгалах';
+  }, 1500);
+};
+
+
+// =====================================================
 // DOCTORS
-// =======================
+// =====================================================
 
 async function loadDoctorsEditor() {
   const list = document.getElementById('doctorsList');
+  if (!list) return;
 
   list.textContent = 'Мэдээлэл ачаалж байна...';
 
@@ -291,14 +278,7 @@ async function loadDoctorsEditor() {
 
   data.forEach(doctor => {
     const item = document.createElement('div');
-
-    item.style.cssText = `
-      background:#fff;
-      border:1px solid #e4e9ef;
-      border-radius:14px;
-      padding:22px;
-      margin-bottom:18px;
-    `;
+    item.style.cssText = editorCardStyle();
 
     item.innerHTML = `
       <h3>${doctor.sort_order}-р эмч</h3>
@@ -307,40 +287,41 @@ async function loadDoctorsEditor() {
       <input
         id="doctor-name-${doctor.id}"
         value="${escapeAdminHtml(doctor.name)}"
-        style="width:100%;padding:12px;margin:8px 0 15px;"
+        style="${fieldStyle()}"
       >
 
       <label>Мэргэжил</label>
       <input
         id="doctor-specialty-${doctor.id}"
         value="${escapeAdminHtml(doctor.specialty)}"
-        style="width:100%;padding:12px;margin:8px 0 15px;"
+        style="${fieldStyle()}"
       >
 
       <label>Туршлага</label>
       <input
         id="doctor-experience-${doctor.id}"
         value="${escapeAdminHtml(doctor.experience)}"
-        style="width:100%;padding:12px;margin:8px 0 15px;"
+        style="${fieldStyle()}"
       >
 
       <label>Танилцуулга</label>
       <textarea
         id="doctor-bio-${doctor.id}"
         rows="6"
-        style="width:100%;padding:12px;margin:8px 0 15px;"
+        style="${fieldStyle()}"
       >${escapeAdminHtml(doctor.bio)}</textarea>
 
       <label>Зургийн URL</label>
       <input
         id="doctor-image-${doctor.id}"
         value="${escapeAdminHtml(doctor.image_url)}"
-        style="width:100%;padding:12px;margin:8px 0 15px;"
+        placeholder="https://..."
+        style="${fieldStyle()}"
       >
 
       <button
         onclick="saveDoctor(${doctor.id}, this)"
-        style="padding:11px 18px;background:#17212b;color:white;border:0;border-radius:8px;cursor:pointer;"
+        style="padding:11px 18px;border:0;border-radius:8px;background:#17212b;color:#fff;font-weight:700;cursor:pointer;"
       >
         Хадгалах
       </button>
@@ -369,8 +350,8 @@ window.saveDoctor = async function(id, button) {
   button.disabled = false;
 
   if (error) {
-    button.textContent = 'Алдаа';
     console.error(error);
+    button.textContent = 'Алдаа';
     return;
   }
 
@@ -382,12 +363,13 @@ window.saveDoctor = async function(id, button) {
 };
 
 
-// =======================
+// =====================================================
 // NEWS
-// =======================
+// =====================================================
 
 async function loadNewsEditor() {
   const list = document.getElementById('newsList');
+  if (!list) return;
 
   list.textContent = 'Мэдээлэл ачаалж байна...';
 
@@ -417,42 +399,36 @@ async function loadNewsEditor() {
 
   data.forEach(news => {
     const item = document.createElement('div');
-
-    item.style.cssText = `
-      background:#fff;
-      border:1px solid #e4e9ef;
-      border-radius:14px;
-      padding:22px;
-      margin-bottom:18px;
-    `;
+    item.style.cssText = editorCardStyle();
 
     item.innerHTML = `
       <label>Гарчиг</label>
       <input
         id="news-title-${news.id}"
         value="${escapeAdminHtml(news.title)}"
-        style="width:100%;padding:12px;margin:8px 0 15px;"
+        style="${fieldStyle()}"
       >
 
       <label>Товч тайлбар</label>
       <textarea
         id="news-excerpt-${news.id}"
         rows="3"
-        style="width:100%;padding:12px;margin:8px 0 15px;"
+        style="${fieldStyle()}"
       >${escapeAdminHtml(news.excerpt)}</textarea>
 
       <label>Мэдээний агуулга</label>
       <textarea
         id="news-content-${news.id}"
         rows="8"
-        style="width:100%;padding:12px;margin:8px 0 15px;"
+        style="${fieldStyle()}"
       >${escapeAdminHtml(news.content)}</textarea>
 
       <label>Зургийн URL</label>
       <input
         id="news-image-${news.id}"
         value="${escapeAdminHtml(news.image_url)}"
-        style="width:100%;padding:12px;margin:8px 0 15px;"
+        placeholder="https://..."
+        style="${fieldStyle()}"
       >
 
       <label style="display:block;margin-bottom:18px;">
@@ -520,8 +496,8 @@ window.saveNews = async function(id, button) {
   button.disabled = false;
 
   if (error) {
-    button.textContent = 'Алдаа';
     console.error(error);
+    button.textContent = 'Алдаа';
     return;
   }
 
@@ -549,12 +525,13 @@ window.deleteNews = async function(id) {
 };
 
 
-// =======================
+// =====================================================
 // SETTINGS
-// =======================
+// =====================================================
 
 async function loadSettingsEditor() {
   const container = document.getElementById('settingsForm');
+  if (!container) return;
 
   container.textContent = 'Мэдээлэл ачаалж байна...';
 
@@ -573,53 +550,68 @@ async function loadSettingsEditor() {
   const s = data[0];
 
   container.innerHTML = `
-    <div style="background:#fff;border:1px solid #e4e9ef;border-radius:14px;padding:22px;">
+    <div style="${editorCardStyle()}">
 
       <label>Email</label>
-      <input id="setting-email"
+      <input
+        id="setting-email"
         value="${escapeAdminHtml(s.email)}"
-        style="width:100%;padding:12px;margin:8px 0 15px;">
+        style="${fieldStyle()}"
+      >
 
       <label>Ерөнхий утас</label>
-      <input id="setting-general-phone"
+      <input
+        id="setting-general-phone"
         value="${escapeAdminHtml(s.general_phone)}"
-        style="width:100%;padding:12px;margin:8px 0 15px;">
+        style="${fieldStyle()}"
+      >
 
       <label>Утас 1</label>
-      <input id="setting-phone1"
+      <input
+        id="setting-phone1"
         value="${escapeAdminHtml(s.phone_1)}"
-        style="width:100%;padding:12px;margin:8px 0 15px;">
+        style="${fieldStyle()}"
+      >
 
       <label>Утас 2</label>
-      <input id="setting-phone2"
+      <input
+        id="setting-phone2"
         value="${escapeAdminHtml(s.phone_2)}"
-        style="width:100%;padding:12px;margin:8px 0 15px;">
+        style="${fieldStyle()}"
+      >
 
       <label>Яаралтай тусламж</label>
-      <input id="setting-emergency"
+      <input
+        id="setting-emergency"
         value="${escapeAdminHtml(s.emergency_text)}"
-        style="width:100%;padding:12px;margin:8px 0 15px;">
+        style="${fieldStyle()}"
+      >
 
       <label>Хаяг</label>
-      <textarea id="setting-address"
+      <textarea
+        id="setting-address"
         rows="3"
-        style="width:100%;padding:12px;margin:8px 0 15px;"
+        style="${fieldStyle()}"
       >${escapeAdminHtml(s.address)}</textarea>
 
       <label>MRI төхөөрөмж</label>
-      <input id="setting-machine"
+      <input
+        id="setting-machine"
         value="${escapeAdminHtml(s.machine_info)}"
-        style="width:100%;padding:12px;margin:8px 0 15px;">
+        style="${fieldStyle()}"
+      >
 
       <label>Цаг захиалгын Google Form URL</label>
-      <input id="setting-booking"
+      <input
+        id="setting-booking"
         value="${escapeAdminHtml(s.booking_url)}"
         placeholder="https://..."
-        style="width:100%;padding:12px;margin:8px 0 15px;">
+        style="${fieldStyle()}"
+      >
 
       <button
         onclick="saveSettings(${s.id}, this)"
-        style="padding:11px 18px;background:#17212b;color:white;border:0;border-radius:8px;cursor:pointer;"
+        style="padding:11px 18px;background:#17212b;color:#fff;border:0;border-radius:8px;cursor:pointer;"
       >
         Хадгалах
       </button>
@@ -650,8 +642,8 @@ window.saveSettings = async function(id, button) {
   button.disabled = false;
 
   if (error) {
-    button.textContent = 'Алдаа';
     console.error(error);
+    button.textContent = 'Алдаа';
     return;
   }
 
@@ -661,4 +653,10 @@ window.saveSettings = async function(id, button) {
     button.textContent = 'Хадгалах';
   }, 1500);
 };
+
+
+// =====================================================
+// START
+// =====================================================
+
 checkAdminAccess();
