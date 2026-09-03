@@ -50,8 +50,9 @@ const servicesButton =
 const servicesEditor =
   document.getElementById('servicesEditor');
 
-servicesButton.addEventListener('click', () => {
+servicesButton.addEventListener('click', async () => {
   servicesEditor.style.display = 'block';
+  await loadServicesEditor();
 });
 async function loadServicesEditor() {
   const servicesList = document.getElementById('servicesList');
