@@ -459,18 +459,20 @@ async function loadNewsEditor() {
   });
 }
 
-window.createNews = async function() {
+window.createNews = async function () {
   const { error } = await supabaseClient
     .from('news')
     .insert({
       title: 'Шинэ мэдээ',
       excerpt: '',
       content: '',
-      published: false
+      image_url: '',
+      published: false,
+      updated_at: new Date().toISOString()
     });
 
   if (error) {
-    alert('Алдаа: ' + error.message);
+    alert('Мэдээ үүсгэхэд алдаа гарлаа: ' + error.message);
     return;
   }
 
