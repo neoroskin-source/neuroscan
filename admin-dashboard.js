@@ -82,23 +82,59 @@ async function loadServicesEditor() {
     item.style.marginBottom = '16px';
 
     item.innerHTML = `
-      <h3>${service.name}</h3>
+  <h3>${service.name}</h3>
 
-      <p><strong>Тодосгогчгүй үнэ:</strong>
-      ${
-        service.without_contrast_price !== null
-          ? Number(service.without_contrast_price).toLocaleString() + ' ₮'
-          : 'Үнэ оруулаагүй'
-      }</p>
+  <label>
+    Тодосгогчгүй үнэ
+  </label>
 
-      <p><strong>Тодосгогчтой үнэ:</strong>
-      ${
-        service.with_contrast_price !== null
-          ? Number(service.with_contrast_price).toLocaleString() + ' ₮'
-          : 'Үнэ оруулаагүй'
-      }</p>
-    `;
+  <input
+    type="number"
+    id="without-price-${service.id}"
+    value="${service.without_contrast_price ?? ''}"
+    placeholder="Үнэ оруулах"
+    style="
+      width:100%;
+      padding:12px;
+      margin:8px 0 18px;
+      border:1px solid #d8dee6;
+      border-radius:8px;
+    "
+  >
 
+  <label>
+    Тодосгогчтой үнэ
+  </label>
+
+  <input
+    type="number"
+    id="with-price-${service.id}"
+    value="${service.with_contrast_price ?? ''}"
+    placeholder="Үнэ оруулах"
+    style="
+      width:100%;
+      padding:12px;
+      margin:8px 0 18px;
+      border:1px solid #d8dee6;
+      border-radius:8px;
+    "
+  >
+
+  <button
+    type="button"
+    style="
+      padding:11px 18px;
+      border:0;
+      border-radius:8px;
+      background:#17212b;
+      color:#fff;
+      font-weight:700;
+      cursor:pointer;
+    "
+  >
+    Хадгалах
+  </button>
+`;
     servicesList.appendChild(item);
   });
 }
