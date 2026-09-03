@@ -39,7 +39,7 @@ async function checkAdminAccess() {
   loadingScreen.style.display = 'none';
   adminDashboard.style.display = 'block';
 }
-
+await loadServicesEditor();
 logoutButton.addEventListener('click', async () => {
   await supabaseClient.auth.signOut();
   window.location.href = 'admin.html';
