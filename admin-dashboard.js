@@ -139,6 +139,43 @@ async function loadServicesEditor() {
 </button>
 `;
     servicesList.appendChild(item);
-  });
+});
 }
+window.saveService = async function(serviceId, button) {
+  const withoutPrice =
+    document.getElementById(`without-price-${serviceId}`).value.trim();
+
+  const withPrice =
+    document.getElementById(`with-price-${serviceId}`).value.trim();
+
+  button.disabled = true;
+  button.textContent = 'Хадгалж байна...';
+
+  const { error } = await supabaseClient
+    .from('services')
+    .update({
+      without_contrast_price:
+        withoutPrice === '' ? null : Number(withoutPrice),
+
+      with_contrast_price:
+        withPrice === '' ? null : Number(withPrice),
+
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', serviceId);
+
+  if (error) {
+    console.error(error);
+    button.textContent = 'Алдаа гарлаа';
+    button.disabled = false;
+    return;
+  }
+
+  button.textContent = '✓ Хадгалагдлаа';
+
+  setTimeout(() => {
+    button.textContent = 'Хадгалах';
+    button.disabled = false;
+  }, 1500);
+};
 checkAdminAccess();
