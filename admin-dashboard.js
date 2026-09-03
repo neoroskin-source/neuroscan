@@ -38,8 +38,10 @@ async function checkAdminAccess() {
   // 3. Админ бол dashboard харуулна
   loadingScreen.style.display = 'none';
   adminDashboard.style.display = 'block';
+  
+  await loadServicesEditor();
 }
-await loadServicesEditor();
+
 logoutButton.addEventListener('click', async () => {
   await supabaseClient.auth.signOut();
   window.location.href = 'admin.html';
