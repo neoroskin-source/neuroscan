@@ -157,6 +157,8 @@ async function loadServicesEditor() {
 });
 }
 window.saveService = async function(serviceId, button) {
+  const withoutDescription =
+  document.getElementById(`without-description-${serviceId}`).value.trim();
   const withoutPrice =
     document.getElementById(`without-price-${serviceId}`).value.trim();
 
@@ -169,14 +171,16 @@ window.saveService = async function(serviceId, button) {
   const { error } = await supabaseClient
     .from('services')
     .update({
-      without_contrast_price:
-        withoutPrice === '' ? null : Number(withoutPrice),
+  without_contrast_description: withoutDescription,
 
-      with_contrast_price:
-        withPrice === '' ? null : Number(withPrice),
+  without_contrast_price:
+    withoutPrice === '' ? null : Number(withoutPrice),
 
-      updated_at: new Date().toISOString()
-    })
+  with_contrast_price:
+    withPrice === '' ? null : Number(withPrice),
+
+  updated_at: new Date().toISOString()
+})
     .eq('id', serviceId);
 
   if (error) {
