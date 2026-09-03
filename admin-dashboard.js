@@ -582,12 +582,7 @@ async function loadSettingsEditor() {
         style="${fieldStyle()}"
       >
 
-      <label>Яаралтай тусламж</label>
-      <input
-        id="setting-emergency"
-        value="${escapeAdminHtml(s.emergency_text)}"
-        style="${fieldStyle()}"
-      >
+      
 
       <label>Хаяг</label>
       <textarea
@@ -633,7 +628,7 @@ window.saveSettings = async function(id, button) {
       general_phone: document.getElementById('setting-general-phone').value.trim(),
       phone_1: document.getElementById('setting-phone1').value.trim(),
       phone_2: document.getElementById('setting-phone2').value.trim(),
-      emergency_text: document.getElementById('setting-emergency').value.trim(),
+      
       address: document.getElementById('setting-address').value.trim(),
       machine_info: document.getElementById('setting-machine').value.trim(),
       booking_url: document.getElementById('setting-booking').value.trim(),
