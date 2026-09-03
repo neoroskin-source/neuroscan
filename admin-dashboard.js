@@ -101,6 +101,22 @@ async function loadServicesEditor() {
     resize:vertical;
   "
 >${service.without_contrast_description ?? ''}</textarea>
+<label>
+  Тодосгогчтой тайлбар
+</label>
+
+<textarea
+  id="with-description-${service.id}"
+  rows="5"
+  style="
+    width:100%;
+    padding:12px;
+    margin:8px 0 18px;
+    border:1px solid #d8dee6;
+    border-radius:8px;
+    resize:vertical;
+  "
+>${service.with_contrast_description ?? ''}</textarea>
   <label>
     Тодосгогчгүй үнэ
   </label>
