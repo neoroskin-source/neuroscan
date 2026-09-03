@@ -175,6 +175,8 @@ async function loadServicesEditor() {
 window.saveService = async function(serviceId, button) {
   const withoutDescription =
   document.getElementById(`without-description-${serviceId}`).value.trim();
+  const withDescription =
+  document.getElementById(`with-description-${serviceId}`).value.trim();
   const withoutPrice =
     document.getElementById(`without-price-${serviceId}`).value.trim();
 
@@ -188,7 +190,7 @@ window.saveService = async function(serviceId, button) {
     .from('services')
     .update({
   without_contrast_description: withoutDescription,
-
+  with_contrast_description: withDescription,
   without_contrast_price:
     withoutPrice === '' ? null : Number(withoutPrice),
 
