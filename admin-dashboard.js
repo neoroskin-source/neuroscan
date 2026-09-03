@@ -121,19 +121,20 @@ async function loadServicesEditor() {
   >
 
   <button
-    type="button"
-    style="
-      padding:11px 18px;
-      border:0;
-      border-radius:8px;
-      background:#17212b;
-      color:#fff;
-      font-weight:700;
-      cursor:pointer;
-    "
-  >
-    Хадгалах
-  </button>
+  type="button"
+  onclick="saveService(${service.id}, this)"
+  style="
+    padding:11px 18px;
+    border:0;
+    border-radius:8px;
+    background:#17212b;
+    color:#fff;
+    font-weight:700;
+    cursor:pointer;
+  "
+>
+  Хадгалах
+</button>
 `;
     servicesList.appendChild(item);
   });
