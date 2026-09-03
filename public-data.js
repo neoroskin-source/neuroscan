@@ -1,6 +1,6 @@
 (async function () {
-  const SUPABASE_URL = 'ЭНД_PROJECT_URL';
-  const SUPABASE_KEY = 'ЭНД_PUBLISHABLE_KEY';
+  const SUPABASE_URL = 'https://fqhqmbtexxeblbnxfvzn.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_o4_UwkZbcd2tM6hVyoMRyQ_yza9Ffzs';
 
   async function ensureSupabase() {
     if (window.supabase) return;
