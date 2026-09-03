@@ -158,25 +158,21 @@
         NEUROSCAN ADMIN
       </div>
 
-      <button
-  class="active"
-  id="servicesButton"
-  onclick="document.getElementById('servicesEditor').style.display='block'; loadServicesEditor();"
->
+      <button class="active" id="servicesButton" onclick="openAdminSection('services')">
   Үйлчилгээ
 </button>
 
-      <button>
-        Эмч мэргэжилтэн
-      </button>
+<button id="doctorsButton" onclick="openAdminSection('doctors')">
+  Эмч мэргэжилтэн
+</button>
 
-      <button>
-        Мэдээ
-      </button>
+<button id="newsButton" onclick="openAdminSection('news')">
+  Мэдээ
+</button>
 
-      <button>
-        Тохиргоо
-      </button>
+<button id="settingsButton" onclick="openAdminSection('settings')">
+  Тохиргоо
+</button>
 
       <button
         id="logoutButton"
