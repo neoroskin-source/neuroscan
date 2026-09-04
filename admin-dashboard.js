@@ -795,9 +795,11 @@ window.createNewsFromEditor = async function () {
   const title =
     document.getElementById('newNewsTitle')?.value.trim() || '';
 
-  const content =
-    document.getElementById('newNewsContent')?.value.trim() || '';
+  const contentEditor =
+    document.getElementById('newNewsContent');
 
+const content =
+  contentEditor?.innerHTML.trim() || '';
   const youtube =
     document.getElementById('newNewsYoutube')?.value.trim() || '';
 
@@ -845,4 +847,25 @@ window.createNewsFromEditor = async function () {
 document.addEventListener('DOMContentLoaded', () => {
   setupNewsUploader();
 });
+window.formatNewsText = function (command, value = null) {
+  const editor = document.getElementById('newNewsContent');
+  if (!editor) return;
+
+  editor.focus();
+
+  document.execCommand(command, false, value);
+};
+
+window.addNewsLink = function () {
+  const editor = document.getElementById('newNewsContent');
+  if (!editor) return;
+
+  const url = prompt('Линк оруулна уу:');
+
+  if (!url) return;
+
+  editor.focus();
+
+  document.execCommand('createLink', false, url);
+};
 checkAdminAccess();
