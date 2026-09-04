@@ -409,7 +409,50 @@ window.saveDoctor = async function(id, button) {
   }, 1500);
 };
 
+// =====================================================
+// ABOUT
+// =====================================================
 
+let aboutImageUrl = '';
+
+async function loadAboutEditor() {
+  const content = document.getElementById('aboutContent');
+  const preview = document.getElementById('aboutImagePreview');
+
+  if (!content) return;
+
+  const { data, error } = await supabaseClient
+    .from('settings')
+    .select('about_content, about_image_url')
+    .order('id')
+    .limit(1);
+
+  if (error || !data.length) {
+    content.innerHTML = '';
+    return;
+  }
+
+  const s = data[0];
+
+  content.innerHTML = s.about_content || '';
+  aboutImageUrl = s.about_image_url || '';
+
+  if (preview && aboutImageUrl) {
+    preview.innerHTML = `
+      <img
+        src="${aboutImageUrl}"
+        alt="About preview"
+        style="
+          width:180px;
+          height:140px;
+          object-fit:cover;
+          border-radius:12px;
+          margin-top:14px;
+        "
+      >
+    `;
+  }
+}
 // =====================================================
 // NEWS
 // =====================================================
