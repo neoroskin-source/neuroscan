@@ -655,5 +655,194 @@ window.saveSettings = async function(id, button) {
 // =====================================================
 // START
 // =====================================================
+let newNewsImageUrl = '';
 
+async function uploadNewsImage(file) {
+  if (!file) return;
+
+  const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+
+  if (!allowed.includes(file.type)) {
+    alert('JPG, PNG эсвэл WEBP зураг оруулна уу.');
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    alert('Зураг 5MB-аас бага байх ёстой.');
+    return;
+  }
+
+  const ext = file.name.split('.').pop();
+  const fileName = `news/${Date.now()}-${Math.random()
+    .toString(36)
+    .slice(2)}.${ext}`;
+
+  const { error: uploadError } = await supabaseClient
+    .storage
+    .from('site-media')
+    .upload(fileName, file);
+
+  if (uploadError) {
+    alert('Зураг upload хийхэд алдаа: ' + uploadError.message);
+    return;
+  }
+
+  const { data } = supabaseClient
+    .storage
+    .from('site-media')
+    .getPublicUrl(fileName);
+
+  newNewsImageUrl = data.publicUrl;
+
+  const preview = document.getElementById('newsImagePreview');
+
+  if (preview) {
+    preview.innerHTML = `
+      <div style="position:relative;display:inline-block;margin-top:10px;">
+        <img
+          src="${newNewsImageUrl}"
+          alt="Preview"
+          style="
+            width:140px;
+            height:140px;
+            object-fit:cover;
+            border-radius:12px;
+          "
+        >
+
+        <button
+          type="button"
+          onclick="removeNewNewsImage()"
+          style="
+            position:absolute;
+            top:-8px;
+            right:-8px;
+            border:none;
+            background:#ef4444;
+            color:white;
+            width:26px;
+            height:26px;
+            border-radius:50%;
+            cursor:pointer;
+          "
+        >
+          ×
+        </button>
+      </div>
+    `;
+  }
+}
+
+window.removeNewNewsImage = function () {
+  newNewsImageUrl = '';
+
+  const preview = document.getElementById('newsImagePreview');
+
+  if (preview) {
+    preview.innerHTML = '';
+  }
+
+  const input = document.getElementById('newsImageFile');
+
+  if (input) {
+    input.value = '';
+  }
+};
+
+
+function setupNewsUploader() {
+  const box = document.getElementById('newsUploadBox');
+  const input = document.getElementById('newsImageFile');
+
+  if (!box || !input) return;
+
+  box.addEventListener('click', () => {
+    input.click();
+  });
+
+  input.addEventListener('change', () => {
+    const file = input.files?.[0];
+
+    if (file) {
+      uploadNewsImage(file);
+    }
+  });
+
+  box.addEventListener('dragover', event => {
+    event.preventDefault();
+    box.style.background = '#f1f5f9';
+  });
+
+  box.addEventListener('dragleave', () => {
+    box.style.background = '';
+  });
+
+  box.addEventListener('drop', event => {
+    event.preventDefault();
+
+    box.style.background = '';
+
+    const file = event.dataTransfer.files?.[0];
+
+    if (file) {
+      uploadNewsImage(file);
+    }
+  });
+}
+
+
+window.createNewsFromEditor = async function () {
+  const title =
+    document.getElementById('newNewsTitle')?.value.trim() || '';
+
+  const content =
+    document.getElementById('newNewsContent')?.value.trim() || '';
+
+  const youtube =
+    document.getElementById('newNewsYoutube')?.value.trim() || '';
+
+  const published =
+    document.getElementById('newNewsPublished')?.checked || false;
+
+  if (!title) {
+    alert('Гарчиг оруулна уу.');
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from('news')
+    .insert({
+      title,
+      excerpt: content.slice(0, 180),
+      content,
+      image_url: newNewsImageUrl || null,
+      youtube_url: youtube || null,
+      published,
+      updated_at: new Date().toISOString()
+    });
+
+  if (error) {
+    alert('Мэдээ хадгалахад алдаа: ' + error.message);
+    return;
+  }
+
+  document.getElementById('newNewsTitle').value = '';
+  document.getElementById('newNewsContent').value = '';
+  document.getElementById('newNewsYoutube').value = '';
+  document.getElementById('newNewsPublished').checked = false;
+
+  newNewsImageUrl = '';
+
+  const preview = document.getElementById('newsImagePreview');
+  if (preview) preview.innerHTML = '';
+
+  alert('Мэдээ амжилттай хадгалагдлаа.');
+
+  await loadNewsEditor();
+};
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  setupNewsUploader();
+});
 checkAdminAccess();
