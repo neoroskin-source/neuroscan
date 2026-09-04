@@ -1124,7 +1124,10 @@ const missionContent =
   document.getElementById(
     'publicMissionContent'
   );
-
+const visionContent =
+  document.getElementById(
+    'publicVisionContent'
+  );
 const valuesContent =
   document.getElementById(
     'publicValuesContent'
