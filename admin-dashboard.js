@@ -2120,7 +2120,162 @@ async function loadSettingsEditor() {
         id="logoImagePreview"
       ></div>
 
+<h3
+  style="
+    margin-top:28px;
+    margin-bottom:12px;
+  "
+>
+  Theme өнгө
+</h3>
 
+<p
+  style="
+    margin-top:0;
+    color:#64748b;
+    font-size:14px;
+  "
+>
+  Сайтын үндсэн өнгөний загварыг сонгоно.
+</p>
+
+<div
+  style="
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:24px;
+  "
+>
+
+  <label
+    style="
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border:1px solid #d8dee6;
+      border-radius:10px;
+    "
+  >
+    <input
+      type="radio"
+      name="themePreset"
+      value="blue"
+      ${s.theme_preset === 'blue' || !s.theme_preset ? 'checked' : ''}
+    >
+
+    <span
+      style="
+        width:22px;
+        height:22px;
+        border-radius:50%;
+        background:#2563b8;
+        display:inline-block;
+      "
+    ></span>
+
+    Blue
+  </label>
+
+
+  <label
+    style="
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border:1px solid #d8dee6;
+      border-radius:10px;
+    "
+  >
+    <input
+      type="radio"
+      name="themePreset"
+      value="teal"
+      ${s.theme_preset === 'teal' ? 'checked' : ''}
+    >
+
+    <span
+      style="
+        width:22px;
+        height:22px;
+        border-radius:50%;
+        background:#0f766e;
+        display:inline-block;
+      "
+    ></span>
+
+    Teal
+  </label>
+
+
+  <label
+    style="
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border:1px solid #d8dee6;
+      border-radius:10px;
+    "
+  >
+    <input
+      type="radio"
+      name="themePreset"
+      value="green"
+      ${s.theme_preset === 'green' ? 'checked' : ''}
+    >
+
+    <span
+      style="
+        width:22px;
+        height:22px;
+        border-radius:50%;
+        background:#15803d;
+        display:inline-block;
+      "
+    ></span>
+
+    Green
+  </label>
+
+
+  <label
+    style="
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border:1px solid #d8dee6;
+      border-radius:10px;
+    "
+  >
+    <input
+      type="radio"
+      name="themePreset"
+      value="navy"
+      ${s.theme_preset === 'navy' ? 'checked' : ''}
+    >
+
+    <span
+      style="
+        width:22px;
+        height:22px;
+        border-radius:50%;
+        background:#172554;
+        display:inline-block;
+      "
+    ></span>
+
+    Navy
+  </label>
+
+</div>
       <hr
         style="
           border:0;
