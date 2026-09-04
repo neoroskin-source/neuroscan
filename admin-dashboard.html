@@ -431,9 +431,122 @@
         </div>
 
       </section>
+<section id="aboutEditor" style="display:none;">
 
+  <h2>Бидний тухай</h2>
+
+  <p>
+    Вэбсайтын “Бидний тухай” мэдээлэл болон зургийг эндээс удирдана.
+  </p>
+
+  <div class="admin-card">
+
+    <h3>Бидний тухай мэдээлэл</h3>
+
+    <label>
+      Зураг
+    </label>
+
+    <div
+      id="aboutUploadBox"
+      style="
+        width:100%;
+        min-height:150px;
+        border:2px dashed #cbd5e1;
+        border-radius:14px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        cursor:pointer;
+        background:#fafcff;
+        color:#94a3b8;
+        padding:30px;
+      "
+    >
+      Зургаа энд дарж эсвэл зөөж оруулна уу
+    </div>
+
+    <input
+      id="aboutImageFile"
+      type="file"
+      accept="image/jpeg,image/png,image/webp"
+      style="display:none;"
+    >
+
+    <div id="aboutImagePreview"></div>
+
+    <label style="margin-top:22px;">
+      Бидний тухай
+    </label>
+
+    <div class="editor-wrap">
+
+      <div class="editor-toolbar">
+
+        <select onchange="formatAboutText('formatBlock', this.value)">
+          <option value="p">Normal</option>
+          <option value="h2">Heading 2</option>
+          <option value="h3">Heading 3</option>
+        </select>
+
+        <button type="button" onclick="formatAboutText('bold')">
+          <b>B</b>
+        </button>
+
+        <button type="button" onclick="formatAboutText('italic')">
+          <i>I</i>
+        </button>
+
+        <button type="button" onclick="formatAboutText('underline')">
+          <u>U</u>
+        </button>
+
+        <button type="button" onclick="formatAboutText('insertUnorderedList')">
+          • List
+        </button>
+
+        <button type="button" onclick="formatAboutText('insertOrderedList')">
+          1. List
+        </button>
+
+        <button type="button" onclick="addAboutLink()">
+          🔗
+        </button>
+
+        <button type="button" onclick="formatAboutText('removeFormat')">
+          Clear
+        </button>
+
+      </div>
+
+      <div
+        id="aboutContent"
+        class="news-rich-editor"
+        contenteditable="true"
+        data-placeholder="Neuroscan MRI төвийн тухай мэдээллээ бичнэ үү..."
+      ></div>
+
+    </div>
+
+    <button
+      type="button"
+      onclick="saveAboutSettings()"
+      style="margin-top:20px;"
+    >
+      Хадгалах
+    </button>
+
+  </div>
+
+</section>
       <section id="newsEditor" style="display:none;">
-
+<button
+  id="aboutButton"
+  onclick="openAdminSection('about')"
+>
+  Бидний тухай
+</button>
         <h2>Мэдээ</h2>
 
         <p>
