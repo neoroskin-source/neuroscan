@@ -554,10 +554,7 @@
               🎯
             </div>
 
-            <h2>
-  Эрхэм зорилго
-</h2>
-
+            <h2>Эрхэм зорилго</h2>
 <div id="publicMissionContent"></div>
 
           </article>
@@ -569,12 +566,8 @@
               👁️
             </div>
 
-            <h2>
-  Алсын хараа
-</h2>
-
+            <h2>Алсын хараа</h2>
 <div id="publicVisionContent"></div>
-
           </article>
 
 
@@ -584,10 +577,7 @@
               💎
             </div>
 
-            <h2>
-  Үнэт зүйлс
-</h2>
-
+            <h2>Үнэт зүйлс</h2>
 <div
   id="publicValuesContent"
   class="values"
@@ -744,6 +734,135 @@
 
 
   <script src="script.js"></script>
+
+<script>
+(async function loadAboutPageData() {
+
+  const SUPABASE_URL =
+    'https://fqhqmbtexxeblbnxfvzn.supabase.co';
+
+  const SUPABASE_KEY =
+    'sb_publishable_o4_UwkZbcd2tM6hVyoMRyQ_yza9Ffzs';
+
+
+  // Supabase library байхгүй бол ачаална
+  if (!window.supabase) {
+
+    await new Promise((resolve, reject) => {
+
+      const script =
+        document.createElement('script');
+
+      script.src =
+        'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+
+      script.onload =
+        resolve;
+
+      script.onerror =
+        reject;
+
+      document.head.appendChild(
+        script
+      );
+
+    });
+
+  }
+
+
+  const client =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+
+  const {
+    data,
+    error
+  } =
+    await client
+      .from('settings')
+      .select(
+        'mission_content, vision_content, values_content'
+      )
+      .order('id')
+      .limit(1);
+
+
+  if (error) {
+
+    console.error(
+      'About public load error:',
+      error
+    );
+
+    return;
+  }
+
+
+  if (
+    !data ||
+    !data.length
+  ) {
+
+    console.error(
+      'Settings data олдсонгүй'
+    );
+
+    return;
+  }
+
+
+  const settings =
+    data[0];
+
+
+  const mission =
+    document.getElementById(
+      'publicMissionContent'
+    );
+
+  const vision =
+    document.getElementById(
+      'publicVisionContent'
+    );
+
+  const values =
+    document.getElementById(
+      'publicValuesContent'
+    );
+
+
+  if (mission) {
+
+    mission.innerHTML =
+      settings.mission_content ||
+      '';
+
+  }
+
+
+  if (vision) {
+
+    vision.innerHTML =
+      settings.vision_content ||
+      '';
+
+  }
+
+
+  if (values) {
+
+    values.innerHTML =
+      settings.values_content ||
+      '';
+
+  }
+
+})();
+</script>
 
 </body>
 </html>
