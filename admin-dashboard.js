@@ -1720,7 +1720,63 @@ async function loadSettingsEditor() {
       <!-- =========================
            CONTACT
            ========================= -->
+<h3
+  style="
+    margin-top:0;
+    margin-bottom:22px;
+  "
+>
+  Сайтын үндсэн мэдээлэл
+</h3>
 
+<label>
+  Сайтын нэр
+</label>
+
+<input
+  id="setting-site-name"
+  type="text"
+  value="${escapeAdminHtml(
+    s.site_name
+  )}"
+  placeholder="NEUROSCAN MRI"
+  style="${fieldStyle()}"
+>
+
+<label>
+  Сайтын тайлбар
+</label>
+
+<textarea
+  id="setting-site-description"
+  rows="4"
+  placeholder="Сайтын товч тайлбар"
+  style="${fieldStyle()}"
+>${escapeAdminHtml(
+  s.site_description
+)}</textarea>
+
+<label>
+  Logo URL
+</label>
+
+<input
+  id="setting-logo-url"
+  type="url"
+  value="${escapeAdminHtml(
+    s.logo_url
+  )}"
+  placeholder="https://..."
+  style="${fieldStyle()}"
+>
+
+<hr
+  style="
+    border:0;
+    border-top:1px solid #e4e9ef;
+    margin:32px 0;
+  "
+>
       <h3
         style="
           margin-top:0;
