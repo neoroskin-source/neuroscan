@@ -283,79 +283,71 @@
       const s =
         settingsRows[0];
 // ===================================
-// PUBLIC LOGO
+// PUBLIC LOGO + SITE NAME
 // ===================================
 
-const publicLogo =
+const header =
   document.querySelector(
-    '.site-header .logo, header .logo, .nav .logo'
+    '.site-header, header'
   );
 
-if (publicLogo) {
-  if (s.logo_url) {
-    publicLogo.innerHTML = `
-      <img
-        src="${esc(s.logo_url)}"
-        alt="${esc(s.site_name || 'NEUROSCAN MRI')}"
-        style="
-          max-height:52px;
-          max-width:220px;
-          width:auto;
-          height:auto;
-          object-fit:contain;
-          display:block;
-        "
-      >
-    `;
-  } else if (s.site_name) {
-    publicLogo.textContent = s.site_name;
-  }
-}
+if (header) {
 
-if (s.site_name) {
-  document.title = s.site_name;
-}
-// ===================================
-// PUBLIC SITE LOGO + SITE NAME
-// ===================================
+  const possibleLogoElements = [
+    ...header.querySelectorAll(
+      'a, .logo, .brand, .site-logo, .navbar-brand'
+    )
+  ];
 
-const publicLogoLink =
-  document.querySelector(
-    '.site-header .logo, header .logo, .nav .logo'
-  );
+  const logoElement =
+    possibleLogoElements.find(el => {
 
-if (publicLogoLink) {
+      const text =
+        el.textContent
+          ?.trim()
+          .replace(/\s+/g, ' ');
 
-  if (s.logo_url) {
+      return (
+        text === 'NEUROSCAN MRI' ||
+        text === s.site_name
+      );
+    });
 
-    publicLogoLink.innerHTML = `
-      <img
-        src="${esc(s.logo_url)}"
-        alt="${esc(
-          s.site_name || 'NEUROSCAN MRI'
-        )}"
-        style="
-          max-height:52px;
-          max-width:220px;
-          width:auto;
-          height:auto;
-          object-fit:contain;
-          display:block;
-        "
-      >
-    `;
+  if (logoElement) {
 
-  } else if (s.site_name) {
+    if (s.logo_url) {
 
-    publicLogoLink.textContent =
-      s.site_name;
+      logoElement.innerHTML = `
+        <img
+          src="${esc(s.logo_url)}"
+          alt="${esc(
+            s.site_name ||
+            'NEUROSCAN MRI'
+          )}"
+          style="
+            display:block;
+            width:auto;
+            height:auto;
+            max-height:58px;
+            max-width:230px;
+            object-fit:contain;
+          "
+        >
+      `;
+
+    } else if (s.site_name) {
+
+      logoElement.textContent =
+        s.site_name;
+    }
   }
 }
 
 
-// Browser title
+// Browser tab title
 if (s.site_name) {
-  document.title = s.site_name;
+  document.title =
+    s.site_name;
 }
 // ===================================
 // HEADER SOCIAL ICONS
