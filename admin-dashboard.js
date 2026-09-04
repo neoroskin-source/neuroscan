@@ -2785,5 +2785,27 @@ document.addEventListener(
 
   }
 );
+window.refreshLivePreview = function() {
 
+  const frame =
+    document.getElementById(
+      'livePreviewFrame'
+    );
+
+  if (!frame) return;
+
+  const url =
+    new URL(
+      'index.html',
+      window.location.href
+    );
+
+  url.searchParams.set(
+    'preview',
+    Date.now()
+  );
+
+  frame.src =
+    url.toString();
+};
 checkAdminAccess();
