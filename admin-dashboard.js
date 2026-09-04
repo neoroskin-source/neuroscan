@@ -5173,10 +5173,10 @@ async function loadSettingsEditor() {
 }
 
 // =====================================================
-// SAVE SETTINGS
+// SAVE BASIC SETTINGS
 // =====================================================
 
-window.saveSettings =
+window.saveBasicSettings =
 async function(
   id,
   button
@@ -5184,7 +5184,6 @@ async function(
 
   button.disabled =
     true;
-
 
   button.textContent =
     'Хадгалж байна...';
@@ -5208,6 +5207,94 @@ async function(
       ?.value
       .trim()
     || '';
+
+
+  const themePreset =
+    document
+      .querySelector(
+        'input[name="themePreset"]:checked'
+      )
+      ?.value
+    || 'blue';
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from('settings')
+      .update({
+
+        site_name:
+          siteName || null,
+
+        site_description:
+          siteDescription || null,
+
+        logo_url:
+          logoImageUrl || null,
+
+        theme_preset:
+          themePreset,
+
+        updated_at:
+          new Date()
+            .toISOString()
+
+      })
+      .eq(
+        'id',
+        id
+      );
+
+
+  if (error) {
+
+    console.error(
+      'Basic settings save error:',
+      error
+    );
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      'Алдаа';
+
+    alert(
+      'Сайтын үндсэн мэдээлэл хадгалахад алдаа: ' +
+      error.message
+    );
+
+    return;
+  }
+
+
+  setButtonSaved(
+    button
+  );
+
+
+  refreshPreviewIfOpen();
+
+};
+
+
+// =====================================================
+// SAVE CONTACT SETTINGS
+// =====================================================
+
+window.saveContactSettings =
+async function(
+  id,
+  button
+) {
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    'Хадгалж байна...';
 
 
   const email =
@@ -5280,6 +5367,94 @@ async function(
     || '';
 
 
+  const {
+    error
+  } =
+    await supabaseClient
+      .from('settings')
+      .update({
+
+        email:
+          email || null,
+
+        general_phone:
+          generalPhone || null,
+
+        phone_1:
+          phone1 || null,
+
+        phone_2:
+          phone2 || null,
+
+        address:
+          address || null,
+
+        maps_url:
+          mapsUrl || null,
+
+        chat_url:
+          chatUrl || null,
+
+        updated_at:
+          new Date()
+            .toISOString()
+
+      })
+      .eq(
+        'id',
+        id
+      );
+
+
+  if (error) {
+
+    console.error(
+      'Contact settings save error:',
+      error
+    );
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      'Алдаа';
+
+    alert(
+      'Холбоо барих мэдээлэл хадгалахад алдаа: ' +
+      error.message
+    );
+
+    return;
+  }
+
+
+  setButtonSaved(
+    button
+  );
+
+
+  refreshPreviewIfOpen();
+
+};
+
+
+// =====================================================
+// SAVE SOCIAL SETTINGS
+// =====================================================
+
+window.saveSocialSettings =
+async function(
+  id,
+  button
+) {
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    'Хадгалж байна...';
+
+
   const facebookUrl =
     document
       .getElementById(
@@ -5310,6 +5485,82 @@ async function(
     || '';
 
 
+  const {
+    error
+  } =
+    await supabaseClient
+      .from('settings')
+      .update({
+
+        facebook_url:
+          facebookUrl || null,
+
+        instagram_url:
+          instagramUrl || null,
+
+        youtube_url:
+          youtubeUrl || null,
+
+        updated_at:
+          new Date()
+            .toISOString()
+
+      })
+      .eq(
+        'id',
+        id
+      );
+
+
+  if (error) {
+
+    console.error(
+      'Social settings save error:',
+      error
+    );
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      'Алдаа';
+
+    alert(
+      'Social хаяг хадгалахад алдаа: ' +
+      error.message
+    );
+
+    return;
+  }
+
+
+  setButtonSaved(
+    button
+  );
+
+
+  refreshPreviewIfOpen();
+
+};
+
+
+// =====================================================
+// SAVE OTHER SETTINGS
+// =====================================================
+
+window.saveOtherSettings =
+async function(
+  id,
+  button
+) {
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    'Хадгалж байна...';
+
+
   const machineInfo =
     document
       .getElementById(
@@ -5330,15 +5581,6 @@ async function(
     || '';
 
 
-  const themePreset =
-    document
-      .querySelector(
-        'input[name="themePreset"]:checked'
-      )
-      ?.value
-    || 'blue';
-
-
   const {
     error
   } =
@@ -5346,84 +5588,11 @@ async function(
       .from('settings')
       .update({
 
-        site_name:
-          siteName ||
-          null,
-
-
-        site_description:
-          siteDescription ||
-          null,
-
-
-        logo_url:
-          logoImageUrl ||
-          null,
-
-
-        theme_preset:
-          themePreset,
-
-
-        email:
-          email ||
-          null,
-
-
-        general_phone:
-          generalPhone ||
-          null,
-
-
-        phone_1:
-          phone1 ||
-          null,
-
-
-        phone_2:
-          phone2 ||
-          null,
-
-
-        address:
-          address ||
-          null,
-
-
-        maps_url:
-          mapsUrl ||
-          null,
-
-
-        chat_url:
-          chatUrl ||
-          null,
-
-
-        facebook_url:
-          facebookUrl ||
-          null,
-
-
-        instagram_url:
-          instagramUrl ||
-          null,
-
-
-        youtube_url:
-          youtubeUrl ||
-          null,
-
-
         machine_info:
-          machineInfo ||
-          null,
-
+          machineInfo || null,
 
         booking_url:
-          bookingUrl ||
-          null,
-
+          bookingUrl || null,
 
         updated_at:
           new Date()
@@ -5439,24 +5608,20 @@ async function(
   if (error) {
 
     console.error(
-      'Settings save error:',
+      'Other settings save error:',
       error
     );
-
 
     button.disabled =
       false;
 
-
     button.textContent =
       'Алдаа';
 
-
     alert(
-      'Тохиргоо хадгалахад алдаа: ' +
+      'Бусад тохиргоо хадгалахад алдаа: ' +
       error.message
     );
-
 
     return;
   }
@@ -5470,8 +5635,6 @@ async function(
   refreshPreviewIfOpen();
 
 };
-
-
 // =====================================================
 // LIVE SITE PREVIEW
 // =====================================================
