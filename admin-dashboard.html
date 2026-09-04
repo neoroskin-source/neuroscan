@@ -212,6 +212,56 @@
 <section id="newsEditor" style="display:none;">
   <h2>Мэдээ</h2>
   <p>Мэдээ нэмэх, засах, нийтлэх болон устгах.</p>
+  <div class="admin-card" style="margin-bottom:24px;">
+  <h3>Шинэ мэдээ</h3>
+
+  <label>Гарчиг</label>
+  <input id="newNewsTitle" type="text" placeholder="Гарчиг оруулна уу">
+
+  <label>Агуулга</label>
+  <textarea id="newNewsContent" rows="10" placeholder="Мэдээний агуулга"></textarea>
+
+  <label>YouTube линк</label>
+  <input id="newNewsYoutube" type="url" placeholder="https://youtube.com/...">
+
+  <label>Зураг</label>
+
+  <div
+    id="newsUploadBox"
+    style="
+      border:2px dashed #cbd5e1;
+      border-radius:14px;
+      padding:36px;
+      text-align:center;
+      cursor:pointer;
+      margin-bottom:12px;
+    "
+  >
+    Зургаа энд дарж эсвэл зөөж оруулна уу
+  </div>
+
+  <input
+    id="newsImageFile"
+    type="file"
+    accept="image/jpeg,image/png,image/webp"
+    style="display:none;"
+  >
+
+  <div id="newsImagePreview"></div>
+
+  <label style="display:flex;gap:8px;align-items:center;margin-top:16px;">
+    <input id="newNewsPublished" type="checkbox">
+    Нийтлэх
+  </label>
+
+  <button
+    type="button"
+    onclick="createNewsFromEditor()"
+    style="margin-top:16px;"
+  >
+    Хадгалах
+  </button>
+</div>
   <div id="newsList">Мэдээлэл ачаалж байна...</div>
 </section>
 
