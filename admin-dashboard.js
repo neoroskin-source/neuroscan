@@ -958,4 +958,103 @@ window.addNewsLink = function () {
 
   document.execCommand('createLink', false, url);
 };
+async function uploadAboutImage(file) {
+  if (!file) return;
+
+  const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+
+  if (!allowed.includes(file.type)) {
+    alert('JPG, PNG эсвэл WEBP зураг оруулна уу.');
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    alert('Зураг 5MB-аас бага байх ёстой.');
+    return;
+  }
+
+  const ext = file.name.split('.').pop();
+
+  const fileName =
+    `about/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+
+  const { error } = await supabaseClient
+    .storage
+    .from('site-media')
+    .upload(fileName, file);
+
+  if (error) {
+    alert('Зураг upload хийхэд алдаа: ' + error.message);
+    return;
+  }
+
+  const { data } = supabaseClient
+    .storage
+    .from('site-media')
+    .getPublicUrl(fileName);
+
+  aboutImageUrl = data.publicUrl;
+
+  const preview = document.getElementById('aboutImagePreview');
+
+  if (preview) {
+    preview.innerHTML = `
+      <img
+        src="${aboutImageUrl}"
+        alt="About preview"
+        style="
+          width:180px;
+          height:140px;
+          object-fit:cover;
+          border-radius:12px;
+          margin-top:14px;
+        "
+      >
+    `;
+  }
+}
+
+function setupAboutUploader() {
+  const box = document.getElementById('aboutUploadBox');
+  const input = document.getElementById('aboutImageFile');
+
+  if (!box || !input) return;
+
+  box.addEventListener('click', () => {
+    input.click();
+  });
+
+  input.addEventListener('change', () => {
+    const file = input.files?.[0];
+
+    if (file) {
+      uploadAboutImage(file);
+    }
+  });
+
+  box.addEventListener('dragover', event => {
+    event.preventDefault();
+    box.style.background = '#f1f5f9';
+  });
+
+  box.addEventListener('dragleave', () => {
+    box.style.background = '#fafcff';
+  });
+
+  box.addEventListener('drop', event => {
+    event.preventDefault();
+
+    box.style.background = '#fafcff';
+
+    const file = event.dataTransfer.files?.[0];
+
+    if (file) {
+      uploadAboutImage(file);
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setupAboutUploader();
+});
 checkAdminAccess();
