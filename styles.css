@@ -544,11 +544,11 @@ a:hover {
 }
 
 
-.booking-detail > div {
-  border: 1px solid #e8ebf0;
-  border-radius: 16px;
-  padding: 22px;
-  background: #ffffff;
+.booking-detail {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 0;
 }
 
 
