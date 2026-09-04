@@ -773,20 +773,14 @@
                   )}"
 
                   style="
-                    display:block;
-
-                    width:138px;
-
-                    height:auto;
-
-                    max-width:none;
-                    max-height:none;
-
-                    object-fit:
-                      contain;
-
-                    flex-shrink:0;
-                  "
+  display:block;
+  width:auto;
+  height:90px;
+  max-width:138px;
+  max-height:90px;
+  object-fit:contain;
+  flex-shrink:0;
+"
                 >
 
               `
