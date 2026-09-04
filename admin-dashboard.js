@@ -5478,9 +5478,6 @@ async function loadSettingsEditor() {
         font-weight:700;
         font-size:15px;
       "
-    >
-      Бүгдийг хадгалах
-    </button>
 
   `;
 
