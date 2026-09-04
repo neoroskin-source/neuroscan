@@ -394,7 +394,7 @@ if (siteHeader) {
           )}"
           style="
             display:block;
-            width:170px;
+            width:160px;
             height:auto;
             max-width:none;
             max-height:none;
