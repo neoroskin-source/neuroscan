@@ -4419,9 +4419,126 @@ function setupLogoUploader() {
 
 }
 
-
 // =====================================================
 // SETTINGS
+// =====================================================
+
+function settingsAccordionHeader(
+  title,
+  bodyId
+) {
+
+  return `
+    <button
+      type="button"
+      onclick="
+        toggleSettingsAccordion(
+          '${bodyId}',
+          this
+        )
+      "
+      style="
+        width:100%;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:16px;
+        padding:18px 20px;
+        background:#ffffff;
+        border:1px solid #e4e9ef;
+        border-radius:12px;
+        cursor:pointer;
+        font-size:16px;
+        font-weight:700;
+        color:#17212b;
+        text-align:left;
+        margin-bottom:10px;
+      "
+    >
+
+      <span>
+        ${title}
+      </span>
+
+      <span
+        class="settings-accordion-arrow"
+        style="
+          font-size:18px;
+          color:#64748b;
+        "
+      >
+        ⌄
+      </span>
+
+    </button>
+  `;
+}
+
+
+// =====================================================
+// SETTINGS ACCORDION TOGGLE
+// =====================================================
+
+window.toggleSettingsAccordion =
+function(
+  bodyId,
+  button
+) {
+
+  const body =
+    document.getElementById(
+      bodyId
+    );
+
+
+  if (!body) return;
+
+
+  const arrow =
+    button?.querySelector(
+      '.settings-accordion-arrow'
+    );
+
+
+  const isOpen =
+    body.style.display ===
+    'block';
+
+
+  if (isOpen) {
+
+    body.style.display =
+      'none';
+
+
+    if (arrow) {
+
+      arrow.textContent =
+        '⌄';
+
+    }
+
+
+    return;
+  }
+
+
+  body.style.display =
+    'block';
+
+
+  if (arrow) {
+
+    arrow.textContent =
+      '⌃';
+
+  }
+
+};
+
+
+// =====================================================
+// LOAD SETTINGS EDITOR
 // =====================================================
 
 async function loadSettingsEditor() {
@@ -4456,6 +4573,12 @@ async function loadSettingsEditor() {
     !data.length
   ) {
 
+    console.error(
+      'Settings load error:',
+      error
+    );
+
+
     container.textContent =
       'Тохиргоо ачаалахад алдаа гарлаа.';
 
@@ -4469,560 +4592,575 @@ async function loadSettingsEditor() {
 
 
   logoImageUrl =
-    s.logo_url ||
-    '';
+    s.logo_url || '';
 
 
   container.innerHTML = `
 
+    <!-- ================================================
+         1. SITE BASIC INFORMATION
+         ================================================ -->
+
+    ${settingsAccordionHeader(
+      'Сайтын үндсэн мэдээлэл',
+      'settingsBasicBody'
+    )}
+
+
     <div
-      style="${editorCardStyle()}"
+      id="settingsBasicBody"
+      style="
+        display:none;
+        margin-bottom:18px;
+      "
     >
 
-      <h3
-        style="
-          margin-top:0;
-          margin-bottom:22px;
-        "
-      >
-        Сайтын үндсэн мэдээлэл
-      </h3>
-
-
-      <label>
-        Сайтын нэр
-      </label>
-
-      <input
-        id="setting-site-name"
-        type="text"
-        value="${escapeAdminHtml(
-          s.site_name
-          || ''
-        )}"
-        placeholder="NEUROSCAN MRI"
-        style="${fieldStyle()}"
-      >
-
-
-      <label>
-        Сайтын тайлбар
-      </label>
-
-      <textarea
-        id="setting-site-description"
-        rows="4"
-        placeholder="Сайтын товч тайлбар"
-        style="${fieldStyle()}"
-      >${escapeAdminHtml(
-        s.site_description
-        || ''
-      )}</textarea>
-
-
-      <label>
-        Logo
-      </label>
-
-
       <div
-        id="logoUploadBox"
-        style="
-          width:100%;
-          min-height:140px;
-          border:2px dashed #cbd5e1;
-          border-radius:14px;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          text-align:center;
-          cursor:pointer;
-          background:#fafcff;
-          color:#94a3b8;
-          padding:28px;
-          margin-bottom:12px;
-          box-sizing:border-box;
-        "
-      >
-        Logo зургаа энд дарж эсвэл зөөж оруулна уу
-      </div>
-
-
-      <input
-        id="logoImageFile"
-        type="file"
-        accept="
-          image/jpeg,
-          image/png,
-          image/webp
-        "
-        style="display:none;"
+        style="${editorCardStyle()}"
       >
 
+        <label>
+          Сайтын нэр
+        </label>
 
-      <div
-        id="logoImagePreview"
-      ></div>
-
-
-      <h3
-        style="
-          margin-top:28px;
-          margin-bottom:12px;
-        "
-      >
-        Theme өнгө
-      </h3>
-
-
-      <p
-        style="
-          margin-top:0;
-          color:#64748b;
-          font-size:14px;
-        "
-      >
-        Сайтын үндсэн өнгөний загварыг сонгоно.
-      </p>
-
-
-      <div
-        style="
-          display:flex;
-          gap:12px;
-          flex-wrap:wrap;
-          margin-bottom:24px;
-        "
-      >
-
-
-        <label
-          style="
-            cursor:pointer;
-            display:flex;
-            align-items:center;
-            gap:8px;
-            padding:10px 14px;
-            border:1px solid #d8dee6;
-            border-radius:10px;
-          "
+        <input
+          id="setting-site-name"
+          type="text"
+          value="${escapeAdminHtml(
+            s.site_name || ''
+          )}"
+          placeholder="NEUROSCAN MRI"
+          style="${fieldStyle()}"
         >
 
-          <input
-            type="radio"
-            name="themePreset"
-            value="blue"
-            ${
-              s.theme_preset ===
-              'blue' ||
-              !s.theme_preset
-                ? 'checked'
-                : ''
-            }
-          >
 
-          <span
-            style="
-              width:22px;
-              height:22px;
-              border-radius:50%;
-              background:#2563b8;
-              display:inline-block;
-            "
-          ></span>
+        <label>
+          Сайтын тайлбар
+        </label>
 
-          Blue
+        <textarea
+          id="setting-site-description"
+          rows="4"
+          placeholder="Сайтын товч тайлбар"
+          style="${fieldStyle()}"
+        >${escapeAdminHtml(
+          s.site_description || ''
+        )}</textarea>
 
+
+        <label>
+          Logo
         </label>
 
 
-        <label
+        <div
+          id="logoUploadBox"
           style="
-            cursor:pointer;
+            width:100%;
+            min-height:140px;
+            border:2px dashed #cbd5e1;
+            border-radius:14px;
             display:flex;
             align-items:center;
-            gap:8px;
-            padding:10px 14px;
-            border:1px solid #d8dee6;
-            border-radius:10px;
+            justify-content:center;
+            text-align:center;
+            cursor:pointer;
+            background:#fafcff;
+            color:#94a3b8;
+            padding:28px;
+            margin-bottom:12px;
+            box-sizing:border-box;
+          "
+        >
+          Logo зургаа энд дарж эсвэл зөөж оруулна уу
+        </div>
+
+
+        <input
+          id="logoImageFile"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          style="display:none;"
+        >
+
+
+        <div
+          id="logoImagePreview"
+        ></div>
+
+
+        <h3
+          style="
+            margin-top:28px;
+            margin-bottom:12px;
+          "
+        >
+          Theme өнгө
+        </h3>
+
+
+        <p
+          style="
+            margin-top:0;
+            color:#64748b;
+            font-size:14px;
+          "
+        >
+          Сайтын үндсэн өнгөний загварыг сонгоно.
+        </p>
+
+
+        <div
+          style="
+            display:flex;
+            gap:12px;
+            flex-wrap:wrap;
+            margin-bottom:10px;
           "
         >
 
-          <input
-            type="radio"
-            name="themePreset"
-            value="teal"
-            ${
-              s.theme_preset ===
-              'teal'
-                ? 'checked'
-                : ''
-            }
+          <label
+            style="
+              cursor:pointer;
+              display:flex;
+              align-items:center;
+              gap:8px;
+              padding:10px 14px;
+              border:1px solid #d8dee6;
+              border-radius:10px;
+            "
           >
 
-          <span
+            <input
+              type="radio"
+              name="themePreset"
+              value="blue"
+              ${
+                s.theme_preset === 'blue' ||
+                !s.theme_preset
+                  ? 'checked'
+                  : ''
+              }
+            >
+
+            <span
+              style="
+                width:22px;
+                height:22px;
+                border-radius:50%;
+                background:#2563b8;
+                display:inline-block;
+              "
+            ></span>
+
+            Blue
+
+          </label>
+
+
+          <label
             style="
-              width:22px;
-              height:22px;
-              border-radius:50%;
-              background:#0f766e;
-              display:inline-block;
+              cursor:pointer;
+              display:flex;
+              align-items:center;
+              gap:8px;
+              padding:10px 14px;
+              border:1px solid #d8dee6;
+              border-radius:10px;
             "
-          ></span>
-
-          Teal
-
-        </label>
-
-
-        <label
-          style="
-            cursor:pointer;
-            display:flex;
-            align-items:center;
-            gap:8px;
-            padding:10px 14px;
-            border:1px solid #d8dee6;
-            border-radius:10px;
-          "
-        >
-
-          <input
-            type="radio"
-            name="themePreset"
-            value="green"
-            ${
-              s.theme_preset ===
-              'green'
-                ? 'checked'
-                : ''
-            }
           >
 
-          <span
+            <input
+              type="radio"
+              name="themePreset"
+              value="teal"
+              ${
+                s.theme_preset === 'teal'
+                  ? 'checked'
+                  : ''
+              }
+            >
+
+            <span
+              style="
+                width:22px;
+                height:22px;
+                border-radius:50%;
+                background:#0f766e;
+                display:inline-block;
+              "
+            ></span>
+
+            Teal
+
+          </label>
+
+
+          <label
             style="
-              width:22px;
-              height:22px;
-              border-radius:50%;
-              background:#15803d;
-              display:inline-block;
+              cursor:pointer;
+              display:flex;
+              align-items:center;
+              gap:8px;
+              padding:10px 14px;
+              border:1px solid #d8dee6;
+              border-radius:10px;
             "
-          ></span>
-
-          Green
-
-        </label>
-
-
-        <label
-          style="
-            cursor:pointer;
-            display:flex;
-            align-items:center;
-            gap:8px;
-            padding:10px 14px;
-            border:1px solid #d8dee6;
-            border-radius:10px;
-          "
-        >
-
-          <input
-            type="radio"
-            name="themePreset"
-            value="navy"
-            ${
-              s.theme_preset ===
-              'navy'
-                ? 'checked'
-                : ''
-            }
           >
 
-          <span
+            <input
+              type="radio"
+              name="themePreset"
+              value="green"
+              ${
+                s.theme_preset === 'green'
+                  ? 'checked'
+                  : ''
+              }
+            >
+
+            <span
+              style="
+                width:22px;
+                height:22px;
+                border-radius:50%;
+                background:#15803d;
+                display:inline-block;
+              "
+            ></span>
+
+            Green
+
+          </label>
+
+
+          <label
             style="
-              width:22px;
-              height:22px;
-              border-radius:50%;
-              background:#172554;
-              display:inline-block;
+              cursor:pointer;
+              display:flex;
+              align-items:center;
+              gap:8px;
+              padding:10px 14px;
+              border:1px solid #d8dee6;
+              border-radius:10px;
             "
-          ></span>
+          >
 
-          Navy
+            <input
+              type="radio"
+              name="themePreset"
+              value="navy"
+              ${
+                s.theme_preset === 'navy'
+                  ? 'checked'
+                  : ''
+              }
+            >
 
-        </label>
+            <span
+              style="
+                width:22px;
+                height:22px;
+                border-radius:50%;
+                background:#172554;
+                display:inline-block;
+              "
+            ></span>
+
+            Navy
+
+          </label>
+
+        </div>
 
       </div>
-
-
-      <hr
-        style="
-          border:0;
-          border-top:1px solid #e4e9ef;
-          margin:32px 0;
-        "
-      >
-
-
-      <h3
-        style="
-          margin-bottom:22px;
-        "
-      >
-        Холбоо барих мэдээлэл
-      </h3>
-
-
-      <label>
-        Email
-      </label>
-
-      <input
-        id="setting-email"
-        type="email"
-        value="${escapeAdminHtml(
-          s.email
-          || ''
-        )}"
-        placeholder="example@email.com"
-        style="${fieldStyle()}"
-      >
-
-
-      <label>
-        Ерөнхий утас
-      </label>
-
-      <input
-        id="setting-general-phone"
-        type="text"
-        value="${escapeAdminHtml(
-          s.general_phone
-          || ''
-        )}"
-        placeholder="(+976) 7700-0011"
-        style="${fieldStyle()}"
-      >
-
-
-      <label>
-        Утас 1
-      </label>
-
-      <input
-        id="setting-phone1"
-        type="text"
-        value="${escapeAdminHtml(
-          s.phone_1
-          || ''
-        )}"
-        placeholder="8888-2328"
-        style="${fieldStyle()}"
-      >
-
-
-      <label>
-        Утас 2
-      </label>
-
-      <input
-        id="setting-phone2"
-        type="text"
-        value="${escapeAdminHtml(
-          s.phone_2
-          || ''
-        )}"
-        placeholder="8503-8105"
-        style="${fieldStyle()}"
-      >
-
-
-      <label>
-        Хаяг
-      </label>
-
-      <textarea
-        id="setting-address"
-        rows="3"
-        placeholder="Төвийн хаяг"
-        style="${fieldStyle()}"
-      >${escapeAdminHtml(
-        s.address
-        || ''
-      )}</textarea>
-
-
-      <label>
-        Google Maps линк
-      </label>
-
-      <input
-        id="setting-maps"
-        type="url"
-        value="${escapeAdminHtml(
-          s.maps_url
-          || ''
-        )}"
-        placeholder="https://maps.google.com/..."
-        style="${fieldStyle()}"
-      >
-
-
-      <label>
-        Chat линк
-      </label>
-
-      <input
-        id="setting-chat"
-        type="url"
-        value="${escapeAdminHtml(
-          s.chat_url
-          || ''
-        )}"
-        placeholder="https://m.me/... эсвэл chat линк"
-        style="${fieldStyle()}"
-      >
-
-
-      <hr
-        style="
-          border:0;
-          border-top:1px solid #e4e9ef;
-          margin:32px 0;
-        "
-      >
-
-
-      <h3
-        style="
-          margin-bottom:22px;
-        "
-      >
-        Social хаягууд
-      </h3>
-
-
-      <label>
-        Facebook
-      </label>
-
-      <input
-        id="setting-facebook"
-        type="url"
-        value="${escapeAdminHtml(
-          s.facebook_url
-          || ''
-        )}"
-        placeholder="https://facebook.com/..."
-        style="${fieldStyle()}"
-      >
-
-
-      <label>
-        Instagram
-      </label>
-
-      <input
-        id="setting-instagram"
-        type="url"
-        value="${escapeAdminHtml(
-          s.instagram_url
-          || ''
-        )}"
-        placeholder="https://instagram.com/..."
-        style="${fieldStyle()}"
-      >
-
-
-      <label>
-        YouTube
-      </label>
-
-      <input
-        id="setting-youtube"
-        type="url"
-        value="${escapeAdminHtml(
-          s.youtube_url
-          || ''
-        )}"
-        placeholder="https://youtube.com/..."
-        style="${fieldStyle()}"
-      >
-
-
-      <hr
-        style="
-          border:0;
-          border-top:1px solid #e4e9ef;
-          margin:32px 0;
-        "
-      >
-
-
-      <h3
-        style="
-          margin-bottom:22px;
-        "
-      >
-        Бусад тохиргоо
-      </h3>
-
-
-      <label>
-        MRI төхөөрөмж
-      </label>
-
-      <input
-        id="setting-machine"
-        type="text"
-        value="${escapeAdminHtml(
-          s.machine_info
-          || ''
-        )}"
-        placeholder="ANKE SuperMark 1.5T MRI"
-        style="${fieldStyle()}"
-      >
-
-
-      <label>
-        Цаг захиалгын Google Form URL
-      </label>
-
-      <input
-        id="setting-booking"
-        type="url"
-        value="${escapeAdminHtml(
-          s.booking_url
-          || ''
-        )}"
-        placeholder="https://..."
-        style="${fieldStyle()}"
-      >
-
-
-      <button
-        type="button"
-        onclick="
-          saveSettings(
-            ${s.id},
-            this
-          )
-        "
-        style="
-          padding:12px 20px;
-          background:#17212b;
-          color:#fff;
-          border:0;
-          border-radius:8px;
-          cursor:pointer;
-          font-weight:700;
-          font-size:15px;
-        "
-      >
-        Хадгалах
-      </button>
 
     </div>
+
+
+    <!-- ================================================
+         2. CONTACT INFORMATION
+         ================================================ -->
+
+    ${settingsAccordionHeader(
+      'Холбоо барих мэдээлэл',
+      'settingsContactBody'
+    )}
+
+
+    <div
+      id="settingsContactBody"
+      style="
+        display:none;
+        margin-bottom:18px;
+      "
+    >
+
+      <div
+        style="${editorCardStyle()}"
+      >
+
+        <label>
+          Email
+        </label>
+
+        <input
+          id="setting-email"
+          type="email"
+          value="${escapeAdminHtml(
+            s.email || ''
+          )}"
+          placeholder="example@email.com"
+          style="${fieldStyle()}"
+        >
+
+
+        <label>
+          Ерөнхий утас
+        </label>
+
+        <input
+          id="setting-general-phone"
+          type="text"
+          value="${escapeAdminHtml(
+            s.general_phone || ''
+          )}"
+          placeholder="(+976) 7700-0011"
+          style="${fieldStyle()}"
+        >
+
+
+        <label>
+          Утас 1
+        </label>
+
+        <input
+          id="setting-phone1"
+          type="text"
+          value="${escapeAdminHtml(
+            s.phone_1 || ''
+          )}"
+          placeholder="8888-2328"
+          style="${fieldStyle()}"
+        >
+
+
+        <label>
+          Утас 2
+        </label>
+
+        <input
+          id="setting-phone2"
+          type="text"
+          value="${escapeAdminHtml(
+            s.phone_2 || ''
+          )}"
+          placeholder="8503-8105"
+          style="${fieldStyle()}"
+        >
+
+
+        <label>
+          Хаяг
+        </label>
+
+        <textarea
+          id="setting-address"
+          rows="3"
+          placeholder="Төвийн хаяг"
+          style="${fieldStyle()}"
+        >${escapeAdminHtml(
+          s.address || ''
+        )}</textarea>
+
+
+        <label>
+          Google Maps линк
+        </label>
+
+        <input
+          id="setting-maps"
+          type="url"
+          value="${escapeAdminHtml(
+            s.maps_url || ''
+          )}"
+          placeholder="https://maps.google.com/..."
+          style="${fieldStyle()}"
+        >
+
+
+        <label>
+          Chat линк
+        </label>
+
+        <input
+          id="setting-chat"
+          type="url"
+          value="${escapeAdminHtml(
+            s.chat_url || ''
+          )}"
+          placeholder="https://m.me/... эсвэл chat линк"
+          style="${fieldStyle()}"
+        >
+
+      </div>
+
+    </div>
+
+
+    <!-- ================================================
+         3. SOCIAL
+         ================================================ -->
+
+    ${settingsAccordionHeader(
+      'Social хаягууд',
+      'settingsSocialBody'
+    )}
+
+
+    <div
+      id="settingsSocialBody"
+      style="
+        display:none;
+        margin-bottom:18px;
+      "
+    >
+
+      <div
+        style="${editorCardStyle()}"
+      >
+
+        <label>
+          Facebook
+        </label>
+
+        <input
+          id="setting-facebook"
+          type="url"
+          value="${escapeAdminHtml(
+            s.facebook_url || ''
+          )}"
+          placeholder="https://facebook.com/..."
+          style="${fieldStyle()}"
+        >
+
+
+        <label>
+          Instagram
+        </label>
+
+        <input
+          id="setting-instagram"
+          type="url"
+          value="${escapeAdminHtml(
+            s.instagram_url || ''
+          )}"
+          placeholder="https://instagram.com/..."
+          style="${fieldStyle()}"
+        >
+
+
+        <label>
+          YouTube
+        </label>
+
+        <input
+          id="setting-youtube"
+          type="url"
+          value="${escapeAdminHtml(
+            s.youtube_url || ''
+          )}"
+          placeholder="https://youtube.com/..."
+          style="${fieldStyle()}"
+        >
+
+      </div>
+
+    </div>
+
+
+    <!-- ================================================
+         4. OTHER SETTINGS
+         ================================================ -->
+
+    ${settingsAccordionHeader(
+      'Бусад тохиргоо',
+      'settingsOtherBody'
+    )}
+
+
+    <div
+      id="settingsOtherBody"
+      style="
+        display:none;
+        margin-bottom:18px;
+      "
+    >
+
+      <div
+        style="${editorCardStyle()}"
+      >
+
+        <label>
+          MRI төхөөрөмж
+        </label>
+
+        <input
+          id="setting-machine"
+          type="text"
+          value="${escapeAdminHtml(
+            s.machine_info || ''
+          )}"
+          placeholder="ANKE SuperMark 1.5T MRI"
+          style="${fieldStyle()}"
+        >
+
+
+        <label>
+          Цаг захиалгын Google Form URL
+        </label>
+
+        <input
+          id="setting-booking"
+          type="url"
+          value="${escapeAdminHtml(
+            s.booking_url || ''
+          )}"
+          placeholder="https://..."
+          style="${fieldStyle()}"
+        >
+
+      </div>
+
+    </div>
+
+
+    <!-- ================================================
+         SAVE ALL
+         ================================================ -->
+
+    <button
+      type="button"
+      onclick="
+        saveSettings(
+          ${s.id},
+          this
+        )
+      "
+      style="
+        margin-top:8px;
+        padding:12px 22px;
+        background:#17212b;
+        color:#ffffff;
+        border:0;
+        border-radius:8px;
+        cursor:pointer;
+        font-weight:700;
+        font-size:15px;
+      "
+    >
+      Бүгдийг хадгалах
+    </button>
 
   `;
 
@@ -5033,7 +5171,6 @@ async function loadSettingsEditor() {
   showLogoPreview();
 
 }
-
 
 // =====================================================
 // SAVE SETTINGS
