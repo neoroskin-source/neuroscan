@@ -59,15 +59,26 @@ function fieldStyle() {
 
   return `
     width:100%;
-    padding:12px;
+    padding:12px 14px;
     margin:8px 0 16px;
-    border:1px solid #d8dee6;
-    border-radius:8px;
+
+    border:1px solid #d9e2ec;
+    border-radius:12px;
+
+    background:#ffffff;
+
     font:inherit;
+    color:#17212b;
+
     box-sizing:border-box;
+
+    outline:none;
+
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
   `;
 }
-
 
 function stripHtml(html) {
 
