@@ -393,13 +393,13 @@ if (siteHeader) {
             'NEUROSCAN'
           )}"
           style="
-          display:block;
-          width:auto;
-          height:88px;
-          max-width:140px;
-          object-fit:contain;
-          flex-shrink:0;
-        "
+           display:block;
+           width:auto;
+           height:100px;
+           max-width:165px;
+           object-fit:contain;
+           flex-shrink:0;
+          "
         >
       `
       : ''
@@ -407,7 +407,7 @@ if (siteHeader) {
 
   <span
     style="
-      font-size:30px;
+      font-size:24px;
       line-height:1;
       font-weight:800;
       letter-spacing:-0.03em;
