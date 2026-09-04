@@ -2694,6 +2694,12 @@ async function(
 
         logo_url:
           logoImageUrl || null,
+        theme_preset:
+  document
+    .querySelector(
+      'input[name="themePreset"]:checked'
+    )
+    ?.value || 'blue',
 
         email:
           email || null,
