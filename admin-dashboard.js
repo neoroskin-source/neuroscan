@@ -1297,42 +1297,66 @@ async function(
 // ABOUT
 // =====================================================
 
-let aboutImageUrl =
-  '';
+let aboutImageUrl = '';
+
 let missionIconValue = '';
 let visionIconValue = '';
 let valuesIconValue = '';
-let aboutSettingsId =
-  null;
 
+let aboutSettingsId = null;
+
+
+// =====================================================
+// LOAD ABOUT EDITOR
+// =====================================================
 
 async function loadAboutEditor() {
 
   const content =
-    document.getElementById('aboutContent');
+    document.getElementById(
+      'aboutContent'
+    );
 
   const mission =
-    document.getElementById('aboutMissionContent');
+    document.getElementById(
+      'aboutMissionContent'
+    );
 
   const vision =
-    document.getElementById('aboutVisionContent');
+    document.getElementById(
+      'aboutVisionContent'
+    );
 
   const values =
-    document.getElementById('aboutValuesContent');
-
-  const preview =
-    document.getElementById('aboutImagePreview');
+    document.getElementById(
+      'aboutValuesContent'
+    );
 
   if (!content) return;
 
-  const { data, error } =
+
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from('settings')
       .select(
-        'id, about_content, about_image_url, mission_content, vision_content, values_content'
+        `
+          id,
+          about_content,
+          about_image_url,
+          mission_content,
+          vision_content,
+          values_content,
+          mission_icon,
+          vision_icon,
+          values_icon
+        `
       )
       .order('id')
       .limit(1);
+
 
   if (error) {
 
@@ -1341,10 +1365,19 @@ async function loadAboutEditor() {
       error
     );
 
+    alert(
+      'Бидний тухай мэдээлэл ачаалахад алдаа гарлаа: ' +
+      error.message
+    );
+
     return;
   }
 
-  if (!data || !data.length) {
+
+  if (
+    !data ||
+    !data.length
+  ) {
 
     console.error(
       'Settings row олдсонгүй'
@@ -1353,39 +1386,177 @@ async function loadAboutEditor() {
     return;
   }
 
-  const s = data[0];
 
-  aboutSettingsId = s.id;
+  const s =
+    data[0];
+
+
+  aboutSettingsId =
+    s.id;
+
+
+  // ---------------------------------
+  // ABOUT CONTENT
+  // ---------------------------------
 
   content.innerHTML =
     s.about_content || '';
 
+
+  // ---------------------------------
+  // MISSION
+  // ---------------------------------
+
   if (mission) {
+
     mission.innerHTML =
       s.mission_content || '';
+
   }
+
+
+  // ---------------------------------
+  // VISION
+  // ---------------------------------
 
   if (vision) {
+
     vision.innerHTML =
       s.vision_content || '';
+
   }
 
+
+  // ---------------------------------
+  // VALUES
+  // ---------------------------------
+
   if (values) {
+
     values.innerHTML =
       s.values_content || '';
+
   }
+
+
+  // ---------------------------------
+  // ABOUT IMAGE
+  // ---------------------------------
 
   aboutImageUrl =
     s.about_image_url || '';
+
 
   setImagePreview(
     'aboutImagePreview',
     aboutImageUrl
   );
+
+
+  // ---------------------------------
+  // ICON VALUES
+  // ---------------------------------
+
+  missionIconValue =
+    s.mission_icon || '';
+
+  visionIconValue =
+    s.vision_icon || '';
+
+  valuesIconValue =
+    s.values_icon || '';
+
+
+  // ---------------------------------
+  // ICON TEXT INPUTS
+  // ---------------------------------
+
+  const missionIconInput =
+    document.getElementById(
+      'missionIconText'
+    );
+
+  const visionIconInput =
+    document.getElementById(
+      'visionIconText'
+    );
+
+  const valuesIconInput =
+    document.getElementById(
+      'valuesIconText'
+    );
+
+
+  if (missionIconInput) {
+
+    missionIconInput.value =
+      isAboutIconImage(
+        missionIconValue
+      )
+        ? ''
+        : missionIconValue;
+
+  }
+
+
+  if (visionIconInput) {
+
+    visionIconInput.value =
+      isAboutIconImage(
+        visionIconValue
+      )
+        ? ''
+        : visionIconValue;
+
+  }
+
+
+  if (valuesIconInput) {
+
+    valuesIconInput.value =
+      isAboutIconImage(
+        valuesIconValue
+      )
+        ? ''
+        : valuesIconValue;
+
+  }
+
+
+  // ---------------------------------
+  // ICON PREVIEW
+  // ---------------------------------
+
+  showAboutIconPreview(
+    'missionIconPreview',
+    missionIconValue
+  );
+
+  showAboutIconPreview(
+    'visionIconPreview',
+    visionIconValue
+  );
+
+  showAboutIconPreview(
+    'valuesIconPreview',
+    valuesIconValue
+  );
+
+
+  // ---------------------------------
+  // UPLOAD SETUP
+  // ---------------------------------
+
+  setupAboutUploader();
+
+  setupAboutIconUploaders();
+
 }
-// -----------------------------------------------------
-// ABOUT EDITOR
-// -----------------------------------------------------
+
+
+// =====================================================
+// ABOUT RICH TEXT
+// =====================================================
 
 window.formatAboutText =
 function(
@@ -1447,169 +1618,164 @@ function() {
 };
 
 
-// -----------------------------------------------------
-// SAVE ABOUT
-// -----------------------------------------------------
+// =====================================================
+// ABOUT ICON HELPERS
+// =====================================================
 
-window.saveAboutSettings =
-async function() {
+function isAboutIconImage(
+  value
+) {
 
-  const content =
-    document
-      .getElementById('aboutContent')
-      ?.innerHTML
-      .trim()
-    || '';
-
-  const missionContent =
-    document
-      .getElementById('aboutMissionContent')
-      ?.innerHTML
-      .trim()
-    || '';
-
-  const visionContent =
-    document
-      .getElementById('aboutVisionContent')
-      ?.innerHTML
-      .trim()
-    || '';
-
-  const valuesContent =
-    document
-      .getElementById('aboutValuesContent')
-      ?.innerHTML
-      .trim()
-    || '';
-
-  if (!aboutSettingsId) {
-
-    const { data, error } =
-      await supabaseClient
-        .from('settings')
-        .select('id')
-        .order('id')
-        .limit(1);
-
-    if (
-      error ||
-      !data ||
-      !data.length
-    ) {
-
-      console.error(error);
-
-      alert(
-        'Тохиргооны мөр олдсонгүй.'
-      );
-
-      return;
-    }
-
-    aboutSettingsId =
-      data[0].id;
+  if (!value) {
+    return false;
   }
 
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from('settings')
-      .update({
 
-        about_content:
-          content,
-
-        about_image_url:
-          aboutImageUrl || null,
-
-        mission_content:
-          missionContent || null,
-
-        vision_content:
-          visionContent || null,
-
-        values_content:
-          valuesContent || null,
-
-        updated_at:
-          new Date().toISOString()
-
-      })
-      .eq(
-        'id',
-        aboutSettingsId
-      )
-      .select(
-        'id, about_content, mission_content, vision_content, values_content'
-      );
-
-  if (error) {
-
-    console.error(
-      'About save error:',
-      error
-    );
-
-    alert(
-      'Хадгалахад алдаа: ' +
-      error.message
-    );
-
-    return;
-  }
-
-  if (!data || !data.length) {
-
-    alert(
-      'Supabase дээр update хийгдсэнгүй.'
-    );
-
-    return;
-  }
-
-  alert(
-    'Бидний тухай мэдээлэл хадгалагдлаа.'
+  return (
+    value.startsWith(
+      'http://'
+    ) ||
+    value.startsWith(
+      'https://'
+    )
   );
 
-  await loadAboutEditor();
+}
 
-  refreshPreviewIfOpen();
-};
 
-// -----------------------------------------------------
-// ABOUT IMAGE UPLOAD
-// -----------------------------------------------------
+// =====================================================
+// SHOW ICON PREVIEW
+// =====================================================
 
-async function uploadAboutImage(
-  file
+function showAboutIconPreview(
+  containerId,
+  value
+) {
+
+  const container =
+    document.getElementById(
+      containerId
+    );
+
+
+  if (!container) return;
+
+
+  if (!value) {
+
+    container.innerHTML =
+      '';
+
+    return;
+  }
+
+
+  // ---------------------------------
+  // IMAGE
+  // ---------------------------------
+
+  if (
+    isAboutIconImage(
+      value
+    )
+  ) {
+
+    container.innerHTML = `
+
+      <div
+        style="
+          margin-top:12px;
+          display:flex;
+          align-items:center;
+          gap:12px;
+        "
+      >
+
+        <img
+          src="${escapeAdminHtml(
+            value
+          )}"
+          alt="Icon preview"
+          style="
+            width:64px;
+            height:64px;
+            object-fit:contain;
+            border-radius:12px;
+            border:1px solid #e4e9ef;
+            background:#fff;
+            padding:6px;
+            box-sizing:border-box;
+          "
+        >
+
+        <span
+          style="
+            font-size:13px;
+            color:#64748b;
+          "
+        >
+          Upload хийсэн зураг
+        </span>
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  // ---------------------------------
+  // EMOJI
+  // ---------------------------------
+
+  container.innerHTML = `
+
+    <div
+      style="
+        margin-top:12px;
+        font-size:42px;
+        line-height:1;
+      "
+    >
+      ${escapeAdminHtml(
+        value
+      )}
+    </div>
+
+  `;
+
+}
+
+
+// =====================================================
+// UPLOAD ABOUT ICON
+// =====================================================
+
+async function uploadAboutIcon(
+  file,
+  type
 ) {
 
   if (!file) return;
 
 
-  const allowed = [
-
+  const allowedTypes = [
     'image/jpeg',
-
     'image/png',
-
     'image/webp'
-
   ];
 
 
   if (
-    !allowed.includes(
+    !allowedTypes.includes(
       file.type
     )
   ) {
 
     alert(
-      'JPG, PNG эсвэл WEBP зураг оруулна уу.'
+      'JPG, PNG эсвэл WEBP зураг сонгоно уу.'
     );
-
 
     return;
   }
@@ -1624,12 +1790,750 @@ async function uploadAboutImage(
       'Зураг 5MB-аас бага байх ёстой.'
     );
 
+    return;
+  }
+
+
+  const extension =
+    file.name
+      .split('.')
+      .pop()
+      .toLowerCase();
+
+
+  const fileName =
+    `about-icons/${type}-${Date.now()}-${Math.random()
+      .toString(36)
+      .slice(2)}.${extension}`;
+
+
+  const {
+    error: uploadError
+  } =
+    await supabaseClient
+      .storage
+      .from(
+        'site-media'
+      )
+      .upload(
+        fileName,
+        file
+      );
+
+
+  if (uploadError) {
+
+    console.error(
+      uploadError
+    );
+
+    alert(
+      'Icon upload хийхэд алдаа: ' +
+      uploadError.message
+    );
 
     return;
   }
 
 
-  const ext =
+  const {
+    data
+  } =
+    supabaseClient
+      .storage
+      .from(
+        'site-media'
+      )
+      .getPublicUrl(
+        fileName
+      );
+
+
+  const publicUrl =
+    data.publicUrl;
+
+
+  // ---------------------------------
+  // MISSION
+  // ---------------------------------
+
+  if (
+    type === 'mission'
+  ) {
+
+    missionIconValue =
+      publicUrl;
+
+
+    const textInput =
+      document.getElementById(
+        'missionIconText'
+      );
+
+
+    if (textInput) {
+
+      textInput.value =
+        '';
+
+    }
+
+
+    showAboutIconPreview(
+      'missionIconPreview',
+      missionIconValue
+    );
+
+  }
+
+
+  // ---------------------------------
+  // VISION
+  // ---------------------------------
+
+  if (
+    type === 'vision'
+  ) {
+
+    visionIconValue =
+      publicUrl;
+
+
+    const textInput =
+      document.getElementById(
+        'visionIconText'
+      );
+
+
+    if (textInput) {
+
+      textInput.value =
+        '';
+
+    }
+
+
+    showAboutIconPreview(
+      'visionIconPreview',
+      visionIconValue
+    );
+
+  }
+
+
+  // ---------------------------------
+  // VALUES
+  // ---------------------------------
+
+  if (
+    type === 'values'
+  ) {
+
+    valuesIconValue =
+      publicUrl;
+
+
+    const textInput =
+      document.getElementById(
+        'valuesIconText'
+      );
+
+
+    if (textInput) {
+
+      textInput.value =
+        '';
+
+    }
+
+
+    showAboutIconPreview(
+      'valuesIconPreview',
+      valuesIconValue
+    );
+
+  }
+
+}
+
+
+// =====================================================
+// SETUP ABOUT ICON UPLOADERS
+// =====================================================
+
+function setupAboutIconUploaders() {
+
+  const configs = [
+
+    {
+      fileId:
+        'missionIconFile',
+
+      textId:
+        'missionIconText',
+
+      previewId:
+        'missionIconPreview',
+
+      type:
+        'mission'
+    },
+
+
+    {
+      fileId:
+        'visionIconFile',
+
+      textId:
+        'visionIconText',
+
+      previewId:
+        'visionIconPreview',
+
+      type:
+        'vision'
+    },
+
+
+    {
+      fileId:
+        'valuesIconFile',
+
+      textId:
+        'valuesIconText',
+
+      previewId:
+        'valuesIconPreview',
+
+      type:
+        'values'
+    }
+
+  ];
+
+
+  configs.forEach(
+    config => {
+
+      const fileInput =
+        document.getElementById(
+          config.fileId
+        );
+
+
+      const textInput =
+        document.getElementById(
+          config.textId
+        );
+
+
+      // -----------------------------
+      // IMAGE FILE
+      // -----------------------------
+
+      if (fileInput) {
+
+        fileInput.onchange =
+        async () => {
+
+          const file =
+            fileInput
+              .files?.[0];
+
+
+          if (!file) {
+            return;
+          }
+
+
+          await uploadAboutIcon(
+            file,
+            config.type
+          );
+
+        };
+
+      }
+
+
+      // -----------------------------
+      // EMOJI TEXT
+      // -----------------------------
+
+      if (textInput) {
+
+        textInput.oninput =
+        () => {
+
+          const value =
+            textInput
+              .value
+              .trim();
+
+
+          if (
+            config.type ===
+            'mission'
+          ) {
+
+            missionIconValue =
+              value;
+
+          }
+
+
+          if (
+            config.type ===
+            'vision'
+          ) {
+
+            visionIconValue =
+              value;
+
+          }
+
+
+          if (
+            config.type ===
+            'values'
+          ) {
+
+            valuesIconValue =
+              value;
+
+          }
+
+
+          showAboutIconPreview(
+            config.previewId,
+            value
+          );
+
+        };
+
+      }
+
+    }
+  );
+
+}
+
+
+// =====================================================
+// REMOVE ABOUT ICON
+// =====================================================
+
+window.removeAboutIcon =
+function(type) {
+
+  if (
+    type === 'mission'
+  ) {
+
+    missionIconValue =
+      '';
+
+
+    const input =
+      document.getElementById(
+        'missionIconText'
+      );
+
+
+    if (input) {
+
+      input.value =
+        '';
+
+    }
+
+
+    showAboutIconPreview(
+      'missionIconPreview',
+      ''
+    );
+
+  }
+
+
+  if (
+    type === 'vision'
+  ) {
+
+    visionIconValue =
+      '';
+
+
+    const input =
+      document.getElementById(
+        'visionIconText'
+      );
+
+
+    if (input) {
+
+      input.value =
+        '';
+
+    }
+
+
+    showAboutIconPreview(
+      'visionIconPreview',
+      ''
+    );
+
+  }
+
+
+  if (
+    type === 'values'
+  ) {
+
+    valuesIconValue =
+      '';
+
+
+    const input =
+      document.getElementById(
+        'valuesIconText'
+      );
+
+
+    if (input) {
+
+      input.value =
+        '';
+
+    }
+
+
+    showAboutIconPreview(
+      'valuesIconPreview',
+      ''
+    );
+
+  }
+
+};
+
+
+// =====================================================
+// SAVE ABOUT
+// =====================================================
+
+window.saveAboutSettings =
+async function() {
+
+  const content =
+    document
+      .getElementById(
+        'aboutContent'
+      )
+      ?.innerHTML
+      .trim()
+    || '';
+
+
+  const missionContent =
+    document
+      .getElementById(
+        'aboutMissionContent'
+      )
+      ?.innerHTML
+      .trim()
+    || '';
+
+
+  const visionContent =
+    document
+      .getElementById(
+        'aboutVisionContent'
+      )
+      ?.innerHTML
+      .trim()
+    || '';
+
+
+  const valuesContent =
+    document
+      .getElementById(
+        'aboutValuesContent'
+      )
+      ?.innerHTML
+      .trim()
+    || '';
+
+
+  const missionIconText =
+    document
+      .getElementById(
+        'missionIconText'
+      )
+      ?.value
+      .trim()
+    || '';
+
+
+  const visionIconText =
+    document
+      .getElementById(
+        'visionIconText'
+      )
+      ?.value
+      .trim()
+    || '';
+
+
+  const valuesIconText =
+    document
+      .getElementById(
+        'valuesIconText'
+      )
+      ?.value
+      .trim()
+    || '';
+
+
+  // Emoji бичсэн байвал emoji-г,
+  // зураг upload хийсэн бол URL-г хадгална.
+
+  const missionIcon =
+    missionIconText ||
+    missionIconValue ||
+    null;
+
+
+  const visionIcon =
+    visionIconText ||
+    visionIconValue ||
+    null;
+
+
+  const valuesIcon =
+    valuesIconText ||
+    valuesIconValue ||
+    null;
+
+
+  // ---------------------------------
+  // SETTINGS ID
+  // ---------------------------------
+
+  if (!aboutSettingsId) {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from('settings')
+        .select('id')
+        .order('id')
+        .limit(1);
+
+
+    if (
+      error ||
+      !data ||
+      !data.length
+    ) {
+
+      console.error(
+        error
+      );
+
+
+      alert(
+        'Settings мэдээлэл олдсонгүй.'
+      );
+
+
+      return;
+    }
+
+
+    aboutSettingsId =
+      data[0].id;
+
+  }
+
+
+  // ---------------------------------
+  // SAVE
+  // ---------------------------------
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from('settings')
+      .update({
+
+        about_content:
+          content ||
+          null,
+
+        about_image_url:
+          aboutImageUrl ||
+          null,
+
+        mission_content:
+          missionContent ||
+          null,
+
+        mission_icon:
+          missionIcon,
+
+        vision_content:
+          visionContent ||
+          null,
+
+        vision_icon:
+          visionIcon,
+
+        values_content:
+          valuesContent ||
+          null,
+
+        values_icon:
+          valuesIcon,
+
+        updated_at:
+          new Date()
+            .toISOString()
+
+      })
+      .eq(
+        'id',
+        aboutSettingsId
+      )
+      .select(
+        `
+          id,
+          about_content,
+          about_image_url,
+          mission_content,
+          mission_icon,
+          vision_content,
+          vision_icon,
+          values_content,
+          values_icon
+        `
+      );
+
+
+  if (error) {
+
+    console.error(
+      'About save error:',
+      error
+    );
+
+
+    alert(
+      'Хадгалахад алдаа: ' +
+      error.message
+    );
+
+
+    return;
+  }
+
+
+  if (
+    !data ||
+    !data.length
+  ) {
+
+    alert(
+      'Supabase дээр мэдээлэл шинэчлэгдсэнгүй.'
+    );
+
+
+    return;
+  }
+
+
+  // ---------------------------------
+  // LOCAL VALUES UPDATE
+  // ---------------------------------
+
+  missionIconValue =
+    data[0].mission_icon ||
+    '';
+
+
+  visionIconValue =
+    data[0].vision_icon ||
+    '';
+
+
+  valuesIconValue =
+    data[0].values_icon ||
+    '';
+
+
+  alert(
+    'Бидний тухай мэдээлэл хадгалагдлаа.'
+  );
+
+
+  await loadAboutEditor();
+
+
+  refreshPreviewIfOpen();
+
+};
+
+
+// =====================================================
+// ABOUT MAIN IMAGE UPLOAD
+// =====================================================
+
+async function uploadAboutImage(
+  file
+) {
+
+  if (!file) return;
+
+
+  const allowedTypes = [
+    'image/jpeg',
+    'image/png',
+    'image/webp'
+  ];
+
+
+  if (
+    !allowedTypes.includes(
+      file.type
+    )
+  ) {
+
+    alert(
+      'JPG, PNG эсвэл WEBP зураг оруулна уу.'
+    );
+
+    return;
+  }
+
+
+  if (
+    file.size >
+    5 * 1024 * 1024
+  ) {
+
+    alert(
+      'Зураг 5MB-аас бага байх ёстой.'
+    );
+
+    return;
+  }
+
+
+  const extension =
     file.name
       .split('.')
       .pop()
@@ -1639,26 +2543,33 @@ async function uploadAboutImage(
   const fileName =
     `about/${Date.now()}-${Math.random()
       .toString(36)
-      .slice(2)}.${ext}`;
+      .slice(2)}.${extension}`;
 
 
   const {
-    error
+    error: uploadError
   } =
     await supabaseClient
       .storage
-      .from('site-media')
+      .from(
+        'site-media'
+      )
       .upload(
         fileName,
         file
       );
 
 
-  if (error) {
+  if (uploadError) {
+
+    console.error(
+      uploadError
+    );
+
 
     alert(
       'Зураг upload хийхэд алдаа: ' +
-      error.message
+      uploadError.message
     );
 
 
@@ -1671,7 +2582,9 @@ async function uploadAboutImage(
   } =
     supabaseClient
       .storage
-      .from('site-media')
+      .from(
+        'site-media'
+      )
       .getPublicUrl(
         fileName
       );
@@ -1689,82 +2602,108 @@ async function uploadAboutImage(
 }
 
 
+// =====================================================
+// SETUP ABOUT MAIN IMAGE
+// =====================================================
+
 function setupAboutUploader() {
 
-  const box =
+  const uploadBox =
     document.getElementById(
       'aboutUploadBox'
     );
 
 
-  const input =
+  const fileInput =
     document.getElementById(
       'aboutImageFile'
     );
 
 
   if (
-    !box ||
-    !input
+    !uploadBox ||
+    !fileInput
   ) {
 
     return;
   }
 
 
-  box.onclick =
+  // ---------------------------------
+  // CLICK
+  // ---------------------------------
+
+  uploadBox.onclick =
   () => {
 
-    input.click();
+    fileInput.click();
 
   };
 
 
-  input.onchange =
-  () => {
+  // ---------------------------------
+  // FILE SELECT
+  // ---------------------------------
+
+  fileInput.onchange =
+  async () => {
 
     const file =
-      input.files?.[0];
+      fileInput
+        .files?.[0];
 
 
     if (file) {
 
-      uploadAboutImage(
+      await uploadAboutImage(
         file
       );
+
     }
 
   };
 
 
-  box.ondragover =
+  // ---------------------------------
+  // DRAG OVER
+  // ---------------------------------
+
+  uploadBox.ondragover =
   event => {
 
     event.preventDefault();
 
 
-    box.style.background =
+    uploadBox.style.background =
       '#f1f5f9';
 
   };
 
 
-  box.ondragleave =
+  // ---------------------------------
+  // DRAG LEAVE
+  // ---------------------------------
+
+  uploadBox.ondragleave =
   () => {
 
-    box.style.background =
+    uploadBox.style.background =
       '#fafcff';
 
   };
 
 
-  box.ondrop =
-  event => {
+  // ---------------------------------
+  // DROP
+  // ---------------------------------
+
+  uploadBox.ondrop =
+  async event => {
 
     event.preventDefault();
 
 
-    box.style.background =
+    uploadBox.style.background =
       '#fafcff';
 
 
@@ -1776,16 +2715,15 @@ function setupAboutUploader() {
 
     if (file) {
 
-      uploadAboutImage(
+      await uploadAboutImage(
         file
       );
+
     }
 
   };
 
 }
-
-
 // =====================================================
 // NEWS
 // =====================================================
