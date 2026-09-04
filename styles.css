@@ -343,3 +343,32 @@ header .nav {
   min-height: 86px !important;
   padding: 10px 28px !important;
 }
+/* =========================================
+   ADMIN THEME COLORS
+   ========================================= */
+
+:root {
+  --theme-primary: #2563b8;
+  --theme-dark: #1e3a5f;
+  --theme-soft: #eaf3fb;
+}
+
+.btn-primary,
+.appointment-button,
+.booking-button {
+  background: var(--theme-primary) !important;
+  border-color: var(--theme-primary) !important;
+}
+
+a:hover {
+  color: var(--theme-primary);
+}
+
+.section-label,
+.eyebrow {
+  color: var(--theme-primary) !important;
+}
+
+#publicTopLogo span {
+  color: var(--theme-primary) !important;
+}
