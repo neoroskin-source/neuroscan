@@ -98,23 +98,70 @@ window.openAdminSection = async function(section) {
   const sections = {
     services: 'servicesEditor',
     doctors: 'doctorsEditor',
+    about: 'aboutEditor',
     news: 'newsEditor',
     settings: 'settingsEditor'
   };
 
   Object.values(sections).forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
+
+    if (el) {
+      el.style.display = 'none';
+    }
   });
 
   [
     'servicesButton',
     'doctorsButton',
+    'aboutButton',
     'newsButton',
     'settingsButton'
   ].forEach(id => {
-    document.getElementById(id)?.classList.remove('active');
+    document
+      .getElementById(id)
+      ?.classList.remove('active');
   });
+
+  const cards = document.getElementById('dashboardCards');
+
+  if (cards) {
+    cards.style.display = 'none';
+  }
+
+  const targetId = sections[section];
+  const target = document.getElementById(targetId);
+
+  if (target) {
+    target.style.display = 'block';
+  }
+
+  document
+    .getElementById(section + 'Button')
+    ?.classList.add('active');
+
+  if (section === 'services') {
+    await loadServicesEditor();
+  }
+
+  if (section === 'doctors') {
+    await loadDoctorsEditor();
+  }
+
+  if (section === 'about') {
+    if (typeof loadAboutEditor === 'function') {
+      await loadAboutEditor();
+    }
+  }
+
+  if (section === 'news') {
+    await loadNewsEditor();
+  }
+
+  if (section === 'settings') {
+    await loadSettingsEditor();
+  }
+};
 
   const cards = document.getElementById('dashboardCards');
   if (cards) cards.style.display = 'none';
