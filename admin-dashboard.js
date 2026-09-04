@@ -1311,12 +1311,20 @@ async function loadAboutEditor() {
       'aboutContent'
     );
 
+  const mission =
+    document.getElementById(
+      'aboutMissionContent'
+    );
+
+  const values =
+    document.getElementById(
+      'aboutValuesContent'
+    );
 
   const preview =
     document.getElementById(
       'aboutImagePreview'
     );
-
 
   if (!content) return;
 
@@ -1328,7 +1336,7 @@ async function loadAboutEditor() {
     await supabaseClient
       .from('settings')
       .select(
-        'id, about_content, about_image_url'
+        'id, about_content, about_image_url, mission_content, values_content'
       )
       .order('id')
       .limit(1);
@@ -1340,46 +1348,54 @@ async function loadAboutEditor() {
     !data.length
   ) {
 
-    content.innerHTML =
-      '';
+    console.error(
+      'About load error:',
+      error
+    );
 
+    content.innerHTML = '';
 
-    if (preview) {
-
-      preview.innerHTML =
-        '';
+    if (mission) {
+      mission.innerHTML = '';
     }
 
+    if (values) {
+      values.innerHTML = '';
+    }
+
+    if (preview) {
+      preview.innerHTML = '';
+    }
 
     return;
   }
 
 
-  const s =
-    data[0];
+  const s = data[0];
 
-
-  aboutSettingsId =
-    s.id;
-
+  aboutSettingsId = s.id;
 
   content.innerHTML =
-    s.about_content ||
-    '';
+    s.about_content || '';
 
+  if (mission) {
+    mission.innerHTML =
+      s.mission_content || '';
+  }
+
+  if (values) {
+    values.innerHTML =
+      s.values_content || '';
+  }
 
   aboutImageUrl =
-    s.about_image_url ||
-    '';
-
+    s.about_image_url || '';
 
   setImagePreview(
     'aboutImagePreview',
     aboutImageUrl
   );
-
 }
-
 
 // -----------------------------------------------------
 // ABOUT EDITOR
@@ -1461,6 +1477,24 @@ async function() {
       .trim()
     || '';
 
+  const missionContent =
+    document
+      .getElementById(
+        'aboutMissionContent'
+      )
+      ?.innerHTML
+      .trim()
+    || '';
+
+  const valuesContent =
+    document
+      .getElementById(
+        'aboutValuesContent'
+      )
+      ?.innerHTML
+      .trim()
+    || '';
+
 
   if (!aboutSettingsId) {
 
@@ -1481,21 +1515,27 @@ async function() {
       !data.length
     ) {
 
+      console.error(
+        'Settings row error:',
+        error
+      );
+
       alert(
         'Тохиргооны мөр олдсонгүй.'
       );
 
-
       return;
     }
-
 
     aboutSettingsId =
       data[0].id;
   }
 
 
-  const { error } =
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from('settings')
       .update({
@@ -1503,11 +1543,14 @@ async function() {
         about_content:
           content,
 
-
         about_image_url:
-          aboutImageUrl ||
-          null,
+          aboutImageUrl || null,
 
+        mission_content:
+          missionContent,
+
+        values_content:
+          valuesContent,
 
         updated_at:
           new Date()
@@ -1517,16 +1560,36 @@ async function() {
       .eq(
         'id',
         aboutSettingsId
+      )
+      .select(
+        'id, about_content, mission_content, values_content'
       );
 
 
   if (error) {
+
+    console.error(
+      'About save error:',
+      error
+    );
 
     alert(
       'Хадгалахад алдаа: ' +
       error.message
     );
 
+    return;
+  }
+
+
+  if (
+    !data ||
+    !data.length
+  ) {
+
+    alert(
+      'Өгөгдөл хадгалагдсангүй. Supabase RLS update policy-г шалгана уу.'
+    );
 
     return;
   }
@@ -1537,10 +1600,10 @@ async function() {
   );
 
 
+  await loadAboutEditor();
+
   refreshPreviewIfOpen();
-
 };
-
 
 // -----------------------------------------------------
 // ABOUT IMAGE UPLOAD
