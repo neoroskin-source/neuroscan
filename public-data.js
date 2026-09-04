@@ -283,24 +283,28 @@
       const s =
         settingsRows[0];
 // ===================================
-// PUBLIC LOGO + SITE NAME
+// TOP HEADER: LOGO + SOCIAL ICONS
 // ===================================
 
-const header =
+const siteHeader =
   document.querySelector(
     '.site-header, header'
   );
 
-if (header) {
+if (siteHeader) {
 
-  const possibleLogoElements = [
-    ...header.querySelectorAll(
+  // -------------------------------
+  // OLD LOGO / BRAND IN NAV
+  // -------------------------------
+
+  const possibleOldLogoElements = [
+    ...siteHeader.querySelectorAll(
       'a, .logo, .brand, .site-logo, .navbar-brand'
     )
   ];
 
-  const logoElement =
-    possibleLogoElements.find(el => {
+  const oldLogoElement =
+    possibleOldLogoElements.find(el => {
 
       const text =
         el.textContent
@@ -313,78 +317,136 @@ if (header) {
       );
     });
 
-  if (logoElement) {
-
-    if (s.logo_url) {
-
-      logoElement.innerHTML = `
-        <img
-          src="${esc(s.logo_url)}"
-          alt="${esc(
-            s.site_name ||
-            'NEUROSCAN MRI'
-          )}"
-          style="
-            display:block;
-            width:auto;
-            height:auto;
-            max-height:58px;
-            max-width:230px;
-            object-fit:contain;
-          "
-        >
-      `;
-
-    } else if (s.site_name) {
-
-      logoElement.textContent =
-        s.site_name;
-    }
+  // Доод navigation мөрөнд байсан хуучин logo-г нуух
+  if (oldLogoElement) {
+    oldLogoElement.style.display =
+      'none';
   }
-}
 
 
-// Browser tab title
-if (s.site_name) {
-  document.title =
-    s.site_name;
-}
-// ===================================
-// HEADER SOCIAL ICONS
-// ===================================
+  // -------------------------------
+  // TOP BAR
+  // -------------------------------
 
-const siteHeader =
-  document.querySelector('.site-header');
+  let topBar =
+    document.getElementById(
+      'neuroscanTopBar'
+    );
 
-if (siteHeader) {
-  let socialTop =
-    document.getElementById('headerSocialLinks');
+  if (!topBar) {
 
-  if (!socialTop) {
-    socialTop =
+    topBar =
       document.createElement('div');
 
-    socialTop.id =
-      'headerSocialLinks';
+    topBar.id =
+      'neuroscanTopBar';
 
-    socialTop.style.cssText = `
+    topBar.style.cssText = `
       width:100%;
-      display:flex;
-      justify-content:flex-end;
-      align-items:center;
-      gap:18px;
-      padding:12px 38px 0;
       box-sizing:border-box;
+      border-bottom:1px solid #e5e7eb;
+      background:#ffffff;
     `;
 
-    siteHeader.prepend(socialTop);
+    siteHeader.prepend(topBar);
   }
+
+
+  // -------------------------------
+  // INNER CONTAINER
+  // -------------------------------
+
+  topBar.innerHTML = `
+    <div
+      style="
+        width:100%;
+        max-width:1440px;
+        margin:0 auto;
+        min-height:82px;
+        padding:14px 40px;
+        box-sizing:border-box;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:24px;
+      "
+    >
+
+      <a
+        href="index.html"
+        id="publicTopLogo"
+        style="
+          display:flex;
+          align-items:center;
+          text-decoration:none;
+        "
+      >
+        ${
+          s.logo_url
+            ? `
+              <img
+                src="${esc(s.logo_url)}"
+                alt="${esc(
+                  s.site_name ||
+                  'NEUROSCAN MRI'
+                )}"
+                style="
+                  display:block;
+                  width:auto;
+                  height:auto;
+                  max-width:210px;
+                  max-height:60px;
+                  object-fit:contain;
+                "
+              >
+            `
+            : `
+              <span
+                style="
+                  font-size:24px;
+                  font-weight:800;
+                  color:#2563b8;
+                "
+              >
+                ${esc(
+                  s.site_name ||
+                  'NEUROSCAN MRI'
+                )}
+              </span>
+            `
+        }
+      </a>
+
+
+      <div
+        id="headerSocialLinks"
+        style="
+          display:flex;
+          align-items:center;
+          justify-content:flex-end;
+          gap:18px;
+        "
+      ></div>
+
+    </div>
+  `;
+
+
+  // -------------------------------
+  // SOCIAL LINKS
+  // -------------------------------
+
+  const socialTop =
+    document.getElementById(
+      'headerSocialLinks'
+    );
 
   const links = [];
 
 
   // Facebook
   if (s.facebook_url) {
+
     links.push(`
       <a
         href="${esc(s.facebook_url)}"
@@ -393,19 +455,19 @@ if (siteHeader) {
         aria-label="Facebook"
         title="Facebook"
         style="
-          width:34px;
-          height:34px;
           display:flex;
           align-items:center;
           justify-content:center;
+          width:32px;
+          height:32px;
           color:#111827;
           text-decoration:none;
         "
       >
         <svg
           viewBox="0 0 24 24"
-          width="28"
-          height="28"
+          width="27"
+          height="27"
           fill="currentColor"
           aria-hidden="true"
         >
@@ -420,6 +482,7 @@ if (siteHeader) {
 
   // Instagram
   if (s.instagram_url) {
+
     links.push(`
       <a
         href="${esc(s.instagram_url)}"
@@ -428,19 +491,19 @@ if (siteHeader) {
         aria-label="Instagram"
         title="Instagram"
         style="
-          width:34px;
-          height:34px;
           display:flex;
           align-items:center;
           justify-content:center;
+          width:32px;
+          height:32px;
           color:#111827;
           text-decoration:none;
         "
       >
         <svg
           viewBox="0 0 24 24"
-          width="30"
-          height="30"
+          width="28"
+          height="28"
           fill="none"
           stroke="currentColor"
           stroke-width="2"
@@ -475,6 +538,7 @@ if (siteHeader) {
 
   // YouTube
   if (s.youtube_url) {
+
     links.push(`
       <a
         href="${esc(s.youtube_url)}"
@@ -483,25 +547,26 @@ if (siteHeader) {
         aria-label="YouTube"
         title="YouTube"
         style="
-          width:36px;
-          height:34px;
           display:flex;
           align-items:center;
           justify-content:center;
+          width:34px;
+          height:32px;
           color:#111827;
           text-decoration:none;
         "
       >
         <svg
           viewBox="0 0 24 24"
-          width="31"
-          height="31"
+          width="29"
+          height="29"
           fill="currentColor"
           aria-hidden="true"
         >
           <path
             d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.071 0 12 0 12s0 3.929.502 5.814a3.017 3.017 0 0 0 2.121 2.136c1.872.505 9.377.505 9.377.505s7.505 0 9.376-.505a3.016 3.016 0 0 0 2.122-2.136C24 15.929 24 12 24 12s0-3.929-.502-5.814z"
           />
+
           <path
             d="M9.75 15.568V8.432L15.818 12 9.75 15.568z"
             fill="white"
@@ -511,11 +576,19 @@ if (siteHeader) {
     `);
   }
 
-  socialTop.innerHTML =
-    links.join('');
+
+  if (socialTop) {
+    socialTop.innerHTML =
+      links.join('');
+  }
 }
 
 
+// Browser tab title
+if (s.site_name) {
+  document.title =
+    s.site_name;
+}
 // ===================================
 // REMOVE OLD BOOKING FOOTER TEXT
 // ===================================
