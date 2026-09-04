@@ -1307,72 +1307,49 @@ let aboutSettingsId =
 async function loadAboutEditor() {
 
   const content =
-    document.getElementById(
-      'aboutContent'
-    );
+    document.getElementById('aboutContent');
 
   const mission =
-    document.getElementById(
-      'aboutMissionContent'
-    );
-const vision =
-  document.getElementById(
-    'aboutVisionContent'
-  );
+    document.getElementById('aboutMissionContent');
+
+  const vision =
+    document.getElementById('aboutVisionContent');
+
   const values =
-    document.getElementById(
-      'aboutValuesContent'
-    );
+    document.getElementById('aboutValuesContent');
 
   const preview =
-    document.getElementById(
-      'aboutImagePreview'
-    );
+    document.getElementById('aboutImagePreview');
 
   if (!content) return;
 
-
-  const {
-    data,
-    error
-  } =
+  const { data, error } =
     await supabaseClient
       .from('settings')
       .select(
-        'id, about_content, about_image_url, mission_content, values_content'
+        'id, about_content, about_image_url, mission_content, vision_content, values_content'
       )
       .order('id')
       .limit(1);
 
-
-  if (
-    error ||
-    !data ||
-    !data.length
-  ) {
+  if (error) {
 
     console.error(
       'About load error:',
       error
     );
 
-    content.innerHTML = '';
-
-    if (mission) {
-      mission.innerHTML = '';
-    }
-
-    if (values) {
-      values.innerHTML = '';
-    }
-
-    if (preview) {
-      preview.innerHTML = '';
-    }
-
     return;
   }
 
+  if (!data || !data.length) {
+
+    console.error(
+      'Settings row олдсонгүй'
+    );
+
+    return;
+  }
 
   const s = data[0];
 
@@ -1385,10 +1362,12 @@ const vision =
     mission.innerHTML =
       s.mission_content || '';
   }
-if (vision) {
-  vision.innerHTML =
-    s.vision_content || '';
-}
+
+  if (vision) {
+    vision.innerHTML =
+      s.vision_content || '';
+  }
+
   if (values) {
     values.innerHTML =
       s.values_content || '';
@@ -1402,7 +1381,6 @@ if (vision) {
     aboutImageUrl
   );
 }
-
 // -----------------------------------------------------
 // ABOUT EDITOR
 // -----------------------------------------------------
@@ -1476,51 +1454,40 @@ async function() {
 
   const content =
     document
-      .getElementById(
-        'aboutContent'
-      )
+      .getElementById('aboutContent')
       ?.innerHTML
       .trim()
     || '';
 
   const missionContent =
     document
-      .getElementById(
-        'aboutMissionContent'
-      )
-      ?.innerHTML
-      .trim()
-    || '';
-const visionContent =
-  document
-    .getElementById(
-      'aboutVisionContent'
-    )
-    ?.innerHTML
-    .trim()
-  || '';
-  const valuesContent =
-    document
-      .getElementById(
-        'aboutValuesContent'
-      )
+      .getElementById('aboutMissionContent')
       ?.innerHTML
       .trim()
     || '';
 
+  const visionContent =
+    document
+      .getElementById('aboutVisionContent')
+      ?.innerHTML
+      .trim()
+    || '';
+
+  const valuesContent =
+    document
+      .getElementById('aboutValuesContent')
+      ?.innerHTML
+      .trim()
+    || '';
 
   if (!aboutSettingsId) {
 
-    const {
-      data,
-      error
-    } =
+    const { data, error } =
       await supabaseClient
         .from('settings')
         .select('id')
         .order('id')
         .limit(1);
-
 
     if (
       error ||
@@ -1528,10 +1495,7 @@ const visionContent =
       !data.length
     ) {
 
-      console.error(
-        'Settings row error:',
-        error
-      );
+      console.error(error);
 
       alert(
         'Тохиргооны мөр олдсонгүй.'
@@ -1543,7 +1507,6 @@ const visionContent =
     aboutSettingsId =
       data[0].id;
   }
-
 
   const {
     data,
@@ -1560,16 +1523,16 @@ const visionContent =
           aboutImageUrl || null,
 
         mission_content:
-          missionContent,
+          missionContent || null,
+
         vision_content:
-  visionContent || null,
+          visionContent || null,
 
         values_content:
-          valuesContent,
+          valuesContent || null,
 
         updated_at:
-          new Date()
-            .toISOString()
+          new Date().toISOString()
 
       })
       .eq(
@@ -1577,9 +1540,8 @@ const visionContent =
         aboutSettingsId
       )
       .select(
-  'id, about_content, about_image_url, mission_content, vision_content, values_content'
-)
-
+        'id, about_content, mission_content, vision_content, values_content'
+      );
 
   if (error) {
 
@@ -1596,24 +1558,18 @@ const visionContent =
     return;
   }
 
-
-  if (
-    !data ||
-    !data.length
-  ) {
+  if (!data || !data.length) {
 
     alert(
-      'Өгөгдөл хадгалагдсангүй. Supabase RLS update policy-г шалгана уу.'
+      'Supabase дээр update хийгдсэнгүй.'
     );
 
     return;
   }
 
-
   alert(
     'Бидний тухай мэдээлэл хадгалагдлаа.'
   );
-
 
   await loadAboutEditor();
 
