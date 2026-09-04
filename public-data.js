@@ -283,21 +283,17 @@
       const s =
         settingsRows[0];
 // ===================================
-// HEADER SOCIAL LINKS
+// HEADER SOCIAL ICONS
 // ===================================
 
 const siteHeader =
   document.querySelector('.site-header');
 
 if (siteHeader) {
-
   let socialTop =
-    document.getElementById(
-      'headerSocialLinks'
-    );
+    document.getElementById('headerSocialLinks');
 
   if (!socialTop) {
-
     socialTop =
       document.createElement('div');
 
@@ -309,10 +305,8 @@ if (siteHeader) {
       display:flex;
       justify-content:flex-end;
       align-items:center;
-      gap:14px;
-      padding:10px 40px 0;
-      font-size:13px;
-      font-weight:600;
+      gap:18px;
+      padding:12px 38px 0;
       box-sizing:border-box;
     `;
 
@@ -321,66 +315,131 @@ if (siteHeader) {
 
   const links = [];
 
+
+  // Facebook
   if (s.facebook_url) {
     links.push(`
       <a
         href="${esc(s.facebook_url)}"
         target="_blank"
         rel="noopener noreferrer"
+        aria-label="Facebook"
+        title="Facebook"
         style="
-          color:#667085;
+          width:34px;
+          height:34px;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          color:#111827;
           text-decoration:none;
         "
       >
-        Facebook
+        <svg
+          viewBox="0 0 24 24"
+          width="28"
+          height="28"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.413c0-3.025 1.792-4.697 4.533-4.697 1.313 0 2.686.236 2.686.236v2.974h-1.513c-1.49 0-1.956.931-1.956 1.887v2.26h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"
+          />
+        </svg>
       </a>
     `);
   }
 
+
+  // Instagram
   if (s.instagram_url) {
     links.push(`
       <a
         href="${esc(s.instagram_url)}"
         target="_blank"
         rel="noopener noreferrer"
+        aria-label="Instagram"
+        title="Instagram"
         style="
-          color:#667085;
+          width:34px;
+          height:34px;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          color:#111827;
           text-decoration:none;
         "
       >
-        Instagram
+        <svg
+          viewBox="0 0 24 24"
+          width="30"
+          height="30"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          aria-hidden="true"
+        >
+          <rect
+            x="3"
+            y="3"
+            width="18"
+            height="18"
+            rx="5"
+          />
+
+          <circle
+            cx="12"
+            cy="12"
+            r="4"
+          />
+
+          <circle
+            cx="17.5"
+            cy="6.5"
+            r="1"
+            fill="currentColor"
+            stroke="none"
+          />
+        </svg>
       </a>
     `);
   }
 
+
+  // YouTube
   if (s.youtube_url) {
     links.push(`
       <a
         href="${esc(s.youtube_url)}"
         target="_blank"
         rel="noopener noreferrer"
+        aria-label="YouTube"
+        title="YouTube"
         style="
-          color:#667085;
+          width:36px;
+          height:34px;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          color:#111827;
           text-decoration:none;
         "
       >
-        YouTube
-      </a>
-    `);
-  }
-
-  if (s.chat_url) {
-    links.push(`
-      <a
-        href="${esc(s.chat_url)}"
-        target="_blank"
-        rel="noopener noreferrer"
-        style="
-          color:#667085;
-          text-decoration:none;
-        "
-      >
-        Chat
+        <svg
+          viewBox="0 0 24 24"
+          width="31"
+          height="31"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.071 0 12 0 12s0 3.929.502 5.814a3.017 3.017 0 0 0 2.121 2.136c1.872.505 9.377.505 9.377.505s7.505 0 9.376-.505a3.016 3.016 0 0 0 2.122-2.136C24 15.929 24 12 24 12s0-3.929-.502-5.814z"
+          />
+          <path
+            d="M9.75 15.568V8.432L15.818 12 9.75 15.568z"
+            fill="white"
+          />
+        </svg>
       </a>
     `);
   }
@@ -388,6 +447,23 @@ if (siteHeader) {
   socialTop.innerHTML =
     links.join('');
 }
+
+
+// ===================================
+// REMOVE OLD BOOKING FOOTER TEXT
+// ===================================
+
+document
+  .querySelectorAll('.copyright span')
+  .forEach(span => {
+    if (
+      span.textContent.includes(
+        'Цаг захиалгын Google Form'
+      )
+    ) {
+      span.remove();
+    }
+  });
 
 
 // ===================================
