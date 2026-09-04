@@ -1884,10 +1884,10 @@ async function loadSettingsEditor() {
   container.innerHTML = `
 
     <div
-      style="${editorCardStyle()}"
-    >
+  style="${editorCardStyle()}"
+>
 
-      <h3
+<h3>
         style="
           margin-top:0;
           margin-bottom:22px;
