@@ -1757,18 +1757,38 @@ async function loadSettingsEditor() {
 )}</textarea>
 
 <label>
-  Logo URL
+  Logo
 </label>
 
-<input
-  id="setting-logo-url"
-  type="url"
-  value="${escapeAdminHtml(
-    s.logo_url
-  )}"
-  placeholder="https://..."
-  style="${fieldStyle()}"
+<div
+  id="logoUploadBox"
+  style="
+    width:100%;
+    min-height:140px;
+    border:2px dashed #cbd5e1;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    cursor:pointer;
+    background:#fafcff;
+    color:#94a3b8;
+    padding:28px;
+    margin-bottom:12px;
+  "
 >
+  Logo зургаа энд дарж эсвэл зөөж оруулна уу
+</div>
+
+<input
+  id="logoImageFile"
+  type="file"
+  accept="image/jpeg,image/png,image/webp"
+  style="display:none;"
+>
+
+<div id="logoImagePreview"></div>
 
 <hr
   style="
