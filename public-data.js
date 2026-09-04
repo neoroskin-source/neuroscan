@@ -289,31 +289,77 @@
                   `
                   : 'MRI';
 
-              const details =
-                item.content
-                  ? `
-                    <details
-                      style="margin-top:14px;"
-                    >
-                      <summary
-                        class="text-link"
-                        style="cursor:pointer;"
-                      >
-                        Дэлгэрэнгүй →
-                      </summary>
+              const youtubeEmbed = (() => {
+  if (!item.youtube_url) return '';
 
-                      <p
-                        style="
-                          margin-top:12px;
-                          white-space:pre-line;
-                        "
-                      >
-                        ${esc(item.content)}
-                      </p>
-                    </details>
-                  `
-                  : '';
+  try {
+    const url = new URL(item.youtube_url);
+    let videoId = '';
 
+    if (url.hostname.includes('youtu.be')) {
+      videoId = url.pathname.replace('/', '');
+    } else if (url.hostname.includes('youtube.com')) {
+      videoId = url.searchParams.get('v') || '';
+
+      if (!videoId && url.pathname.includes('/embed/')) {
+        videoId = url.pathname.split('/embed/')[1];
+      }
+
+      if (!videoId && url.pathname.includes('/shorts/')) {
+        videoId = url.pathname.split('/shorts/')[1];
+      }
+    }
+
+    if (!videoId) return '';
+
+    return `
+      <div style="
+        position:relative;
+        width:100%;
+        padding-top:56.25%;
+        margin-top:18px;
+        border-radius:14px;
+        overflow:hidden;
+      ">
+        <iframe
+          src="https://www.youtube.com/embed/${videoId}"
+          title="YouTube video"
+          allowfullscreen
+          style="
+            position:absolute;
+            inset:0;
+            width:100%;
+            height:100%;
+            border:0;
+          "
+        ></iframe>
+      </div>
+    `;
+  } catch {
+    return '';
+  }
+})();
+
+const details = item.content || youtubeEmbed
+  ? `
+    <details style="margin-top:14px;">
+      <summary class="text-link" style="cursor:pointer;">
+        Дэлгэрэнгүй →
+      </summary>
+
+      <div
+        class="news-full-content"
+        style="
+          margin-top:14px;
+          line-height:1.75;
+        "
+      >
+        ${item.content || ''}
+        ${youtubeEmbed}
+      </div>
+    </details>
+  `
+  : '';
               return `
                 <article class="news-card">
 
