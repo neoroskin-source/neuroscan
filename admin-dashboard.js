@@ -412,8 +412,6 @@ async function(serviceId, button) {
       'Хадгалах';
   }, 1500);
 };
-
-
 // =====================================================
 // DOCTORS
 // =====================================================
@@ -955,8 +953,6 @@ function setupAboutUploader() {
     }
   );
 }
-
-
 // =====================================================
 // NEWS
 // =====================================================
@@ -1700,7 +1696,10 @@ async function uploadLogoImage(file) {
   }
 
   const ext =
-    file.name.split('.').pop().toLowerCase();
+    file.name
+      .split('.')
+      .pop()
+      .toLowerCase();
 
   const fileName =
     `logo/${Date.now()}-${Math.random()
@@ -1711,13 +1710,17 @@ async function uploadLogoImage(file) {
     await supabaseClient
       .storage
       .from('site-media')
-      .upload(fileName, file);
+      .upload(
+        fileName,
+        file
+      );
 
   if (error) {
     alert(
       'Logo upload хийхэд алдаа: ' +
       error.message
     );
+
     return;
   }
 
@@ -1725,15 +1728,19 @@ async function uploadLogoImage(file) {
     supabaseClient
       .storage
       .from('site-media')
-      .getPublicUrl(fileName);
+      .getPublicUrl(
+        fileName
+      );
 
-  logoImageUrl = data.publicUrl;
+  logoImageUrl =
+    data.publicUrl;
 
   showLogoPreview();
 }
 
 
 function showLogoPreview() {
+
   const preview =
     document.getElementById(
       'logoImagePreview'
@@ -1758,7 +1765,9 @@ function showLogoPreview() {
       "
     >
       <img
-        src="${escapeAdminHtml(logoImageUrl)}"
+        src="${escapeAdminHtml(
+          logoImageUrl
+        )}"
         alt="Logo preview"
         style="
           max-width:220px;
@@ -1773,6 +1782,7 @@ function showLogoPreview() {
 
 
 function setupLogoUploader() {
+
   const box =
     document.getElementById(
       'logoUploadBox'
@@ -1790,6 +1800,7 @@ function setupLogoUploader() {
   };
 
   input.onchange = () => {
+
     const file =
       input.files?.[0];
 
@@ -1799,6 +1810,7 @@ function setupLogoUploader() {
   };
 
   box.ondragover = event => {
+
     event.preventDefault();
 
     box.style.background =
@@ -1806,24 +1818,29 @@ function setupLogoUploader() {
   };
 
   box.ondragleave = () => {
+
     box.style.background =
       '#fafcff';
   };
 
   box.ondrop = event => {
+
     event.preventDefault();
 
     box.style.background =
       '#fafcff';
 
     const file =
-      event.dataTransfer.files?.[0];
+      event.dataTransfer
+        .files?.[0];
 
     if (file) {
       uploadLogoImage(file);
     }
   };
 }
+
+
 // =====================================================
 // SETTINGS
 // =====================================================
@@ -1860,97 +1877,104 @@ async function loadSettingsEditor() {
   }
 
   const s = data[0];
-  logoImageUrl = s.logo_url || '';
+
+  logoImageUrl =
+    s.logo_url || '';
+
   container.innerHTML = `
 
     <div
       style="${editorCardStyle()}"
     >
-setupLogoUploader();
-showLogoPreview();
-      <!-- =========================
-           CONTACT
-           ========================= -->
-<h3
-  style="
-    margin-top:0;
-    margin-bottom:22px;
-  "
->
-  Сайтын үндсэн мэдээлэл
-</h3>
 
-<label>
-  Сайтын нэр
-</label>
-
-<input
-  id="setting-site-name"
-  type="text"
-  value="${escapeAdminHtml(
-    s.site_name
-  )}"
-  placeholder="NEUROSCAN MRI"
-  style="${fieldStyle()}"
->
-
-<label>
-  Сайтын тайлбар
-</label>
-
-<textarea
-  id="setting-site-description"
-  rows="4"
-  placeholder="Сайтын товч тайлбар"
-  style="${fieldStyle()}"
->${escapeAdminHtml(
-  s.site_description
-)}</textarea>
-
-<label>
-  Logo
-</label>
-
-<div
-  id="logoUploadBox"
-  style="
-    width:100%;
-    min-height:140px;
-    border:2px dashed #cbd5e1;
-    border-radius:14px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    cursor:pointer;
-    background:#fafcff;
-    color:#94a3b8;
-    padding:28px;
-    margin-bottom:12px;
-  "
->
-  Logo зургаа энд дарж эсвэл зөөж оруулна уу
-</div>
-
-<input
-  id="logoImageFile"
-  type="file"
-  accept="image/jpeg,image/png,image/webp"
-  style="display:none;"
->
-
-<div id="logoImagePreview"></div>
-
-<hr
-  style="
-    border:0;
-    border-top:1px solid #e4e9ef;
-    margin:32px 0;
-  "
->
       <h3
         style="
           margin-top:0;
+          margin-bottom:22px;
+        "
+      >
+        Сайтын үндсэн мэдээлэл
+      </h3>
+
+
+      <label>
+        Сайтын нэр
+      </label>
+
+      <input
+        id="setting-site-name"
+        type="text"
+        value="${escapeAdminHtml(
+          s.site_name
+        )}"
+        placeholder="NEUROSCAN MRI"
+        style="${fieldStyle()}"
+      >
+
+
+      <label>
+        Сайтын тайлбар
+      </label>
+
+      <textarea
+        id="setting-site-description"
+        rows="4"
+        placeholder="Сайтын товч тайлбар"
+        style="${fieldStyle()}"
+      >${escapeAdminHtml(
+        s.site_description
+      )}</textarea>
+
+
+      <label>
+        Logo
+      </label>
+
+      <div
+        id="logoUploadBox"
+        style="
+          width:100%;
+          min-height:140px;
+          border:2px dashed #cbd5e1;
+          border-radius:14px;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          text-align:center;
+          cursor:pointer;
+          background:#fafcff;
+          color:#94a3b8;
+          padding:28px;
+          margin-bottom:12px;
+          box-sizing:border-box;
+        "
+      >
+        Logo зургаа энд дарж эсвэл зөөж оруулна уу
+      </div>
+
+      <input
+        id="logoImageFile"
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        style="display:none;"
+      >
+
+      <div
+        id="logoImagePreview"
+      ></div>
+
+
+      <hr
+        style="
+          border:0;
+          border-top:1px solid #e4e9ef;
+          margin:32px 0;
+        "
+      >
+
+
+      <h3
+        style="
           margin-bottom:22px;
         "
       >
@@ -2062,10 +2086,6 @@ showLogoPreview();
       >
 
 
-      <!-- =========================
-           SOCIAL
-           ========================= -->
-
       <hr
         style="
           border:0;
@@ -2073,6 +2093,7 @@ showLogoPreview();
           margin:32px 0;
         "
       >
+
 
       <h3
         style="
@@ -2128,10 +2149,6 @@ showLogoPreview();
       >
 
 
-      <!-- =========================
-           OTHER
-           ========================= -->
-
       <hr
         style="
           border:0;
@@ -2139,6 +2156,7 @@ showLogoPreview();
           margin:32px 0;
         "
       >
+
 
       <h3
         style="
@@ -2198,7 +2216,7 @@ showLogoPreview();
 
     </div>
   `;
-   
+
   setupLogoUploader();
   showLogoPreview();
 }
@@ -2215,6 +2233,24 @@ async function(id, button) {
 
   button.textContent =
     'Хадгалж байна...';
+
+
+  const siteName =
+    document
+      .getElementById(
+        'setting-site-name'
+      )
+      ?.value
+      .trim() || '';
+
+
+  const siteDescription =
+    document
+      .getElementById(
+        'setting-site-description'
+      )
+      ?.value
+      .trim() || '';
 
 
   const email =
@@ -2330,6 +2366,15 @@ async function(id, button) {
       .from('settings')
       .update({
 
+        site_name:
+          siteName || null,
+
+        site_description:
+          siteDescription || null,
+
+        logo_url:
+          logoImageUrl || null,
+
         email:
           email || null,
 
@@ -2427,4 +2472,3 @@ document.addEventListener(
 
 
 checkAdminAccess();
-
