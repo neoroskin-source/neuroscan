@@ -495,7 +495,56 @@
          ========================= -->
 
     <main class="content">
+<div
+  id="livePreviewPanel"
+  style="
+    margin-bottom:28px;
+    background:#ffffff;
+    border:1px solid #e4e9ef;
+    border-radius:16px;
+    overflow:hidden;
+  "
+>
+  <div
+    style="
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:14px 18px;
+      border-bottom:1px solid #e4e9ef;
+    "
+  >
+    <strong>Live Preview</strong>
 
+    <button
+      type="button"
+      onclick="refreshLivePreview()"
+      style="
+        border:0;
+        background:#17212b;
+        color:white;
+        padding:8px 14px;
+        border-radius:8px;
+        cursor:pointer;
+      "
+    >
+      Шинэчлэх
+    </button>
+  </div>
+
+  <iframe
+    id="livePreviewFrame"
+    src="index.html"
+    title="Website live preview"
+    style="
+      display:block;
+      width:100%;
+      height:650px;
+      border:0;
+      background:white;
+    "
+  ></iframe>
+</div>
       <h1>
         Удирдлагын хэсэг
       </h1>
