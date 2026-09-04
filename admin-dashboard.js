@@ -2198,6 +2198,9 @@ showLogoPreview();
 
     </div>
   `;
+   
+  setupLogoUploader();
+  showLogoPreview();
 }
 
 
