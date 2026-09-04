@@ -10,53 +10,6 @@ const loadingScreen = document.getElementById('loadingScreen');
 const adminDashboard = document.getElementById('adminDashboard');
 const logoutButton = document.getElementById('logoutButton');
 
-
-// =====================================================
-// ADMIN ACCESS
-// =====================================================
-
-async function checkAdminAccess() {
-  const {
-    data: { session },
-    error: sessionError
-  } = await supabaseClient.auth.getSession();
-
-  if (sessionError || !session) {
-    window.location.href = 'admin.html';
-    return;
-  }
-
-  const { data: adminData, error: adminError } = await supabaseClient
-    .from('admin_users')
-    .select('user_id')
-    .eq('user_id', session.user.id)
-    .maybeSingle();
-
-  if (adminError || !adminData) {
-    await supabaseClient.auth.signOut();
-    window.location.href = 'admin.html';
-    return;
-  }
-
-  loadingScreen.style.display = 'none';
-  adminDashboard.style.display = 'block';
-
-  await loadServicesEditor();
-}
-
-
-// =====================================================
-// LOGOUT
-// =====================================================
-
-if (logoutButton) {
-  logoutButton.addEventListener('click', async () => {
-    await supabaseClient.auth.signOut();
-    window.location.href = 'admin.html';
-  });
-}
-
-
 // =====================================================
 // HELPERS
 // =====================================================
@@ -88,19 +41,14 @@ function fieldStyle() {
     border:1px solid #d8dee6;
     border-radius:8px;
     font:inherit;
+    box-sizing:border-box;
   `;
 }
 
 function stripHtml(html) {
   const temp = document.createElement('div');
-
   temp.innerHTML = html || '';
-
-  return (
-    temp.textContent ||
-    temp.innerText ||
-    ''
-  ).trim();
+  return (temp.textContent || temp.innerText || '').trim();
 }
 
 function setImagePreview(
@@ -134,12 +82,72 @@ function setImagePreview(
   `;
 }
 
+function setButtonSaved(button) {
+  button.disabled = false;
+  button.textContent = '✓ Хадгалагдлаа';
+
+  setTimeout(() => {
+    button.textContent = 'Хадгалах';
+  }, 1500);
+}
+
+// =====================================================
+// ADMIN ACCESS
+// =====================================================
+
+async function checkAdminAccess() {
+  const {
+    data: { session },
+    error: sessionError
+  } = await supabaseClient.auth.getSession();
+
+  if (sessionError || !session) {
+    window.location.href = 'admin.html';
+    return;
+  }
+
+  const {
+    data: adminData,
+    error: adminError
+  } = await supabaseClient
+    .from('admin_users')
+    .select('user_id')
+    .eq('user_id', session.user.id)
+    .maybeSingle();
+
+  if (adminError || !adminData) {
+    await supabaseClient.auth.signOut();
+    window.location.href = 'admin.html';
+    return;
+  }
+
+  if (loadingScreen) {
+    loadingScreen.style.display = 'none';
+  }
+
+  if (adminDashboard) {
+    adminDashboard.style.display = 'block';
+  }
+
+  await loadServicesEditor();
+}
+
+if (logoutButton) {
+  logoutButton.addEventListener(
+    'click',
+    async () => {
+      await supabaseClient.auth.signOut();
+      window.location.href = 'admin.html';
+    }
+  );
+}
 
 // =====================================================
 // SECTION NAVIGATION
 // =====================================================
 
-window.openAdminSection = async function(section) {
+window.openAdminSection =
+async function(section) {
 
   const sections = {
     services: 'servicesEditor',
@@ -149,13 +157,18 @@ window.openAdminSection = async function(section) {
     settings: 'settingsEditor'
   };
 
-  Object.values(sections).forEach(id => {
-    const el = document.getElementById(id);
+  Object
+    .values(sections)
+    .forEach(id => {
 
-    if (el) {
-      el.style.display = 'none';
-    }
-  });
+      const el =
+        document.getElementById(id);
+
+      if (el) {
+        el.style.display = 'none';
+      }
+
+    });
 
   [
     'servicesButton',
@@ -167,22 +180,28 @@ window.openAdminSection = async function(section) {
 
     document
       .getElementById(id)
-      ?.classList.remove('active');
+      ?.classList
+      .remove('active');
 
   });
 
   const cards =
-    document.getElementById('dashboardCards');
+    document.getElementById(
+      'dashboardCards'
+    );
 
   if (cards) {
     cards.style.display = 'none';
   }
 
-  const targetId = sections[section];
+  const targetId =
+    sections[section];
 
   const target =
     targetId
-      ? document.getElementById(targetId)
+      ? document.getElementById(
+          targetId
+        )
       : null;
 
   if (target) {
@@ -190,8 +209,11 @@ window.openAdminSection = async function(section) {
   }
 
   document
-    .getElementById(section + 'Button')
-    ?.classList.add('active');
+    .getElementById(
+      section + 'Button'
+    )
+    ?.classList
+    .add('active');
 
   if (section === 'services') {
     await loadServicesEditor();
@@ -214,7 +236,6 @@ window.openAdminSection = async function(section) {
   }
 };
 
-
 // =====================================================
 // SERVICES
 // =====================================================
@@ -222,147 +243,177 @@ window.openAdminSection = async function(section) {
 async function loadServicesEditor() {
 
   const list =
-    document.getElementById('servicesList');
+    document.getElementById(
+      'servicesList'
+    );
 
   if (!list) return;
 
   list.textContent =
     'Мэдээлэл ачаалж байна...';
 
-  const { data, error } =
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from('services')
       .select('*')
       .order('sort_order');
 
   if (error) {
+
     list.textContent =
-      'Алдаа: ' + error.message;
+      'Алдаа: ' +
+      error.message;
 
     return;
   }
 
   list.innerHTML = '';
 
-  data.forEach(service => {
+  (data || []).forEach(
+    service => {
 
-    const item =
-      document.createElement('div');
+      const item =
+        document.createElement(
+          'div'
+        );
 
-    item.style.cssText =
-      editorCardStyle();
+      item.style.cssText =
+        editorCardStyle();
 
-    item.innerHTML = `
+      item.innerHTML = `
+        <h3>
+          ${escapeAdminHtml(
+            service.name
+          )}
+        </h3>
 
-      <h3>
-        ${escapeAdminHtml(service.name)}
-      </h3>
+        <label>
+          Тодосгогчгүй тайлбар
+        </label>
 
-      <label>
-        Тодосгогчгүй тайлбар
-      </label>
+        <textarea
+          id="without-description-${service.id}"
+          rows="5"
+          style="${fieldStyle()}"
+        >${escapeAdminHtml(
+          service
+            .without_contrast_description
+        )}</textarea>
 
-      <textarea
-        id="without-description-${service.id}"
-        rows="5"
-        style="${fieldStyle()}"
-      >${escapeAdminHtml(
-        service.without_contrast_description
-      )}</textarea>
+        <label>
+          Тодосгогчгүй үнэ
+        </label>
 
-      <label>
-        Тодосгогчгүй үнэ
-      </label>
+        <input
+          type="number"
+          id="without-price-${service.id}"
+          value="${
+            service
+              .without_contrast_price
+            ?? ''
+          }"
+          placeholder="Үнэ оруулах"
+          style="${fieldStyle()}"
+        >
 
-      <input
-        type="number"
-        id="without-price-${service.id}"
-        value="${service.without_contrast_price ?? ''}"
-        placeholder="Үнэ оруулах"
-        style="${fieldStyle()}"
-      >
+        <label>
+          Тодосгогчтой тайлбар
+        </label>
 
-      <label>
-        Тодосгогчтой тайлбар
-      </label>
+        <textarea
+          id="with-description-${service.id}"
+          rows="5"
+          style="${fieldStyle()}"
+        >${escapeAdminHtml(
+          service
+            .with_contrast_description
+        )}</textarea>
 
-      <textarea
-        id="with-description-${service.id}"
-        rows="5"
-        style="${fieldStyle()}"
-      >${escapeAdminHtml(
-        service.with_contrast_description
-      )}</textarea>
+        <label>
+          Тодосгогчтой үнэ
+        </label>
 
-      <label>
-        Тодосгогчтой үнэ
-      </label>
+        <input
+          type="number"
+          id="with-price-${service.id}"
+          value="${
+            service
+              .with_contrast_price
+            ?? ''
+          }"
+          placeholder="Үнэ оруулах"
+          style="${fieldStyle()}"
+        >
 
-      <input
-        type="number"
-        id="with-price-${service.id}"
-        value="${service.with_contrast_price ?? ''}"
-        placeholder="Үнэ оруулах"
-        style="${fieldStyle()}"
-      >
+        <button
+          onclick="
+            saveService(
+              ${service.id},
+              this
+            )
+          "
+          style="
+            padding:11px 18px;
+            border:0;
+            border-radius:8px;
+            background:#17212b;
+            color:#fff;
+            font-weight:700;
+            cursor:pointer;
+          "
+        >
+          Хадгалах
+        </button>
+      `;
 
-      <button
-        onclick="saveService(${service.id}, this)"
-        style="
-          padding:11px 18px;
-          border:0;
-          border-radius:8px;
-          background:#17212b;
-          color:#fff;
-          font-weight:700;
-          cursor:pointer;
-        "
-      >
-        Хадгалах
-      </button>
-    `;
-
-    list.appendChild(item);
-  });
+      list.appendChild(item);
+    }
+  );
 }
 
-
 window.saveService =
-async function(serviceId, button) {
+async function(
+  serviceId,
+  button
+) {
 
   const withoutDescription =
     document
       .getElementById(
         `without-description-${serviceId}`
       )
-      .value
-      .trim();
+      ?.value
+      .trim() || '';
 
   const withDescription =
     document
       .getElementById(
         `with-description-${serviceId}`
       )
-      .value
-      .trim();
+      ?.value
+      .trim() || '';
 
   const withoutPrice =
     document
       .getElementById(
         `without-price-${serviceId}`
       )
-      .value
-      .trim();
+      ?.value
+      .trim() || '';
 
   const withPrice =
     document
       .getElementById(
         `with-price-${serviceId}`
       )
-      .value
-      .trim();
+      ?.value
+      .trim() || '';
 
   button.disabled = true;
+
   button.textContent =
     'Хадгалж байна...';
 
@@ -380,23 +431,33 @@ async function(serviceId, button) {
         without_contrast_price:
           withoutPrice === ''
             ? null
-            : Number(withoutPrice),
+            : Number(
+                withoutPrice
+              ),
 
         with_contrast_price:
           withPrice === ''
             ? null
-            : Number(withPrice),
+            : Number(
+                withPrice
+              ),
 
         updated_at:
-          new Date().toISOString()
+          new Date()
+            .toISOString()
 
       })
-      .eq('id', serviceId);
-
-  button.disabled = false;
+      .eq(
+        'id',
+        serviceId
+      );
 
   if (error) {
+
     console.error(error);
+
+    button.disabled =
+      false;
 
     button.textContent =
       'Алдаа';
@@ -404,14 +465,9 @@ async function(serviceId, button) {
     return;
   }
 
-  button.textContent =
-    '✓ Хадгалагдлаа';
-
-  setTimeout(() => {
-    button.textContent =
-      'Хадгалах';
-  }, 1500);
+  setButtonSaved(button);
 };
+
 // =====================================================
 // DOCTORS
 // =====================================================
@@ -419,14 +475,19 @@ async function(serviceId, button) {
 async function loadDoctorsEditor() {
 
   const list =
-    document.getElementById('doctorsList');
+    document.getElementById(
+      'doctorsList'
+    );
 
   if (!list) return;
 
   list.textContent =
     'Мэдээлэл ачаалж байна...';
 
-  const { data, error } =
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from('doctors')
       .select('*')
@@ -435,111 +496,125 @@ async function loadDoctorsEditor() {
   if (error) {
 
     list.textContent =
-      'Алдаа: ' + error.message;
+      'Алдаа: ' +
+      error.message;
 
     return;
   }
 
   list.innerHTML = '';
 
-  data.forEach(doctor => {
+  (data || []).forEach(
+    doctor => {
 
-    const item =
-      document.createElement('div');
+      const item =
+        document.createElement(
+          'div'
+        );
 
-    item.style.cssText =
-      editorCardStyle();
+      item.style.cssText =
+        editorCardStyle();
 
-    item.innerHTML = `
+      item.innerHTML = `
 
-      <h3>
-        ${doctor.sort_order}-р эмч
-      </h3>
+        <h3>
+          ${escapeAdminHtml(
+            doctor.sort_order
+          )}-р эмч
+        </h3>
 
-      <label>
-        Нэр
-      </label>
+        <label>
+          Нэр
+        </label>
 
-      <input
-        id="doctor-name-${doctor.id}"
-        value="${escapeAdminHtml(
-          doctor.name
-        )}"
-        style="${fieldStyle()}"
-      >
+        <input
+          id="doctor-name-${doctor.id}"
+          value="${escapeAdminHtml(
+            doctor.name
+          )}"
+          style="${fieldStyle()}"
+        >
 
-      <label>
-        Мэргэжил
-      </label>
+        <label>
+          Мэргэжил
+        </label>
 
-      <input
-        id="doctor-specialty-${doctor.id}"
-        value="${escapeAdminHtml(
-          doctor.specialty
-        )}"
-        style="${fieldStyle()}"
-      >
+        <input
+          id="doctor-specialty-${doctor.id}"
+          value="${escapeAdminHtml(
+            doctor.specialty
+          )}"
+          style="${fieldStyle()}"
+        >
 
-      <label>
-        Туршлага
-      </label>
+        <label>
+          Туршлага
+        </label>
 
-      <input
-        id="doctor-experience-${doctor.id}"
-        value="${escapeAdminHtml(
-          doctor.experience
-        )}"
-        style="${fieldStyle()}"
-      >
+        <input
+          id="doctor-experience-${doctor.id}"
+          value="${escapeAdminHtml(
+            doctor.experience
+          )}"
+          style="${fieldStyle()}"
+        >
 
-      <label>
-        Танилцуулга
-      </label>
+        <label>
+          Танилцуулга
+        </label>
 
-      <textarea
-        id="doctor-bio-${doctor.id}"
-        rows="6"
-        style="${fieldStyle()}"
-      >${escapeAdminHtml(
-        doctor.bio
-      )}</textarea>
+        <textarea
+          id="doctor-bio-${doctor.id}"
+          rows="6"
+          style="${fieldStyle()}"
+        >${escapeAdminHtml(
+          doctor.bio
+        )}</textarea>
 
-      <label>
-        Зургийн URL
-      </label>
+        <label>
+          Зургийн URL
+        </label>
 
-      <input
-        id="doctor-image-${doctor.id}"
-        value="${escapeAdminHtml(
-          doctor.image_url
-        )}"
-        placeholder="https://..."
-        style="${fieldStyle()}"
-      >
+        <input
+          id="doctor-image-${doctor.id}"
+          value="${escapeAdminHtml(
+            doctor.image_url
+          )}"
+          placeholder="https://..."
+          style="${fieldStyle()}"
+        >
 
-      <button
-        onclick="saveDoctor(${doctor.id}, this)"
-        style="
-          padding:11px 18px;
-          border:0;
-          border-radius:8px;
-          background:#17212b;
-          color:#fff;
-          font-weight:700;
-          cursor:pointer;
-        "
-      >
-        Хадгалах
-      </button>
-    `;
+        <button
+          onclick="
+            saveDoctor(
+              ${doctor.id},
+              this
+            )
+          "
+          style="
+            padding:11px 18px;
+            border:0;
+            border-radius:8px;
+            background:#17212b;
+            color:#fff;
+            font-weight:700;
+            cursor:pointer;
+          "
+        >
+          Хадгалах
+        </button>
+      `;
 
-    list.appendChild(item);
-  });
+      list.appendChild(item);
+    }
+  );
 }
 
-
 window.saveDoctor =
-async function(id, button) {
+async function(
+  id,
+  button
+) {
 
   button.disabled = true;
 
@@ -556,51 +631,62 @@ async function(id, button) {
             .getElementById(
               `doctor-name-${id}`
             )
-            .value
-            .trim(),
+            ?.value
+            .trim()
+          || '',
 
         specialty:
           document
             .getElementById(
               `doctor-specialty-${id}`
             )
-            .value
-            .trim(),
+            ?.value
+            .trim()
+          || '',
 
         experience:
           document
             .getElementById(
               `doctor-experience-${id}`
             )
-            .value
-            .trim(),
+            ?.value
+            .trim()
+          || '',
 
         bio:
           document
             .getElementById(
               `doctor-bio-${id}`
             )
-            .value
-            .trim(),
+            ?.value
+            .trim()
+          || '',
 
         image_url:
           document
             .getElementById(
               `doctor-image-${id}`
             )
-            .value
-            .trim(),
+            ?.value
+            .trim()
+          || null,
 
         updated_at:
-          new Date().toISOString()
+          new Date()
+            .toISOString()
 
       })
-      .eq('id', id);
-
-  button.disabled = false;
+      .eq(
+        'id',
+        id
+      );
 
   if (error) {
+
     console.error(error);
+
+    button.disabled =
+      false;
 
     button.textContent =
       'Алдаа';
@@ -608,15 +694,8 @@ async function(id, button) {
     return;
   }
 
-  button.textContent =
-    '✓ Хадгалагдлаа';
-
-  setTimeout(() => {
-    button.textContent =
-      'Хадгалах';
-  }, 1500);
+  setButtonSaved(button);
 };
-
 
 // =====================================================
 // ABOUT
@@ -624,7 +703,6 @@ async function(id, button) {
 
 let aboutImageUrl = '';
 let aboutSettingsId = null;
-
 
 async function loadAboutEditor() {
 
@@ -640,7 +718,10 @@ async function loadAboutEditor() {
 
   if (!content) return;
 
-  const { data, error } =
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from('settings')
       .select(
@@ -680,9 +761,11 @@ async function loadAboutEditor() {
   );
 }
 
-
 window.formatAboutText =
-function(command, value = null) {
+function(
+  command,
+  value = null
+) {
 
   const editor =
     document.getElementById(
@@ -700,7 +783,6 @@ function(command, value = null) {
   );
 };
 
-
 window.addAboutLink =
 function() {
 
@@ -712,7 +794,9 @@ function() {
   if (!editor) return;
 
   const url =
-    prompt('Линк оруулна уу:');
+    prompt(
+      'Линк оруулна уу:'
+    );
 
   if (!url) return;
 
@@ -724,7 +808,6 @@ function() {
     url
   );
 };
-
 
 window.saveAboutSettings =
 async function() {
@@ -739,7 +822,10 @@ async function() {
 
   if (!aboutSettingsId) {
 
-    const { data, error } =
+    const {
+      data,
+      error
+    } =
       await supabaseClient
         .from('settings')
         .select('id')
@@ -775,7 +861,8 @@ async function() {
           aboutImageUrl || null,
 
         updated_at:
-          new Date().toISOString()
+          new Date()
+            .toISOString()
 
       })
       .eq(
@@ -798,8 +885,9 @@ async function() {
   );
 };
 
-
-async function uploadAboutImage(file) {
+async function uploadAboutImage(
+  file
+) {
 
   if (!file) return;
 
@@ -810,7 +898,9 @@ async function uploadAboutImage(file) {
   ];
 
   if (
-    !allowed.includes(file.type)
+    !allowed.includes(
+      file.type
+    )
   ) {
 
     alert(
@@ -879,7 +969,6 @@ async function uploadAboutImage(file) {
   );
 }
 
-
 function setupAboutUploader() {
 
   const box =
@@ -892,67 +981,63 @@ function setupAboutUploader() {
       'aboutImageFile'
     );
 
-  if (!box || !input) return;
+  if (
+    !box ||
+    !input
+  ) {
+    return;
+  }
 
-  box.addEventListener(
-    'click',
-    () => {
-      input.click();
+  box.onclick = () => {
+    input.click();
+  };
+
+  input.onchange = () => {
+
+    const file =
+      input.files?.[0];
+
+    if (file) {
+      uploadAboutImage(file);
     }
-  );
 
-  input.addEventListener(
-    'change',
-    () => {
+  };
 
-      const file =
-        input.files?.[0];
+  box.ondragover =
+  event => {
 
-      if (file) {
-        uploadAboutImage(file);
-      }
+    event.preventDefault();
+
+    box.style.background =
+      '#f1f5f9';
+  };
+
+  box.ondragleave =
+  () => {
+
+    box.style.background =
+      '#fafcff';
+  };
+
+  box.ondrop =
+  event => {
+
+    event.preventDefault();
+
+    box.style.background =
+      '#fafcff';
+
+    const file =
+      event
+        .dataTransfer
+        .files?.[0];
+
+    if (file) {
+      uploadAboutImage(file);
     }
-  );
-
-  box.addEventListener(
-    'dragover',
-    event => {
-
-      event.preventDefault();
-
-      box.style.background =
-        '#f1f5f9';
-    }
-  );
-
-  box.addEventListener(
-    'dragleave',
-    () => {
-
-      box.style.background =
-        '#fafcff';
-    }
-  );
-
-  box.addEventListener(
-    'drop',
-    event => {
-
-      event.preventDefault();
-
-      box.style.background =
-        '#fafcff';
-
-      const file =
-        event.dataTransfer
-          .files?.[0];
-
-      if (file) {
-        uploadAboutImage(file);
-      }
-    }
-  );
+  };
 }
+
 // =====================================================
 // NEWS
 // =====================================================
@@ -969,7 +1054,10 @@ async function loadNewsEditor() {
   list.textContent =
     'Мэдээлэл ачаалж байна...';
 
-  const { data, error } =
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from('news')
       .select('*')
@@ -1006,7 +1094,10 @@ async function loadNewsEditor() {
     </button>
   `;
 
-  if (!data.length) {
+  if (
+    !data ||
+    !data.length
+  ) {
 
     list.innerHTML +=
       '<p>Одоогоор мэдээ байхгүй.</p>';
@@ -1014,129 +1105,143 @@ async function loadNewsEditor() {
     return;
   }
 
-  data.forEach(news => {
+  data.forEach(
+    news => {
 
-    const item =
-      document.createElement(
-        'div'
-      );
+      const item =
+        document.createElement(
+          'div'
+        );
 
-    item.style.cssText =
-      editorCardStyle();
+      item.style.cssText =
+        editorCardStyle();
 
-    item.innerHTML = `
+      item.innerHTML = `
 
-      <label>
-        Гарчиг
-      </label>
-
-      <input
-        id="news-title-${news.id}"
-        value="${escapeAdminHtml(
-          news.title
-        )}"
-        style="${fieldStyle()}"
-      >
-
-      <label>
-        Товч тайлбар
-      </label>
-
-      <textarea
-        id="news-excerpt-${news.id}"
-        rows="3"
-        style="${fieldStyle()}"
-      >${escapeAdminHtml(
-        news.excerpt
-      )}</textarea>
-
-      <label>
-        Мэдээний агуулга
-      </label>
-
-      <textarea
-        id="news-content-${news.id}"
-        rows="8"
-        style="${fieldStyle()}"
-      >${escapeAdminHtml(
-        news.content
-      )}</textarea>
-
-      <label>
-        Зургийн URL
-      </label>
-
-      <input
-        id="news-image-${news.id}"
-        value="${escapeAdminHtml(
-          news.image_url
-        )}"
-        placeholder="https://..."
-        style="${fieldStyle()}"
-      >
-
-      <label>
-        YouTube линк
-      </label>
-
-      <input
-        id="news-youtube-${news.id}"
-        value="${escapeAdminHtml(
-          news.youtube_url
-        )}"
-        placeholder="https://youtube.com/..."
-        style="${fieldStyle()}"
-      >
-
-      <label
-        style="
-          display:block;
-          margin-bottom:18px;
-        "
-      >
+        <label>
+          Гарчиг
+        </label>
 
         <input
-          type="checkbox"
-          id="news-published-${news.id}"
-          ${news.published ? 'checked' : ''}
+          id="news-title-${news.id}"
+          value="${escapeAdminHtml(
+            news.title
+          )}"
+          style="${fieldStyle()}"
         >
 
-        Нийтлэх
-      </label>
+        <label>
+          Товч тайлбар
+        </label>
 
-      <button
-        onclick="saveNews(${news.id}, this)"
-        style="
-          padding:11px 18px;
-          background:#17212b;
-          color:#fff;
-          border:0;
-          border-radius:8px;
-          cursor:pointer;
-        "
-      >
-        Хадгалах
-      </button>
+        <textarea
+          id="news-excerpt-${news.id}"
+          rows="3"
+          style="${fieldStyle()}"
+        >${escapeAdminHtml(
+          news.excerpt
+        )}</textarea>
 
-      <button
-        onclick="deleteNews(${news.id})"
-        style="
-          padding:11px 18px;
-          margin-left:8px;
-          background:#fff;
-          border:1px solid #ccc;
-          border-radius:8px;
-          cursor:pointer;
-        "
-      >
-        Устгах
-      </button>
-    `;
+        <label>
+          Мэдээний агуулга
+        </label>
 
-    list.appendChild(item);
-  });
+        <textarea
+          id="news-content-${news.id}"
+          rows="8"
+          style="${fieldStyle()}"
+        >${escapeAdminHtml(
+          news.content
+        )}</textarea>
+
+        <label>
+          Зургийн URL
+        </label>
+
+        <input
+          id="news-image-${news.id}"
+          value="${escapeAdminHtml(
+            news.image_url
+          )}"
+          placeholder="https://..."
+          style="${fieldStyle()}"
+        >
+
+        <label>
+          YouTube линк
+        </label>
+
+        <input
+          id="news-youtube-${news.id}"
+          value="${escapeAdminHtml(
+            news.youtube_url
+          )}"
+          placeholder="https://youtube.com/..."
+          style="${fieldStyle()}"
+        >
+
+        <label
+          style="
+            display:block;
+            margin-bottom:18px;
+          "
+        >
+
+          <input
+            type="checkbox"
+            id="news-published-${news.id}"
+            ${
+              news.published
+                ? 'checked'
+                : ''
+            }
+          >
+
+          Нийтлэх
+        </label>
+
+        <button
+          onclick="
+            saveNews(
+              ${news.id},
+              this
+            )
+          "
+          style="
+            padding:11px 18px;
+            background:#17212b;
+            color:#fff;
+            border:0;
+            border-radius:8px;
+            cursor:pointer;
+          "
+        >
+          Хадгалах
+        </button>
+
+        <button
+          onclick="
+            deleteNews(
+              ${news.id}
+            )
+          "
+          style="
+            padding:11px 18px;
+            margin-left:8px;
+            background:#fff;
+            border:1px solid #ccc;
+            border-radius:8px;
+            cursor:pointer;
+          "
+        >
+          Устгах
+        </button>
+      `;
+
+      list.appendChild(item);
+    }
+  );
 }
-
 
 window.createNews =
 async function() {
@@ -1156,16 +1261,17 @@ async function() {
           '',
 
         image_url:
-          '',
+          null,
 
         youtube_url:
-          '',
+          null,
 
         published:
           false,
 
         updated_at:
-          new Date().toISOString()
+          new Date()
+            .toISOString()
 
       });
 
@@ -1182,9 +1288,11 @@ async function() {
   await loadNewsEditor();
 };
 
-
 window.saveNews =
-async function(id, button) {
+async function(
+  id,
+  button
+) {
 
   button.disabled = true;
 
@@ -1201,59 +1309,70 @@ async function(id, button) {
             .getElementById(
               `news-title-${id}`
             )
-            .value
-            .trim(),
+            ?.value
+            .trim()
+          || '',
 
         excerpt:
           document
             .getElementById(
               `news-excerpt-${id}`
             )
-            .value
-            .trim(),
+            ?.value
+            .trim()
+          || '',
 
         content:
           document
             .getElementById(
               `news-content-${id}`
             )
-            .value
-            .trim(),
+            ?.value
+            .trim()
+          || '',
 
         image_url:
           document
             .getElementById(
               `news-image-${id}`
             )
-            .value
-            .trim(),
+            ?.value
+            .trim()
+          || null,
 
         youtube_url:
           document
             .getElementById(
               `news-youtube-${id}`
             )
-            .value
-            .trim(),
+            ?.value
+            .trim()
+          || null,
 
         published:
           document
             .getElementById(
               `news-published-${id}`
             )
-            .checked,
+            ?.checked
+          || false,
 
         updated_at:
-          new Date().toISOString()
+          new Date()
+            .toISOString()
 
       })
-      .eq('id', id);
-
-  button.disabled = false;
+      .eq(
+        'id',
+        id
+      );
 
   if (error) {
 
     console.error(error);
+
+    button.disabled =
+      false;
 
     button.textContent =
       'Алдаа';
@@ -1261,17 +1380,8 @@ async function(id, button) {
     return;
   }
 
-  button.textContent =
-    '✓ Хадгалагдлаа';
-
-  setTimeout(() => {
-
-    button.textContent =
-      'Хадгалах';
-
-  }, 1500);
+  setButtonSaved(button);
 };
-
 
 window.deleteNews =
 async function(id) {
@@ -1288,7 +1398,10 @@ async function(id) {
     await supabaseClient
       .from('news')
       .delete()
-      .eq('id', id);
+      .eq(
+        'id',
+        id
+      );
 
   if (error) {
 
@@ -1303,15 +1416,15 @@ async function(id) {
   await loadNewsEditor();
 };
 
-
 // =====================================================
 // NEW NEWS IMAGE
 // =====================================================
 
 let newNewsImageUrl = '';
 
-
-async function uploadNewsImage(file) {
+async function uploadNewsImage(
+  file
+) {
 
   if (!file) return;
 
@@ -1322,7 +1435,9 @@ async function uploadNewsImage(file) {
   ];
 
   if (
-    !allowed.includes(file.type)
+    !allowed.includes(
+      file.type
+    )
   ) {
 
     alert(
@@ -1395,7 +1510,6 @@ async function uploadNewsImage(file) {
   );
 }
 
-
 window.removeNewNewsImage =
 function() {
 
@@ -1416,7 +1530,6 @@ function() {
   }
 };
 
-
 function setupNewsUploader() {
 
   const box =
@@ -1429,72 +1542,61 @@ function setupNewsUploader() {
       'newsImageFile'
     );
 
-  if (!box || !input) return;
+  if (
+    !box ||
+    !input
+  ) {
+    return;
+  }
 
-  box.addEventListener(
-    'click',
-    () => {
-      input.click();
+  box.onclick = () => {
+    input.click();
+  };
+
+  input.onchange = () => {
+
+    const file =
+      input.files?.[0];
+
+    if (file) {
+      uploadNewsImage(file);
     }
-  );
+  };
 
-  input.addEventListener(
-    'change',
-    () => {
+  box.ondragover =
+  event => {
 
-      const file =
-        input.files?.[0];
+    event.preventDefault();
 
-      if (file) {
-        uploadNewsImage(file);
-      }
+    box.style.background =
+      '#f1f5f9';
+  };
+
+  box.ondragleave =
+  () => {
+
+    box.style.background =
+      '';
+  };
+
+  box.ondrop =
+  event => {
+
+    event.preventDefault();
+
+    box.style.background =
+      '';
+
+    const file =
+      event
+        .dataTransfer
+        .files?.[0];
+
+    if (file) {
+      uploadNewsImage(file);
     }
-  );
-
-  box.addEventListener(
-    'dragover',
-    event => {
-
-      event.preventDefault();
-
-      box.style.background =
-        '#f1f5f9';
-    }
-  );
-
-  box.addEventListener(
-    'dragleave',
-    () => {
-
-      box.style.background =
-        '';
-    }
-  );
-
-  box.addEventListener(
-    'drop',
-    event => {
-
-      event.preventDefault();
-
-      box.style.background =
-        '';
-
-      const file =
-        event.dataTransfer
-          .files?.[0];
-
-      if (file) {
-        uploadNewsImage(file);
-      }
-    }
-  );
+  };
 }
-
-
-// =====================================================
-// CREATE NEWS FROM RICH EDITOR
-// =====================================================
 
 window.createNewsFromEditor =
 async function() {
@@ -1505,7 +1607,8 @@ async function() {
         'newNewsTitle'
       )
       ?.value
-      .trim() || '';
+      .trim()
+    || '';
 
   const contentEditor =
     document.getElementById(
@@ -1515,7 +1618,8 @@ async function() {
   const content =
     contentEditor
       ?.innerHTML
-      .trim() || '';
+      .trim()
+    || '';
 
   const youtube =
     document
@@ -1523,14 +1627,16 @@ async function() {
         'newNewsYoutube'
       )
       ?.value
-      .trim() || '';
+      .trim()
+    || '';
 
   const published =
     document
       .getElementById(
         'newNewsPublished'
       )
-      ?.checked || false;
+      ?.checked
+    || false;
 
   if (!title) {
 
@@ -1543,7 +1649,10 @@ async function() {
 
   const excerpt =
     stripHtml(content)
-      .slice(0, 180);
+      .slice(
+        0,
+        180
+      );
 
   const { error } =
     await supabaseClient
@@ -1557,15 +1666,18 @@ async function() {
         content,
 
         image_url:
-          newNewsImageUrl || null,
+          newNewsImageUrl
+          || null,
 
         youtube_url:
-          youtube || null,
+          youtube
+          || null,
 
         published,
 
         updated_at:
-          new Date().toISOString()
+          new Date()
+            .toISOString()
 
       });
 
@@ -1579,29 +1691,42 @@ async function() {
     return;
   }
 
-  document
-    .getElementById(
+  const titleEl =
+    document.getElementById(
       'newNewsTitle'
-    )
-    .value = '';
+    );
 
-  document
-    .getElementById(
+  const contentEl =
+    document.getElementById(
       'newNewsContent'
-    )
-    .innerHTML = '';
+    );
 
-  document
-    .getElementById(
+  const youtubeEl =
+    document.getElementById(
       'newNewsYoutube'
-    )
-    .value = '';
+    );
 
-  document
-    .getElementById(
+  const publishedEl =
+    document.getElementById(
       'newNewsPublished'
-    )
-    .checked = false;
+    );
+
+  if (titleEl) {
+    titleEl.value = '';
+  }
+
+  if (contentEl) {
+    contentEl.innerHTML = '';
+  }
+
+  if (youtubeEl) {
+    youtubeEl.value = '';
+  }
+
+  if (publishedEl) {
+    publishedEl.checked =
+      false;
+  }
 
   newNewsImageUrl = '';
 
@@ -1616,11 +1741,6 @@ async function() {
 
   await loadNewsEditor();
 };
-
-
-// =====================================================
-// NEWS RICH TEXT
-// =====================================================
 
 window.formatNewsText =
 function(
@@ -1643,7 +1763,6 @@ function(
     value
   );
 };
-
 
 window.addNewsLink =
 function() {
@@ -1670,13 +1789,17 @@ function() {
     url
   );
 };
+
 // =====================================================
 // LOGO UPLOAD
 // =====================================================
 
 let logoImageUrl = '';
 
-async function uploadLogoImage(file) {
+async function uploadLogoImage(
+  file
+) {
+
   if (!file) return;
 
   const allowed = [
@@ -1685,13 +1808,28 @@ async function uploadLogoImage(file) {
     'image/webp'
   ];
 
-  if (!allowed.includes(file.type)) {
-    alert('JPG, PNG эсвэл WEBP зураг оруулна уу.');
+  if (
+    !allowed.includes(
+      file.type
+    )
+  ) {
+
+    alert(
+      'JPG, PNG эсвэл WEBP зураг оруулна уу.'
+    );
+
     return;
   }
 
-  if (file.size > 5 * 1024 * 1024) {
-    alert('Logo 5MB-аас бага байх ёстой.');
+  if (
+    file.size >
+    5 * 1024 * 1024
+  ) {
+
+    alert(
+      'Logo 5MB-аас бага байх ёстой.'
+    );
+
     return;
   }
 
@@ -1716,6 +1854,7 @@ async function uploadLogoImage(file) {
       );
 
   if (error) {
+
     alert(
       'Logo upload хийхэд алдаа: ' +
       error.message
@@ -1738,7 +1877,6 @@ async function uploadLogoImage(file) {
   showLogoPreview();
 }
 
-
 function showLogoPreview() {
 
   const preview =
@@ -1749,7 +1887,9 @@ function showLogoPreview() {
   if (!preview) return;
 
   if (!logoImageUrl) {
+
     preview.innerHTML = '';
+
     return;
   }
 
@@ -1780,7 +1920,6 @@ function showLogoPreview() {
   `;
 }
 
-
 function setupLogoUploader() {
 
   const box =
@@ -1793,10 +1932,17 @@ function setupLogoUploader() {
       'logoImageFile'
     );
 
-  if (!box || !input) return;
+  if (
+    !box ||
+    !input
+  ) {
+    return;
+  }
 
   box.onclick = () => {
+
     input.click();
+
   };
 
   input.onchange = () => {
@@ -1807,23 +1953,29 @@ function setupLogoUploader() {
     if (file) {
       uploadLogoImage(file);
     }
+
   };
 
-  box.ondragover = event => {
+  box.ondragover =
+  event => {
 
     event.preventDefault();
 
     box.style.background =
       '#f1f5f9';
+
   };
 
-  box.ondragleave = () => {
+  box.ondragleave =
+  () => {
 
     box.style.background =
       '#fafcff';
+
   };
 
-  box.ondrop = event => {
+  box.ondrop =
+  event => {
 
     event.preventDefault();
 
@@ -1831,15 +1983,16 @@ function setupLogoUploader() {
       '#fafcff';
 
     const file =
-      event.dataTransfer
+      event
+        .dataTransfer
         .files?.[0];
 
     if (file) {
       uploadLogoImage(file);
     }
+
   };
 }
-
 
 // =====================================================
 // SETTINGS
@@ -1857,7 +2010,10 @@ async function loadSettingsEditor() {
   container.textContent =
     'Мэдээлэл ачаалж байна...';
 
-  const { data, error } =
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from('settings')
       .select('*')
@@ -1876,7 +2032,8 @@ async function loadSettingsEditor() {
     return;
   }
 
-  const s = data[0];
+  const s =
+    data[0];
 
   logoImageUrl =
     s.logo_url || '';
@@ -1884,10 +2041,10 @@ async function loadSettingsEditor() {
   container.innerHTML = `
 
     <div
-  style="${editorCardStyle()}"
->
+      style="${editorCardStyle()}"
+    >
 
-<h3>
+      <h3
         style="
           margin-top:0;
           margin-bottom:22px;
@@ -2199,7 +2356,12 @@ async function loadSettingsEditor() {
 
       <button
         type="button"
-        onclick="saveSettings(${s.id}, this)"
+        onclick="
+          saveSettings(
+            ${s.id},
+            this
+          )
+        "
         style="
           padding:12px 20px;
           background:#17212b;
@@ -2218,22 +2380,25 @@ async function loadSettingsEditor() {
   `;
 
   setupLogoUploader();
+
   showLogoPreview();
 }
-
 
 // =====================================================
 // SAVE SETTINGS
 // =====================================================
 
 window.saveSettings =
-async function(id, button) {
+async function(
+  id,
+  button
+) {
 
-  button.disabled = true;
+  button.disabled =
+    true;
 
   button.textContent =
     'Хадгалж байна...';
-
 
   const siteName =
     document
@@ -2241,8 +2406,8 @@ async function(id, button) {
         'setting-site-name'
       )
       ?.value
-      .trim() || '';
-
+      .trim()
+    || '';
 
   const siteDescription =
     document
@@ -2250,8 +2415,8 @@ async function(id, button) {
         'setting-site-description'
       )
       ?.value
-      .trim() || '';
-
+      .trim()
+    || '';
 
   const email =
     document
@@ -2259,8 +2424,8 @@ async function(id, button) {
         'setting-email'
       )
       ?.value
-      .trim() || '';
-
+      .trim()
+    || '';
 
   const generalPhone =
     document
@@ -2268,8 +2433,8 @@ async function(id, button) {
         'setting-general-phone'
       )
       ?.value
-      .trim() || '';
-
+      .trim()
+    || '';
 
   const phone1 =
     document
@@ -2277,8 +2442,8 @@ async function(id, button) {
         'setting-phone1'
       )
       ?.value
-      .trim() || '';
-
+      .trim()
+    || '';
 
   const phone2 =
     document
@@ -2286,8 +2451,8 @@ async function(id, button) {
         'setting-phone2'
       )
       ?.value
-      .trim() || '';
-
+      .trim()
+    || '';
 
   const address =
     document
@@ -2295,8 +2460,8 @@ async function(id, button) {
         'setting-address'
       )
       ?.value
-      .trim() || '';
-
+      .trim()
+    || '';
 
   const mapsUrl =
     document
@@ -2304,8 +2469,8 @@ async function(id, button) {
         'setting-maps'
       )
       ?.value
-      .trim() || '';
-
+      .trim()
+    || '';
 
   const chatUrl =
     document
@@ -2313,8 +2478,8 @@ async function(id, button) {
         'setting-chat'
       )
       ?.value
-      .trim() || '';
-
+      .trim()
+    || '';
 
   const facebookUrl =
     document
@@ -2322,8 +2487,8 @@ async function(id, button) {
         'setting-facebook'
       )
       ?.value
-      .trim() || '';
-
+      .trim()
+    || '';
 
   const instagramUrl =
     document
@@ -2331,8 +2496,8 @@ async function(id, button) {
         'setting-instagram'
       )
       ?.value
-      .trim() || '';
-
+      .trim()
+    || '';
 
   const youtubeUrl =
     document
@@ -2340,8 +2505,8 @@ async function(id, button) {
         'setting-youtube'
       )
       ?.value
-      .trim() || '';
-
+      .trim()
+    || '';
 
   const machineInfo =
     document
@@ -2349,8 +2514,8 @@ async function(id, button) {
         'setting-machine'
       )
       ?.value
-      .trim() || '';
-
+      .trim()
+    || '';
 
   const bookingUrl =
     document
@@ -2358,8 +2523,8 @@ async function(id, button) {
         'setting-booking'
       )
       ?.value
-      .trim() || '';
-
+      .trim()
+    || '';
 
   const { error } =
     await supabaseClient
@@ -2412,7 +2577,8 @@ async function(id, button) {
           bookingUrl || null,
 
         updated_at:
-          new Date().toISOString()
+          new Date()
+            .toISOString()
 
       })
       .eq(
@@ -2420,16 +2586,15 @@ async function(id, button) {
         id
       );
 
-
-  button.disabled = false;
-
-
   if (error) {
 
     console.error(
       'Settings save error:',
       error
     );
+
+    button.disabled =
+      false;
 
     button.textContent =
       'Алдаа';
@@ -2442,19 +2607,8 @@ async function(id, button) {
     return;
   }
 
-
-  button.textContent =
-    '✓ Хадгалагдлаа';
-
-
-  setTimeout(() => {
-
-    button.textContent =
-      'Хадгалах';
-
-  }, 1500);
+  setButtonSaved(button);
 };
-
 
 // =====================================================
 // START
@@ -2465,10 +2619,10 @@ document.addEventListener(
   () => {
 
     setupNewsUploader();
+
     setupAboutUploader();
 
   }
 );
-
 
 checkAdminAccess();
