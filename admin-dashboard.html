@@ -119,6 +119,139 @@
       line-height: 1.6;
     }
 
+    /* =========================
+       NEWS ADMIN UI
+       ========================= */
+
+    #newsEditor {
+      max-width: 1100px;
+    }
+
+    #newsEditor > h2 {
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+
+    #newsEditor > p {
+      color: #667085;
+      margin-bottom: 24px;
+    }
+
+    #newsEditor .admin-card {
+      background: #ffffff;
+      border: 1px solid #e4e9ef;
+      border-radius: 18px;
+      padding: 30px;
+      margin-top: 20px;
+      margin-bottom: 28px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+    }
+
+    #newsEditor .admin-card h3 {
+      margin: 0 0 26px;
+      font-size: 24px;
+      color: #17212b;
+    }
+
+    #newsEditor .admin-card label {
+      display: block;
+      margin: 18px 0 8px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #263442;
+    }
+
+    #newsEditor .admin-card input[type="text"],
+    #newsEditor .admin-card input[type="url"],
+    #newsEditor .admin-card textarea {
+      width: 100%;
+      display: block;
+      padding: 14px 16px;
+      border: 1px solid #ccd5df;
+      border-radius: 10px;
+      background: #ffffff;
+      color: #17212b;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    #newsEditor .admin-card input[type="text"]:focus,
+    #newsEditor .admin-card input[type="url"]:focus,
+    #newsEditor .admin-card textarea:focus {
+      border-color: #4f8cff;
+      box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.12);
+    }
+
+    #newsEditor .admin-card textarea {
+      min-height: 220px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    #newsUploadBox {
+      width: 100%;
+      min-height: 150px;
+      border: 2px dashed #cbd5e1 !important;
+      border-radius: 14px !important;
+      padding: 36px !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      cursor: pointer;
+      margin-bottom: 12px;
+      color: #94a3b8;
+      background: #fafcff;
+      transition: background .2s, border-color .2s;
+    }
+
+    #newsUploadBox:hover {
+      background: #f4f8ff;
+      border-color: #8ab4ff !important;
+    }
+
+    #newsImagePreview {
+      margin-top: 12px;
+    }
+
+    #newsEditor .admin-card label:has(input[type="checkbox"]) {
+      display: flex !important;
+      align-items: center;
+      gap: 10px;
+      margin-top: 18px;
+      cursor: pointer;
+    }
+
+    #newsEditor .admin-card input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    #newsEditor .admin-card > button {
+      margin-top: 18px !important;
+      border: 0;
+      border-radius: 10px;
+      background: #10b981;
+      color: #ffffff;
+      padding: 13px 24px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity .2s, transform .2s;
+    }
+
+    #newsEditor .admin-card > button:hover {
+      opacity: .92;
+      transform: translateY(-1px);
+    }
+
+    #newsList {
+      margin-top: 28px;
+    }
+
     @media (max-width: 800px) {
       .sidebar {
         position: static;
@@ -140,6 +273,10 @@
       .cards {
         grid-template-columns: 1fr;
       }
+
+      #newsEditor .admin-card {
+        padding: 20px;
+      }
     }
   </style>
 </head>
@@ -159,20 +296,20 @@
       </div>
 
       <button class="active" id="servicesButton" onclick="openAdminSection('services')">
-  Үйлчилгээ
-</button>
+        Үйлчилгээ
+      </button>
 
-<button id="doctorsButton" onclick="openAdminSection('doctors')">
-  Эмч мэргэжилтэн
-</button>
+      <button id="doctorsButton" onclick="openAdminSection('doctors')">
+        Эмч мэргэжилтэн
+      </button>
 
-<button id="newsButton" onclick="openAdminSection('news')">
-  Мэдээ
-</button>
+      <button id="newsButton" onclick="openAdminSection('news')">
+        Мэдээ
+      </button>
 
-<button id="settingsButton" onclick="openAdminSection('settings')">
-  Тохиргоо
-</button>
+      <button id="settingsButton" onclick="openAdminSection('settings')">
+        Тохиргоо
+      </button>
 
       <button
         id="logoutButton"
@@ -190,86 +327,123 @@
       <p class="subtitle">
         Neuroscan MRI вэбсайтын мэдээллийг эндээс удирдана.
       </p>
-<section id="servicesEditor" style="display:none;">
 
-  <h2>Үйлчилгээний мэдээлэл засах</h2>
+      <section id="servicesEditor" style="display:none;">
 
-  <p>
-    MRI үйлчилгээний үнэ болон тайлбарыг эндээс засна.
-  </p>
+        <h2>Үйлчилгээний мэдээлэл засах</h2>
 
-  <div id="servicesList">
-    Мэдээлэл ачаалж байна...
-  </div>
+        <p>
+          MRI үйлчилгээний үнэ болон тайлбарыг эндээс засна.
+        </p>
 
-</section>
+        <div id="servicesList">
+          Мэдээлэл ачаалж байна...
+        </div>
+
+      </section>
+
       <section id="doctorsEditor" style="display:none;">
-  <h2>Эмч мэргэжилтэн</h2>
-  <p>2 эмчийн мэдээллийг эндээс засна.</p>
-  <div id="doctorsList">Мэдээлэл ачаалж байна...</div>
-</section>
+        <h2>Эмч мэргэжилтэн</h2>
+        <p>2 эмчийн мэдээллийг эндээс засна.</p>
+        <div id="doctorsList">Мэдээлэл ачаалж байна...</div>
+      </section>
 
-<section id="newsEditor" style="display:none;">
-  <h2>Мэдээ</h2>
-  <p>Мэдээ нэмэх, засах, нийтлэх болон устгах.</p>
-  <div class="admin-card" style="margin-bottom:24px;">
-  <h3>Шинэ мэдээ</h3>
+      <section id="newsEditor" style="display:none;">
 
-  <label>Гарчиг</label>
-  <input id="newNewsTitle" type="text" placeholder="Гарчиг оруулна уу">
+        <h2>Мэдээ</h2>
 
-  <label>Агуулга</label>
-  <textarea id="newNewsContent" rows="10" placeholder="Мэдээний агуулга"></textarea>
+        <p>
+          Мэдээ нэмэх, засах, нийтлэх болон устгах.
+        </p>
 
-  <label>YouTube линк</label>
-  <input id="newNewsYoutube" type="url" placeholder="https://youtube.com/...">
+        <div class="admin-card">
 
-  <label>Зураг</label>
+          <h3>Шинэ мэдээ</h3>
 
-  <div
-    id="newsUploadBox"
-    style="
-      border:2px dashed #cbd5e1;
-      border-radius:14px;
-      padding:36px;
-      text-align:center;
-      cursor:pointer;
-      margin-bottom:12px;
-    "
-  >
-    Зургаа энд дарж эсвэл зөөж оруулна уу
-  </div>
+          <label for="newNewsTitle">
+            Гарчиг
+          </label>
 
-  <input
-    id="newsImageFile"
-    type="file"
-    accept="image/jpeg,image/png,image/webp"
-    style="display:none;"
-  >
+          <input
+            id="newNewsTitle"
+            type="text"
+            placeholder="Гарчиг оруулна уу"
+          >
 
-  <div id="newsImagePreview"></div>
+          <label for="newNewsContent">
+            Агуулга
+          </label>
 
-  <label style="display:flex;gap:8px;align-items:center;margin-top:16px;">
-    <input id="newNewsPublished" type="checkbox">
-    Нийтлэх
-  </label>
+          <textarea
+            id="newNewsContent"
+            rows="10"
+            placeholder="Мэдээний агуулга"
+          ></textarea>
 
-  <button
-    type="button"
-    onclick="createNewsFromEditor()"
-    style="margin-top:16px;"
-  >
-    Хадгалах
-  </button>
-</div>
-  <div id="newsList">Мэдээлэл ачаалж байна...</div>
-</section>
+          <label for="newNewsYoutube">
+            YouTube линк
+          </label>
 
-<section id="settingsEditor" style="display:none;">
-  <h2>Тохиргоо</h2>
-  <p>Холбоо барих мэдээлэл болон цаг захиалгын холбоос.</p>
-  <div id="settingsForm">Мэдээлэл ачаалж байна...</div>
-</section>
+          <input
+            id="newNewsYoutube"
+            type="url"
+            placeholder="https://youtube.com/..."
+          >
+
+          <label>
+            Зураг
+          </label>
+
+          <div id="newsUploadBox">
+            Зургаа энд дарж эсвэл зөөж оруулна уу
+          </div>
+
+          <input
+            id="newsImageFile"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            style="display:none;"
+          >
+
+          <div id="newsImagePreview"></div>
+
+          <label>
+            <input
+              id="newNewsPublished"
+              type="checkbox"
+            >
+            Нийтлэх
+          </label>
+
+          <button
+            type="button"
+            onclick="createNewsFromEditor()"
+          >
+            Хадгалах
+          </button>
+
+        </div>
+
+        <div id="newsList">
+          Мэдээлэл ачаалж байна...
+        </div>
+
+      </section>
+
+      <section id="settingsEditor" style="display:none;">
+
+        <h2>Тохиргоо</h2>
+
+        <p>
+          Холбоо барих мэдээлэл болон цаг захиалгын холбоос.
+        </p>
+
+        <div id="settingsForm">
+          Мэдээлэл ачаалж байна...
+        </div>
+
+      </section>
+
       <div class="cards" id="dashboardCards">
 
         <div class="card">
@@ -307,7 +481,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="admin-dashboard.js?v=20"></script>
-  
+  <script src="admin-dashboard.js?v=21"></script>
+
 </body>
 </html>
