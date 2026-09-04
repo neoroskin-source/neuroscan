@@ -707,134 +707,151 @@
     // LOGO + SOCIAL ICONS
     // ---------------------------------
 
-    topBar.innerHTML = `
+   topBar.innerHTML = `
+  <div
+    id="neuroscanTopInner"
+    style="
+      width:100%;
+      max-width:1920px;
+      margin:0 auto;
+      min-height:92px;
+      padding:10px 28px;
+      box-sizing:border-box;
 
-      <div
+      display:flex;
+      align-items:center;
+      gap:28px;
+    "
+  >
+
+    <a
+      href="index.html"
+      id="publicTopLogo"
+      style="
+        display:flex;
+        align-items:center;
+        gap:12px;
+        text-decoration:none;
+        flex-shrink:0;
+      "
+    >
+      ${
+        s.logo_url
+          ? `
+            <img
+              src="${esc(s.logo_url)}"
+              alt="${esc(
+                s.site_name ||
+                'NEUROSCAN'
+              )}"
+              style="
+                display:block;
+                width:auto;
+                height:72px;
+                max-width:120px;
+                object-fit:contain;
+                flex-shrink:0;
+              "
+            >
+          `
+          : ''
+      }
+
+      <span
         style="
-          width:100%;
-          max-width:1440px;
-          margin:0 auto;
-
-          min-height:126px;
-
-          padding:
-            16px
-            40px;
-
-          box-sizing:
-            border-box;
-
-          display:flex;
-
-          align-items:
-            center;
-
-          justify-content:
-            space-between;
-
-          gap:24px;
+          font-size:18px;
+          line-height:1;
+          font-weight:700;
+          color:#2563b8;
+          white-space:nowrap;
         "
       >
+        NEUROSCAN
+      </span>
+    </a>
 
 
-        <!-- =========================
-             LOGO
-             ========================= -->
-
-        <a
-          href="index.html"
-          id="publicTopLogo"
-          style="
-            display:flex;
-            align-items:center;
-
-            gap:16px;
-
-            text-decoration:
-              none;
-
-            min-width:
-              210px;
-          "
-        >
-
-          ${
-            s.logo_url
-              ? `
-
-                <img
-                  src="${esc(
-                    s.logo_url
-                  )}"
-
-                  alt="${esc(
-                    s.site_name ||
-                    'NEUROSCAN'
-                  )}"
-
-                  style="
-  display:block;
-  width:auto;
-  height:90px;
-  max-width:138px;
-  max-height:72px;
-  object-fit:contain;
-  flex-shrink:0;
-"
-                >
-
-              `
-              : ''
-          }
+    <div
+      id="publicTopNavigation"
+      style="
+        flex:1;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:26px;
+        min-width:0;
+      "
+    ></div>
 
 
-          <span
-            style="
-              font-size:16px;
+    <div
+      id="headerSocialLinks"
+      style="
+        display:flex;
+        align-items:center;
+        justify-content:flex-end;
+        gap:14px;
+        flex-shrink:0;
+      "
+    ></div>
 
-              line-height:1;
+  </div>
+`;
+    // ---------------------------------
+// MOVE ORIGINAL NAV INTO TOP BAR
+// ---------------------------------
 
-              font-weight:700;
+const topNavigation =
+  document.getElementById(
+    'publicTopNavigation'
+  );
 
-              letter-spacing:
-                -0.03em;
+const originalNav =
+  [...siteHeader.querySelectorAll(
+    'nav, .nav, .navbar'
+  )]
+  .find(el =>
+    !el.closest('#neuroscanTopBar')
+  );
 
-              color:#2563b8;
+if (
+  topNavigation &&
+  originalNav
+) {
 
-              white-space:
-                nowrap;
-            "
-          >
-            NEUROSCAN
-          </span>
+  const navLinks =
+    [
+      ...originalNav.querySelectorAll(
+        'a'
+      )
+    ];
 
-        </a>
+  navLinks.forEach(link => {
 
+    link.style.fontSize =
+      '14px';
 
-        <!-- =========================
-             SOCIAL ICONS
-             ========================= -->
+    link.style.fontWeight =
+      '600';
 
-        <div
-          id="headerSocialLinks"
+    link.style.padding =
+      '6px 4px';
 
-          style="
-            display:flex;
+    link.style.whiteSpace =
+      'nowrap';
 
-            align-items:
-              center;
+    link.style.textDecoration =
+      'none';
 
-            justify-content:
-              flex-end;
-
-            gap:18px;
-          "
-        ></div>
-
-      </div>
-    `;
+    topNavigation.appendChild(
+      link
+    );
+  });
 
 
+  originalNav.style.display =
+    'none';
+}
     // ---------------------------------
     // SOCIAL LINKS
     // ---------------------------------
