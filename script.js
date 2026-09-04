@@ -9,9 +9,60 @@ const supabaseClient = window.supabase
     )
   : null;
 
-const BOOKING_URL = 'appointment.html';
-document.querySelectorAll('[data-booking-link]').forEach(a => a.href = BOOKING_URL);
+const BOOKING_PAGE_URL =
+  'appointment.html';
 
+
+document
+  .querySelectorAll(
+    '[data-booking-link]'
+  )
+  .forEach(link => {
+
+    link.href =
+      BOOKING_PAGE_URL;
+
+  });
+const GOOGLE_FORM_URL =
+  'ЭНД_GOOGLE_FORM_URL';
+
+
+const appointmentButton =
+  document.getElementById(
+    'appointmentGoogleFormButton'
+  );
+
+
+if (appointmentButton) {
+
+  if (
+    GOOGLE_FORM_URL &&
+    GOOGLE_FORM_URL !==
+      'ЭНД_GOOGLE_FORM_URL'
+  ) {
+
+    appointmentButton.href =
+      GOOGLE_FORM_URL;
+
+  } else {
+
+    appointmentButton.href =
+      '#';
+
+    appointmentButton.onclick =
+    function(event) {
+
+      event.preventDefault();
+
+      alert(
+        'Google Form холбоос хараахан тохируулаагүй байна.'
+      );
+
+    };
+
+  }
+
+}
 const menuBtn = document.getElementById('menuBtn');
 const mobileNav = document.getElementById('mobileNav');
 menuBtn?.addEventListener('click', () => mobileNav?.classList.toggle('open'));
@@ -265,6 +316,6 @@ async function loadServicesFromSupabase() {
 // Load public Supabase data
 if (!document.querySelector('script[src*="public-data.js"]')) {
   const publicDataScript = document.createElement('script');
-  publicDataScript.src = 'public-data.js?v=547';
+  publicDataScript.src = 'public-data.js?v=548';
   document.body.appendChild(publicDataScript);
 }
