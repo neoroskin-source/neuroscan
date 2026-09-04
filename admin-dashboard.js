@@ -1018,7 +1018,6 @@ async function loadDoctorsEditor() {
       'doctorsList'
     );
 
-
   if (!list) return;
 
 
@@ -1038,6 +1037,11 @@ async function loadDoctorsEditor() {
 
   if (error) {
 
+    console.error(
+      'Doctors load error:',
+      error
+    );
+
     list.textContent =
       'Алдаа: ' +
       error.message;
@@ -1046,137 +1050,593 @@ async function loadDoctorsEditor() {
   }
 
 
-  list.innerHTML =
-    '';
+  list.innerHTML = '';
 
 
-  (data || [])
-    .forEach(
-      doctor => {
+  if (
+    !data ||
+    !data.length
+  ) {
 
-        const item =
-          document.createElement(
-            'div'
-          );
+    list.innerHTML =
+      '<p>Эмчийн мэдээлэл байхгүй байна.</p>';
 
-
-        item.style.cssText =
-          editorCardStyle();
+    return;
+  }
 
 
-        item.innerHTML = `
+  data.forEach(
+    doctor => {
 
-          <h3>
-            ${escapeAdminHtml(
-              doctor.sort_order
-            )}-р эмч
-          </h3>
-
-
-          <label>
-            Нэр
-          </label>
-
-          <input
-            id="doctor-name-${doctor.id}"
-            value="${escapeAdminHtml(
-              doctor.name
-              || ''
-            )}"
-            style="${fieldStyle()}"
-          >
-
-
-          <label>
-            Мэргэжил
-          </label>
-
-          <input
-            id="doctor-specialty-${doctor.id}"
-            value="${escapeAdminHtml(
-              doctor.specialty
-              || ''
-            )}"
-            style="${fieldStyle()}"
-          >
-
-
-          <label>
-            Туршлага
-          </label>
-
-          <input
-            id="doctor-experience-${doctor.id}"
-            value="${escapeAdminHtml(
-              doctor.experience
-              || ''
-            )}"
-            style="${fieldStyle()}"
-          >
-
-
-          <label>
-            Танилцуулга
-          </label>
-
-          <textarea
-            id="doctor-bio-${doctor.id}"
-            rows="6"
-            style="${fieldStyle()}"
-          >${escapeAdminHtml(
-            doctor.bio
-            || ''
-          )}</textarea>
-
-
-          <label>
-            Зургийн URL
-          </label>
-
-          <input
-            id="doctor-image-${doctor.id}"
-            value="${escapeAdminHtml(
-              doctor.image_url
-              || ''
-            )}"
-            placeholder="https://..."
-            style="${fieldStyle()}"
-          >
-
-
-          <button
-            type="button"
-            onclick="
-              saveDoctor(
-                ${doctor.id},
-                this
-              )
-            "
-            style="
-              padding:11px 18px;
-              border:0;
-              border-radius:8px;
-              background:#17212b;
-              color:#fff;
-              font-weight:700;
-              cursor:pointer;
-            "
-          >
-            Хадгалах
-          </button>
-
-        `;
-
-
-        list.appendChild(
-          item
+      const item =
+        document.createElement(
+          'div'
         );
 
-      }
-    );
+
+      item.style.cssText =
+        editorCardStyle();
+
+
+      const doctorImage =
+        doctor.image_url || '';
+
+
+      item.innerHTML = `
+
+        <h3
+          style="
+            margin-top:0;
+            margin-bottom:24px;
+          "
+        >
+          ${escapeAdminHtml(
+            doctor.sort_order
+          )}-р эмч
+        </h3>
+
+
+        <!-- =========================
+             NAME
+             ========================= -->
+
+        <label>
+          Нэр
+        </label>
+
+        <input
+          id="doctor-name-${doctor.id}"
+          type="text"
+          value="${escapeAdminHtml(
+            doctor.name || ''
+          )}"
+          style="${fieldStyle()}"
+        >
+
+
+        <!-- =========================
+             SPECIALTY
+             ========================= -->
+
+        <label>
+          Мэргэжил
+        </label>
+
+        <input
+          id="doctor-specialty-${doctor.id}"
+          type="text"
+          value="${escapeAdminHtml(
+            doctor.specialty || ''
+          )}"
+          style="${fieldStyle()}"
+        >
+
+
+        <!-- =========================
+             EXPERIENCE
+             ========================= -->
+
+        <label>
+          Туршлага
+        </label>
+
+        <input
+          id="doctor-experience-${doctor.id}"
+          type="text"
+          value="${escapeAdminHtml(
+            doctor.experience || ''
+          )}"
+          style="${fieldStyle()}"
+        >
+
+
+        <!-- =========================
+             BIO
+             ========================= -->
+
+        <label>
+          Танилцуулга
+        </label>
+
+        <textarea
+          id="doctor-bio-${doctor.id}"
+          rows="6"
+          style="${fieldStyle()}"
+        >${escapeAdminHtml(
+          doctor.bio || ''
+        )}</textarea>
+
+
+        <!-- =========================
+             DOCTOR IMAGE
+             ========================= -->
+
+        <label
+          style="
+            display:block;
+            margin-top:8px;
+            margin-bottom:8px;
+          "
+        >
+          Эмчийн зураг
+        </label>
+
+
+        <div
+          id="doctor-upload-box-${doctor.id}"
+          onclick="
+            document
+              .getElementById(
+                'doctor-image-file-${doctor.id}'
+              )
+              .click()
+          "
+          style="
+            width:100%;
+            min-height:140px;
+            border:2px dashed #cbd5e1;
+            border-radius:14px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+            cursor:pointer;
+            background:#fafcff;
+            color:#64748b;
+            padding:24px;
+            box-sizing:border-box;
+            margin-bottom:12px;
+          "
+        >
+          Энд дарж эмчийн зураг сонгоно уу
+        </div>
+
+
+        <input
+          id="doctor-image-file-${doctor.id}"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          style="display:none;"
+          onchange="
+            uploadDoctorImage(
+              this.files?.[0],
+              ${doctor.id}
+            )
+          "
+        >
+
+
+        <!--
+          image_url-г энэ hidden input-д хадгална.
+          saveDoctor() энэ value-г Supabase руу явуулна.
+        -->
+
+        <input
+          id="doctor-image-${doctor.id}"
+          type="hidden"
+          value="${escapeAdminHtml(
+            doctorImage
+          )}"
+        >
+
+
+        <div
+          id="doctor-image-preview-${doctor.id}"
+          style="
+            margin-bottom:18px;
+          "
+        >
+          ${
+            doctorImage
+              ? `
+                <div
+                  style="
+                    display:flex;
+                    align-items:flex-start;
+                    gap:14px;
+                    flex-wrap:wrap;
+                  "
+                >
+
+                  <img
+                    src="${escapeAdminHtml(
+                      doctorImage
+                    )}"
+                    alt="Doctor preview"
+                    style="
+                      width:150px;
+                      height:180px;
+                      object-fit:cover;
+                      border-radius:14px;
+                      border:1px solid #e4e9ef;
+                      background:#fff;
+                    "
+                  >
+
+                  <button
+                    type="button"
+                    onclick="
+                      removeDoctorImage(
+                        ${doctor.id}
+                      )
+                    "
+                    style="
+                      padding:9px 14px;
+                      background:#fff;
+                      border:1px solid #d8dee6;
+                      border-radius:8px;
+                      cursor:pointer;
+                    "
+                  >
+                    Зураг арилгах
+                  </button>
+
+                </div>
+              `
+              : ''
+          }
+        </div>
+
+
+        <!-- =========================
+             SAVE
+             ========================= -->
+
+        <button
+          type="button"
+          onclick="
+            saveDoctor(
+              ${doctor.id},
+              this
+            )
+          "
+          style="
+            padding:11px 18px;
+            border:0;
+            border-radius:8px;
+            background:#17212b;
+            color:#fff;
+            font-weight:700;
+            cursor:pointer;
+          "
+        >
+          Хадгалах
+        </button>
+
+      `;
+
+
+      list.appendChild(
+        item
+      );
+
+    }
+  );
 
 }
 
+
+// =====================================================
+// UPLOAD DOCTOR IMAGE
+// =====================================================
+
+window.uploadDoctorImage =
+async function(
+  file,
+  doctorId
+) {
+
+  if (!file) return;
+
+
+  const allowedTypes = [
+    'image/jpeg',
+    'image/png',
+    'image/webp'
+  ];
+
+
+  if (
+    !allowedTypes.includes(
+      file.type
+    )
+  ) {
+
+    alert(
+      'JPG, PNG эсвэл WEBP зураг сонгоно уу.'
+    );
+
+    return;
+  }
+
+
+  if (
+    file.size >
+    5 * 1024 * 1024
+  ) {
+
+    alert(
+      'Зураг 5MB-аас бага байх ёстой.'
+    );
+
+    return;
+  }
+
+
+  const uploadBox =
+    document.getElementById(
+      `doctor-upload-box-${doctorId}`
+    );
+
+
+  if (uploadBox) {
+
+    uploadBox.textContent =
+      'Зураг upload хийж байна...';
+
+  }
+
+
+  const extension =
+    file.name
+      .split('.')
+      .pop()
+      .toLowerCase();
+
+
+  const fileName =
+    `doctors/${doctorId}-${Date.now()}-${Math.random()
+      .toString(36)
+      .slice(2)}.${extension}`;
+
+
+  const {
+    error: uploadError
+  } =
+    await supabaseClient
+      .storage
+      .from(
+        'site-media'
+      )
+      .upload(
+        fileName,
+        file
+      );
+
+
+  if (uploadError) {
+
+    console.error(
+      'Doctor image upload error:',
+      uploadError
+    );
+
+
+    if (uploadBox) {
+
+      uploadBox.textContent =
+        'Энд дарж эмчийн зураг сонгоно уу';
+
+    }
+
+
+    alert(
+      'Зураг upload хийхэд алдаа: ' +
+      uploadError.message
+    );
+
+    return;
+  }
+
+
+  const {
+    data
+  } =
+    supabaseClient
+      .storage
+      .from(
+        'site-media'
+      )
+      .getPublicUrl(
+        fileName
+      );
+
+
+  const publicUrl =
+    data.publicUrl;
+
+
+  const hiddenInput =
+    document.getElementById(
+      `doctor-image-${doctorId}`
+    );
+
+
+  if (hiddenInput) {
+
+    hiddenInput.value =
+      publicUrl;
+
+  }
+
+
+  showDoctorImagePreview(
+    doctorId,
+    publicUrl
+  );
+
+
+  if (uploadBox) {
+
+    uploadBox.textContent =
+      'Өөр зураг сонгох';
+
+  }
+
+};
+
+
+// =====================================================
+// SHOW DOCTOR IMAGE PREVIEW
+// =====================================================
+
+function showDoctorImagePreview(
+  doctorId,
+  imageUrl
+) {
+
+  const preview =
+    document.getElementById(
+      `doctor-image-preview-${doctorId}`
+    );
+
+
+  if (!preview) return;
+
+
+  if (!imageUrl) {
+
+    preview.innerHTML =
+      '';
+
+    return;
+  }
+
+
+  preview.innerHTML = `
+
+    <div
+      style="
+        display:flex;
+        align-items:flex-start;
+        gap:14px;
+        flex-wrap:wrap;
+      "
+    >
+
+      <img
+        src="${escapeAdminHtml(
+          imageUrl
+        )}"
+        alt="Doctor preview"
+        style="
+          width:150px;
+          height:180px;
+          object-fit:cover;
+          border-radius:14px;
+          border:1px solid #e4e9ef;
+          background:#fff;
+        "
+      >
+
+
+      <button
+        type="button"
+        onclick="
+          removeDoctorImage(
+            ${doctorId}
+          )
+        "
+        style="
+          padding:9px 14px;
+          background:#fff;
+          border:1px solid #d8dee6;
+          border-radius:8px;
+          cursor:pointer;
+        "
+      >
+        Зураг арилгах
+      </button>
+
+    </div>
+
+  `;
+
+}
+
+
+// =====================================================
+// REMOVE DOCTOR IMAGE
+// =====================================================
+
+window.removeDoctorImage =
+function(
+  doctorId
+) {
+
+  const hiddenInput =
+    document.getElementById(
+      `doctor-image-${doctorId}`
+    );
+
+
+  const fileInput =
+    document.getElementById(
+      `doctor-image-file-${doctorId}`
+    );
+
+
+  const uploadBox =
+    document.getElementById(
+      `doctor-upload-box-${doctorId}`
+    );
+
+
+  if (hiddenInput) {
+
+    hiddenInput.value =
+      '';
+
+  }
+
+
+  if (fileInput) {
+
+    fileInput.value =
+      '';
+
+  }
+
+
+  if (uploadBox) {
+
+    uploadBox.textContent =
+      'Энд дарж эмчийн зураг сонгоно уу';
+
+  }
+
+
+  showDoctorImagePreview(
+    doctorId,
+    ''
+  );
+
+};
+
+
+// =====================================================
+// SAVE DOCTOR
+// =====================================================
 
 window.saveDoctor =
 async function(
@@ -1184,68 +1644,90 @@ async function(
   button
 ) {
 
-  button.disabled =
-    true;
+  if (button) {
+
+    button.disabled =
+      true;
 
 
-  button.textContent =
-    'Хадгалж байна...';
+    button.textContent =
+      'Хадгалж байна...';
+
+  }
 
 
-  const { error } =
+  const name =
+    document
+      .getElementById(
+        `doctor-name-${id}`
+      )
+      ?.value
+      .trim()
+    || '';
+
+
+  const specialty =
+    document
+      .getElementById(
+        `doctor-specialty-${id}`
+      )
+      ?.value
+      .trim()
+    || '';
+
+
+  const experience =
+    document
+      .getElementById(
+        `doctor-experience-${id}`
+      )
+      ?.value
+      .trim()
+    || '';
+
+
+  const bio =
+    document
+      .getElementById(
+        `doctor-bio-${id}`
+      )
+      ?.value
+      .trim()
+    || '';
+
+
+  const imageUrl =
+    document
+      .getElementById(
+        `doctor-image-${id}`
+      )
+      ?.value
+      .trim()
+    || '';
+
+
+  const {
+    error
+  } =
     await supabaseClient
       .from('doctors')
       .update({
 
         name:
-          document
-            .getElementById(
-              `doctor-name-${id}`
-            )
-            ?.value
-            .trim()
-          || '',
-
+          name,
 
         specialty:
-          document
-            .getElementById(
-              `doctor-specialty-${id}`
-            )
-            ?.value
-            .trim()
-          || '',
-
+          specialty,
 
         experience:
-          document
-            .getElementById(
-              `doctor-experience-${id}`
-            )
-            ?.value
-            .trim()
-          || '',
-
+          experience,
 
         bio:
-          document
-            .getElementById(
-              `doctor-bio-${id}`
-            )
-            ?.value
-            .trim()
-          || '',
-
+          bio,
 
         image_url:
-          document
-            .getElementById(
-              `doctor-image-${id}`
-            )
-            ?.value
-            .trim()
-          || null,
-
+          imageUrl ||
+          null,
 
         updated_at:
           new Date()
@@ -1261,16 +1743,21 @@ async function(
   if (error) {
 
     console.error(
+      'Doctor save error:',
       error
     );
 
 
-    button.disabled =
-      false;
+    if (button) {
+
+      button.disabled =
+        false;
 
 
-    button.textContent =
-      'Алдаа';
+      button.textContent =
+        'Алдаа';
+
+    }
 
 
     alert(
@@ -1291,7 +1778,6 @@ async function(
   refreshPreviewIfOpen();
 
 };
-
 
 // =====================================================
 // ABOUT
