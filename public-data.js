@@ -282,6 +282,48 @@
     ) {
       const s =
         settingsRows[0];
+      // ===================================
+// PUBLIC SITE LOGO + SITE NAME
+// ===================================
+
+const publicLogoLink =
+  document.querySelector(
+    '.site-header .logo, header .logo, .nav .logo'
+  );
+
+if (publicLogoLink) {
+
+  if (s.logo_url) {
+
+    publicLogoLink.innerHTML = `
+      <img
+        src="${esc(s.logo_url)}"
+        alt="${esc(
+          s.site_name || 'NEUROSCAN MRI'
+        )}"
+        style="
+          max-height:52px;
+          max-width:220px;
+          width:auto;
+          height:auto;
+          object-fit:contain;
+          display:block;
+        "
+      >
+    `;
+
+  } else if (s.site_name) {
+
+    publicLogoLink.textContent =
+      s.site_name;
+  }
+}
+
+
+// Browser title
+if (s.site_name) {
+  document.title = s.site_name;
+}
 // ===================================
 // HEADER SOCIAL ICONS
 // ===================================
