@@ -1206,7 +1206,27 @@ if (missionContent) {
   }
 
 }
+// -------------------------------
+// АЛСЫН ХАРАА
+// -------------------------------
 
+if (visionContent) {
+
+  if (s.vision_content) {
+
+    visionContent.innerHTML =
+      sanitizeRichHtml(
+        s.vision_content
+      );
+
+  } else {
+
+    visionContent.innerHTML =
+      '';
+
+  }
+
+}
 
 // -------------------------------
 // ҮНЭТ ЗҮЙЛС
