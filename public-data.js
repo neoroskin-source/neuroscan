@@ -1124,19 +1124,19 @@ const missionContent =
   document.getElementById(
     'publicMissionContent'
   );
+
 const visionContent =
   document.getElementById(
     'publicVisionContent'
   );
+
 const valuesContent =
   document.getElementById(
     'publicValuesContent'
   );
 
 
-// -------------------------------
 // БИДНИЙ ТУХАЙ
-// -------------------------------
 
 if (aboutContent) {
 
@@ -1149,17 +1149,13 @@ if (aboutContent) {
 
   } else {
 
-    aboutContent.innerHTML =
-      '';
+    aboutContent.innerHTML = '';
 
   }
-
 }
 
 
-// -------------------------------
 // ABOUT IMAGE
-// -------------------------------
 
 if (aboutImage) {
 
@@ -1181,76 +1177,49 @@ if (aboutImage) {
       'none';
 
   }
-
 }
 
 
-// -------------------------------
 // ЭРХЭМ ЗОРИЛГО
-// -------------------------------
 
 if (missionContent) {
 
-  if (s.mission_content) {
-
-    missionContent.innerHTML =
-      sanitizeRichHtml(
-        s.mission_content
-      );
-
-  } else {
-
-    missionContent.innerHTML =
-      '';
-
-  }
+  missionContent.innerHTML =
+    s.mission_content
+      ? sanitizeRichHtml(
+          s.mission_content
+        )
+      : '';
 
 }
-// -------------------------------
+
+
 // АЛСЫН ХАРАА
-// -------------------------------
 
 if (visionContent) {
 
-  if (s.vision_content) {
-
-    visionContent.innerHTML =
-      sanitizeRichHtml(
-        s.vision_content
-      );
-
-  } else {
-
-    visionContent.innerHTML =
-      '';
-
-  }
+  visionContent.innerHTML =
+    s.vision_content
+      ? sanitizeRichHtml(
+          s.vision_content
+        )
+      : '';
 
 }
 
-// -------------------------------
+
 // ҮНЭТ ЗҮЙЛС
-// -------------------------------
 
 if (valuesContent) {
 
-  if (s.values_content) {
-
-    valuesContent.innerHTML =
-      sanitizeRichHtml(
-        s.values_content
-      );
-
-  } else {
-
-    valuesContent.innerHTML =
-      '';
-
-  }
+  valuesContent.innerHTML =
+    s.values_content
+      ? sanitizeRichHtml(
+          s.values_content
+        )
+      : '';
 
 }
-
-
   // =====================================================
   // BOOKING LINKS
   // =====================================================
