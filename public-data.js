@@ -362,8 +362,8 @@ if (siteHeader) {
         width:100%;
         max-width:1440px;
         margin:0 auto;
-        min-height:82px;
-        padding:14px 40px;
+        min-height:105px;
+        padding:16px 40px;
         box-sizing:border-box;
         display:flex;
         align-items:center;
@@ -372,51 +372,52 @@ if (siteHeader) {
       "
     >
 
-      <a
-        href="index.html"
-        id="publicTopLogo"
-        style="
-          display:flex;
-          align-items:center;
-          text-decoration:none;
-        "
-      >
-        ${
-          s.logo_url
-            ? `
-              <img
-                src="${esc(s.logo_url)}"
-                alt="${esc(
-                  s.site_name ||
-                  'NEUROSCAN MRI'
-                )}"
-                style="
-                  display:block;
-                  width:auto;
-                  height:auto;
-                  max-width:210px;
-                  max-height:60px;
-                  object-fit:contain;
-                "
-              >
-            `
-            : `
-              <span
-                style="
-                  font-size:24px;
-                  font-weight:800;
-                  color:#2563b8;
-                "
-              >
-                ${esc(
-                  s.site_name ||
-                  'NEUROSCAN MRI'
-                )}
-              </span>
-            `
-        }
-      </a>
+     <a
+  href="index.html"
+  id="publicTopLogo"
+  style="
+    display:flex;
+    align-items:center;
+    gap:16px;
+    text-decoration:none;
+    min-width:260px;
+  "
+>
+  ${
+    s.logo_url
+      ? `
+        <img
+          src="${esc(s.logo_url)}"
+          alt="${esc(
+            s.site_name ||
+            'NEUROSCAN'
+          )}"
+          style="
+            display:block;
+            width:auto;
+            height:72px;
+            max-width:110px;
+            object-fit:contain;
+            flex-shrink:0;
+          "
+        >
+      `
+      : ''
+  }
 
+  <span
+    style="
+      font-size:30px;
+      line-height:1;
+      font-weight:800;
+      letter-spacing:-0.03em;
+      color:#2563b8;
+      white-space:nowrap;
+    "
+  >
+    NEUROSCAN
+  </span>
+</a>
 
       <div
         id="headerSocialLinks"
