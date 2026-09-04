@@ -1674,8 +1674,6 @@ function() {
     url
   );
 };
-
-
 // =====================================================
 // SETTINGS
 // =====================================================
@@ -1701,6 +1699,7 @@ async function loadSettingsEditor() {
 
   if (
     error ||
+    !data ||
     !data.length
   ) {
 
@@ -1718,17 +1717,34 @@ async function loadSettingsEditor() {
       style="${editorCardStyle()}"
     >
 
+      <!-- =========================
+           CONTACT
+           ========================= -->
+
+      <h3
+        style="
+          margin-top:0;
+          margin-bottom:22px;
+        "
+      >
+        Холбоо барих мэдээлэл
+      </h3>
+
+
       <label>
         Email
       </label>
 
       <input
         id="setting-email"
+        type="email"
         value="${escapeAdminHtml(
           s.email
         )}"
+        placeholder="example@email.com"
         style="${fieldStyle()}"
       >
+
 
       <label>
         Ерөнхий утас
@@ -1736,11 +1752,14 @@ async function loadSettingsEditor() {
 
       <input
         id="setting-general-phone"
+        type="text"
         value="${escapeAdminHtml(
           s.general_phone
         )}"
+        placeholder="(+976) 7700-0011"
         style="${fieldStyle()}"
       >
+
 
       <label>
         Утас 1
@@ -1748,11 +1767,14 @@ async function loadSettingsEditor() {
 
       <input
         id="setting-phone1"
+        type="text"
         value="${escapeAdminHtml(
           s.phone_1
         )}"
+        placeholder="8888-2328"
         style="${fieldStyle()}"
       >
+
 
       <label>
         Утас 2
@@ -1760,11 +1782,14 @@ async function loadSettingsEditor() {
 
       <input
         id="setting-phone2"
+        type="text"
         value="${escapeAdminHtml(
           s.phone_2
         )}"
+        placeholder="8503-8105"
         style="${fieldStyle()}"
       >
+
 
       <label>
         Хаяг
@@ -1773,10 +1798,129 @@ async function loadSettingsEditor() {
       <textarea
         id="setting-address"
         rows="3"
+        placeholder="Төвийн хаяг"
         style="${fieldStyle()}"
       >${escapeAdminHtml(
         s.address
       )}</textarea>
+
+
+      <label>
+        Google Maps линк
+      </label>
+
+      <input
+        id="setting-maps"
+        type="url"
+        value="${escapeAdminHtml(
+          s.maps_url
+        )}"
+        placeholder="https://maps.google.com/..."
+        style="${fieldStyle()}"
+      >
+
+
+      <label>
+        Chat линк
+      </label>
+
+      <input
+        id="setting-chat"
+        type="url"
+        value="${escapeAdminHtml(
+          s.chat_url
+        )}"
+        placeholder="https://m.me/... эсвэл chat линк"
+        style="${fieldStyle()}"
+      >
+
+
+      <!-- =========================
+           SOCIAL
+           ========================= -->
+
+      <hr
+        style="
+          border:0;
+          border-top:1px solid #e4e9ef;
+          margin:32px 0;
+        "
+      >
+
+      <h3
+        style="
+          margin-bottom:22px;
+        "
+      >
+        Social хаягууд
+      </h3>
+
+
+      <label>
+        Facebook
+      </label>
+
+      <input
+        id="setting-facebook"
+        type="url"
+        value="${escapeAdminHtml(
+          s.facebook_url
+        )}"
+        placeholder="https://facebook.com/..."
+        style="${fieldStyle()}"
+      >
+
+
+      <label>
+        Instagram
+      </label>
+
+      <input
+        id="setting-instagram"
+        type="url"
+        value="${escapeAdminHtml(
+          s.instagram_url
+        )}"
+        placeholder="https://instagram.com/..."
+        style="${fieldStyle()}"
+      >
+
+
+      <label>
+        YouTube
+      </label>
+
+      <input
+        id="setting-youtube"
+        type="url"
+        value="${escapeAdminHtml(
+          s.youtube_url
+        )}"
+        placeholder="https://youtube.com/..."
+        style="${fieldStyle()}"
+      >
+
+
+      <!-- =========================
+           OTHER
+           ========================= -->
+
+      <hr
+        style="
+          border:0;
+          border-top:1px solid #e4e9ef;
+          margin:32px 0;
+        "
+      >
+
+      <h3
+        style="
+          margin-bottom:22px;
+        "
+      >
+        Бусад тохиргоо
+      </h3>
+
 
       <label>
         MRI төхөөрөмж
@@ -1784,11 +1928,14 @@ async function loadSettingsEditor() {
 
       <input
         id="setting-machine"
+        type="text"
         value="${escapeAdminHtml(
           s.machine_info
         )}"
+        placeholder="ANKE SuperMark 1.5T MRI"
         style="${fieldStyle()}"
       >
+
 
       <label>
         Цаг захиалгын Google Form URL
@@ -1796,6 +1943,7 @@ async function loadSettingsEditor() {
 
       <input
         id="setting-booking"
+        type="url"
         value="${escapeAdminHtml(
           s.booking_url
         )}"
@@ -1803,15 +1951,19 @@ async function loadSettingsEditor() {
         style="${fieldStyle()}"
       >
 
+
       <button
+        type="button"
         onclick="saveSettings(${s.id}, this)"
         style="
-          padding:11px 18px;
+          padding:12px 20px;
           background:#17212b;
           color:#fff;
           border:0;
           border-radius:8px;
           cursor:pointer;
+          font-weight:700;
+          font-size:15px;
         "
       >
         Хадгалах
@@ -1822,6 +1974,10 @@ async function loadSettingsEditor() {
 }
 
 
+// =====================================================
+// SAVE SETTINGS
+// =====================================================
+
 window.saveSettings =
 async function(id, button) {
 
@@ -1830,66 +1986,155 @@ async function(id, button) {
   button.textContent =
     'Хадгалж байна...';
 
+
+  const email =
+    document
+      .getElementById(
+        'setting-email'
+      )
+      ?.value
+      .trim() || '';
+
+
+  const generalPhone =
+    document
+      .getElementById(
+        'setting-general-phone'
+      )
+      ?.value
+      .trim() || '';
+
+
+  const phone1 =
+    document
+      .getElementById(
+        'setting-phone1'
+      )
+      ?.value
+      .trim() || '';
+
+
+  const phone2 =
+    document
+      .getElementById(
+        'setting-phone2'
+      )
+      ?.value
+      .trim() || '';
+
+
+  const address =
+    document
+      .getElementById(
+        'setting-address'
+      )
+      ?.value
+      .trim() || '';
+
+
+  const mapsUrl =
+    document
+      .getElementById(
+        'setting-maps'
+      )
+      ?.value
+      .trim() || '';
+
+
+  const chatUrl =
+    document
+      .getElementById(
+        'setting-chat'
+      )
+      ?.value
+      .trim() || '';
+
+
+  const facebookUrl =
+    document
+      .getElementById(
+        'setting-facebook'
+      )
+      ?.value
+      .trim() || '';
+
+
+  const instagramUrl =
+    document
+      .getElementById(
+        'setting-instagram'
+      )
+      ?.value
+      .trim() || '';
+
+
+  const youtubeUrl =
+    document
+      .getElementById(
+        'setting-youtube'
+      )
+      ?.value
+      .trim() || '';
+
+
+  const machineInfo =
+    document
+      .getElementById(
+        'setting-machine'
+      )
+      ?.value
+      .trim() || '';
+
+
+  const bookingUrl =
+    document
+      .getElementById(
+        'setting-booking'
+      )
+      ?.value
+      .trim() || '';
+
+
   const { error } =
     await supabaseClient
       .from('settings')
       .update({
 
         email:
-          document
-            .getElementById(
-              'setting-email'
-            )
-            .value
-            .trim(),
+          email || null,
 
         general_phone:
-          document
-            .getElementById(
-              'setting-general-phone'
-            )
-            .value
-            .trim(),
+          generalPhone || null,
 
         phone_1:
-          document
-            .getElementById(
-              'setting-phone1'
-            )
-            .value
-            .trim(),
+          phone1 || null,
 
         phone_2:
-          document
-            .getElementById(
-              'setting-phone2'
-            )
-            .value
-            .trim(),
+          phone2 || null,
 
         address:
-          document
-            .getElementById(
-              'setting-address'
-            )
-            .value
-            .trim(),
+          address || null,
+
+        maps_url:
+          mapsUrl || null,
+
+        chat_url:
+          chatUrl || null,
+
+        facebook_url:
+          facebookUrl || null,
+
+        instagram_url:
+          instagramUrl || null,
+
+        youtube_url:
+          youtubeUrl || null,
 
         machine_info:
-          document
-            .getElementById(
-              'setting-machine'
-            )
-            .value
-            .trim(),
+          machineInfo || null,
 
         booking_url:
-          document
-            .getElementById(
-              'setting-booking'
-            )
-            .value
-            .trim(),
+          bookingUrl || null,
 
         updated_at:
           new Date().toISOString()
@@ -1900,20 +2145,32 @@ async function(id, button) {
         id
       );
 
+
   button.disabled = false;
+
 
   if (error) {
 
-    console.error(error);
+    console.error(
+      'Settings save error:',
+      error
+    );
 
     button.textContent =
       'Алдаа';
 
+    alert(
+      'Тохиргоо хадгалахад алдаа: ' +
+      error.message
+    );
+
     return;
   }
 
+
   button.textContent =
     '✓ Хадгалагдлаа';
+
 
   setTimeout(() => {
 
@@ -1940,3 +2197,4 @@ document.addEventListener(
 
 
 checkAdminAccess();
+
