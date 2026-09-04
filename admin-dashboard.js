@@ -1675,6 +1675,156 @@ function() {
   );
 };
 // =====================================================
+// LOGO UPLOAD
+// =====================================================
+
+let logoImageUrl = '';
+
+async function uploadLogoImage(file) {
+  if (!file) return;
+
+  const allowed = [
+    'image/jpeg',
+    'image/png',
+    'image/webp'
+  ];
+
+  if (!allowed.includes(file.type)) {
+    alert('JPG, PNG эсвэл WEBP зураг оруулна уу.');
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    alert('Logo 5MB-аас бага байх ёстой.');
+    return;
+  }
+
+  const ext =
+    file.name.split('.').pop().toLowerCase();
+
+  const fileName =
+    `logo/${Date.now()}-${Math.random()
+      .toString(36)
+      .slice(2)}.${ext}`;
+
+  const { error } =
+    await supabaseClient
+      .storage
+      .from('site-media')
+      .upload(fileName, file);
+
+  if (error) {
+    alert(
+      'Logo upload хийхэд алдаа: ' +
+      error.message
+    );
+    return;
+  }
+
+  const { data } =
+    supabaseClient
+      .storage
+      .from('site-media')
+      .getPublicUrl(fileName);
+
+  logoImageUrl = data.publicUrl;
+
+  showLogoPreview();
+}
+
+
+function showLogoPreview() {
+  const preview =
+    document.getElementById(
+      'logoImagePreview'
+    );
+
+  if (!preview) return;
+
+  if (!logoImageUrl) {
+    preview.innerHTML = '';
+    return;
+  }
+
+  preview.innerHTML = `
+    <div
+      style="
+        margin-top:14px;
+        padding:18px;
+        border:1px solid #e4e9ef;
+        border-radius:12px;
+        background:#fff;
+        display:inline-block;
+      "
+    >
+      <img
+        src="${escapeAdminHtml(logoImageUrl)}"
+        alt="Logo preview"
+        style="
+          max-width:220px;
+          max-height:90px;
+          object-fit:contain;
+          display:block;
+        "
+      >
+    </div>
+  `;
+}
+
+
+function setupLogoUploader() {
+  const box =
+    document.getElementById(
+      'logoUploadBox'
+    );
+
+  const input =
+    document.getElementById(
+      'logoImageFile'
+    );
+
+  if (!box || !input) return;
+
+  box.onclick = () => {
+    input.click();
+  };
+
+  input.onchange = () => {
+    const file =
+      input.files?.[0];
+
+    if (file) {
+      uploadLogoImage(file);
+    }
+  };
+
+  box.ondragover = event => {
+    event.preventDefault();
+
+    box.style.background =
+      '#f1f5f9';
+  };
+
+  box.ondragleave = () => {
+    box.style.background =
+      '#fafcff';
+  };
+
+  box.ondrop = event => {
+    event.preventDefault();
+
+    box.style.background =
+      '#fafcff';
+
+    const file =
+      event.dataTransfer.files?.[0];
+
+    if (file) {
+      uploadLogoImage(file);
+    }
+  };
+}
+// =====================================================
 // SETTINGS
 // =====================================================
 
