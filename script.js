@@ -265,6 +265,6 @@ async function loadServicesFromSupabase() {
 // Load public Supabase data
 if (!document.querySelector('script[src*="public-data.js"]')) {
   const publicDataScript = document.createElement('script');
-  publicDataScript.src = 'public-data.js?v=542';
+  publicDataScript.src = 'public-data.js?v=543';
   document.body.appendChild(publicDataScript);
 }
