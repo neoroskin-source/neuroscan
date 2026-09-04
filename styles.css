@@ -517,3 +517,72 @@ a:hover {
   }
 
 }
+/* =========================================
+   APPOINTMENT PAGE
+   ========================================= */
+
+.booking-box {
+  max-width: 820px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+}
+
+
+.booking-box h2 {
+  margin-bottom: 24px;
+}
+
+
+.booking-detail {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 0;
+}
+
+
+.booking-detail > div {
+  border: 1px solid #e8ebf0;
+  border-radius: 16px;
+  padding: 22px;
+  background: #ffffff;
+}
+
+
+.booking-phone-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+
+.booking-phone-list a {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #2f66b3;
+}
+
+
+.booking-box .hero-actions {
+  margin-top: 24px;
+}
+
+
+.booking-box .primary-btn {
+  border: 0;
+  box-shadow: none;
+}
+
+
+@media (max-width: 720px) {
+
+  .booking-detail {
+    grid-template-columns: 1fr;
+  }
+
+}
