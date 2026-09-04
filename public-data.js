@@ -617,7 +617,107 @@
         `;
       }
     }
+// ===================================
+// SOCIAL / MAPS / CHAT
+// ===================================
 
+const footerMain =
+  document.querySelector('.footer-main');
+
+if (footerMain) {
+  let socialBlock =
+    document.getElementById('publicSocialLinks');
+
+  if (!socialBlock) {
+    socialBlock =
+      document.createElement('div');
+
+    socialBlock.id =
+      'publicSocialLinks';
+
+    socialBlock.style.cssText = `
+      margin-top:24px;
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+      align-items:center;
+    `;
+
+    const footerContainer =
+      footerMain.querySelector('.container');
+
+    if (footerContainer) {
+      footerContainer.appendChild(
+        socialBlock
+      );
+    }
+  }
+
+  const socialLinks = [];
+
+  if (s.facebook_url) {
+    socialLinks.push(`
+      <a
+        href="${esc(s.facebook_url)}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Facebook
+      </a>
+    `);
+  }
+
+  if (s.instagram_url) {
+    socialLinks.push(`
+      <a
+        href="${esc(s.instagram_url)}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Instagram
+      </a>
+    `);
+  }
+
+  if (s.youtube_url) {
+    socialLinks.push(`
+      <a
+        href="${esc(s.youtube_url)}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        YouTube
+      </a>
+    `);
+  }
+
+  if (s.chat_url) {
+    socialLinks.push(`
+      <a
+        href="${esc(s.chat_url)}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Chat
+      </a>
+    `);
+  }
+
+  if (s.maps_url) {
+    socialLinks.push(`
+      <a
+        href="${esc(s.maps_url)}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Google Maps
+      </a>
+    `);
+  }
+
+  socialBlock.innerHTML =
+    socialLinks.join('');
+}
 
     // ====================================
     // NEWS
