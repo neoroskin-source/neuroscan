@@ -1299,7 +1299,9 @@ async function(
 
 let aboutImageUrl =
   '';
-
+let missionIconValue = '';
+let visionIconValue = '';
+let valuesIconValue = '';
 let aboutSettingsId =
   null;
 
