@@ -1106,73 +1106,126 @@ if (
   }
 
 
-  // =====================================================
-  // ABOUT PAGE
-  // =====================================================
+// ===================================
+// ABOUT PAGE
+// ===================================
 
-  function renderAbout(
-    s
-  ) {
+const aboutContent =
+  document.getElementById(
+    'publicAboutContent'
+  );
 
-    const aboutContent =
-      document.getElementById(
-        'publicAboutContent'
-      );
+const aboutImage =
+  document.getElementById(
+    'publicAboutImage'
+  );
+
+const missionContent =
+  document.getElementById(
+    'publicMissionContent'
+  );
+
+const valuesContent =
+  document.getElementById(
+    'publicValuesContent'
+  );
 
 
-    const aboutImage =
-      document.getElementById(
-        'publicAboutImage'
-      );
+// -------------------------------
+// БИДНИЙ ТУХАЙ
+// -------------------------------
 
+if (aboutContent) {
 
-    if (aboutContent) {
+  if (s.about_content) {
 
-      if (
+    aboutContent.innerHTML =
+      sanitizeRichHtml(
         s.about_content
-      ) {
+      );
 
-        aboutContent.innerHTML =
-          sanitizeRichHtml(
-            s.about_content
-          );
+  } else {
 
-      } else {
+    aboutContent.innerHTML =
+      '';
 
-        aboutContent.innerHTML =
-          '';
-      }
-    }
-
-
-    if (aboutImage) {
-
-      if (
-        s.about_image_url
-      ) {
-
-        aboutImage.src =
-          s.about_image_url;
-
-        aboutImage
-          .style
-          .display =
-          'block';
-
-      } else {
-
-        aboutImage
-          .removeAttribute(
-            'src'
-          );
-
-        aboutImage
-          .style
-          .display =
-          'none';
-      }
-    }
   }
+
+}
+
+
+// -------------------------------
+// ABOUT IMAGE
+// -------------------------------
+
+if (aboutImage) {
+
+  if (s.about_image_url) {
+
+    aboutImage.src =
+      s.about_image_url;
+
+    aboutImage.style.display =
+      'block';
+
+  } else {
+
+    aboutImage.removeAttribute(
+      'src'
+    );
+
+    aboutImage.style.display =
+      'none';
+
+  }
+
+}
+
+
+// -------------------------------
+// ЭРХЭМ ЗОРИЛГО
+// -------------------------------
+
+if (missionContent) {
+
+  if (s.mission_content) {
+
+    missionContent.innerHTML =
+      sanitizeRichHtml(
+        s.mission_content
+      );
+
+  } else {
+
+    missionContent.innerHTML =
+      '';
+
+  }
+
+}
+
+
+// -------------------------------
+// ҮНЭТ ЗҮЙЛС
+// -------------------------------
+
+if (valuesContent) {
+
+  if (s.values_content) {
+
+    valuesContent.innerHTML =
+      sanitizeRichHtml(
+        s.values_content
+      );
+
+  } else {
+
+    valuesContent.innerHTML =
+      '';
+
+  }
+
+}
 
 
   // =====================================================
