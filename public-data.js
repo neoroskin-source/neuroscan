@@ -777,7 +777,7 @@
   width:auto;
   height:90px;
   max-width:138px;
-  max-height:90px;
+  max-height:72px;
   object-fit:contain;
   flex-shrink:0;
 "
