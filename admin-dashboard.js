@@ -4747,22 +4747,15 @@ function settingsAccordionHeader(
   title,
   bodyId
 ) {
-
   return `
     <button
       type="button"
-      onclick="
-        toggleSettingsAccordion(
-          '${bodyId}',
-          this
-        )
-      "
+      onclick="toggleSettingsAccordion('${bodyId}', this)"
       style="
         width:100%;
         display:flex;
         align-items:center;
         justify-content:space-between;
-        gap:16px;
         padding:18px 20px;
         background:#ffffff;
         border:1px solid #e4e9ef;
@@ -4775,10 +4768,7 @@ function settingsAccordionHeader(
         margin-bottom:10px;
       "
     >
-
-      <span>
-        ${title}
-      </span>
+      <span>${title}</span>
 
       <span
         class="settings-accordion-arrow"
@@ -4789,76 +4779,48 @@ function settingsAccordionHeader(
       >
         ⌄
       </span>
-
     </button>
   `;
 }
 
-
-// =====================================================
-// SETTINGS ACCORDION TOGGLE
-// =====================================================
 
 window.toggleSettingsAccordion =
 function(
   bodyId,
   button
 ) {
-
   const body =
     document.getElementById(
       bodyId
     );
 
-
   if (!body) return;
-
 
   const arrow =
     button?.querySelector(
       '.settings-accordion-arrow'
     );
 
-
   const isOpen =
     body.style.display ===
     'block';
 
-
-  if (isOpen) {
-
-    body.style.display =
-      'none';
-
-
-    if (arrow) {
-
-      arrow.textContent =
-        '⌄';
-
-    }
-
-
-    return;
-  }
-
-
   body.style.display =
-    'block';
-
+    isOpen
+      ? 'none'
+      : 'block';
 
   if (arrow) {
-
     arrow.textContent =
-      '⌃';
-
+      isOpen
+        ? '⌄'
+        : '⌃';
   }
-
 };
 
 
 // =====================================================
-// LOAD SETTINGS EDITOR
+// LOAD SETTINGS
 // =====================================================
 
 async function loadSettingsEditor() {
@@ -4867,7 +4829,6 @@ async function loadSettingsEditor() {
     document.getElementById(
       'settingsForm'
     );
-
 
   if (!container) return;
 
@@ -4898,10 +4859,8 @@ async function loadSettingsEditor() {
       error
     );
 
-
     container.textContent =
       'Тохиргоо ачаалахад алдаа гарлаа.';
-
 
     return;
   }
@@ -4917,15 +4876,10 @@ async function loadSettingsEditor() {
 
   container.innerHTML = `
 
-    <!-- ================================================
-         1. SITE BASIC INFORMATION
-         ================================================ -->
-
     ${settingsAccordionHeader(
       'Сайтын үндсэн мэдээлэл',
       'settingsBasicBody'
     )}
-
 
     <div
       id="settingsBasicBody"
@@ -4934,10 +4888,7 @@ async function loadSettingsEditor() {
         margin-bottom:18px;
       "
     >
-
-      <div
-        style="${editorCardStyle()}"
-      >
+      <div style="${editorCardStyle()}">
 
         <label>
           Сайтын нэр
@@ -4961,7 +4912,6 @@ async function loadSettingsEditor() {
         <textarea
           id="setting-site-description"
           rows="4"
-          placeholder="Сайтын товч тайлбар"
           style="${fieldStyle()}"
         >${escapeAdminHtml(
           s.site_description || ''
@@ -4971,7 +4921,6 @@ async function loadSettingsEditor() {
         <label>
           Logo
         </label>
-
 
         <div
           id="logoUploadBox"
@@ -5009,25 +4958,9 @@ async function loadSettingsEditor() {
         ></div>
 
 
-        <h3
-          style="
-            margin-top:28px;
-            margin-bottom:12px;
-          "
-        >
+        <h3 style="margin-top:28px;">
           Theme өнгө
         </h3>
-
-
-        <p
-          style="
-            margin-top:0;
-            color:#64748b;
-            font-size:14px;
-          "
-        >
-          Сайтын үндсэн өнгөний загварыг сонгоно.
-        </p>
 
 
         <div
@@ -5035,22 +4968,11 @@ async function loadSettingsEditor() {
             display:flex;
             gap:12px;
             flex-wrap:wrap;
-            margin-bottom:10px;
+            margin-bottom:20px;
           "
         >
 
-          <label
-            style="
-              cursor:pointer;
-              display:flex;
-              align-items:center;
-              gap:8px;
-              padding:10px 14px;
-              border:1px solid #d8dee6;
-              border-radius:10px;
-            "
-          >
-
+          <label>
             <input
               type="radio"
               name="themePreset"
@@ -5062,34 +4984,11 @@ async function loadSettingsEditor() {
                   : ''
               }
             >
-
-            <span
-              style="
-                width:22px;
-                height:22px;
-                border-radius:50%;
-                background:#2563b8;
-                display:inline-block;
-              "
-            ></span>
-
             Blue
-
           </label>
 
 
-          <label
-            style="
-              cursor:pointer;
-              display:flex;
-              align-items:center;
-              gap:8px;
-              padding:10px 14px;
-              border:1px solid #d8dee6;
-              border-radius:10px;
-            "
-          >
-
+          <label>
             <input
               type="radio"
               name="themePreset"
@@ -5100,34 +4999,11 @@ async function loadSettingsEditor() {
                   : ''
               }
             >
-
-            <span
-              style="
-                width:22px;
-                height:22px;
-                border-radius:50%;
-                background:#0f766e;
-                display:inline-block;
-              "
-            ></span>
-
             Teal
-
           </label>
 
 
-          <label
-            style="
-              cursor:pointer;
-              display:flex;
-              align-items:center;
-              gap:8px;
-              padding:10px 14px;
-              border:1px solid #d8dee6;
-              border-radius:10px;
-            "
-          >
-
+          <label>
             <input
               type="radio"
               name="themePreset"
@@ -5138,34 +5014,11 @@ async function loadSettingsEditor() {
                   : ''
               }
             >
-
-            <span
-              style="
-                width:22px;
-                height:22px;
-                border-radius:50%;
-                background:#15803d;
-                display:inline-block;
-              "
-            ></span>
-
             Green
-
           </label>
 
 
-          <label
-            style="
-              cursor:pointer;
-              display:flex;
-              align-items:center;
-              gap:8px;
-              padding:10px 14px;
-              border:1px solid #d8dee6;
-              border-radius:10px;
-            "
-          >
-
+          <label>
             <input
               type="radio"
               name="themePreset"
@@ -5176,37 +5029,42 @@ async function loadSettingsEditor() {
                   : ''
               }
             >
-
-            <span
-              style="
-                width:22px;
-                height:22px;
-                border-radius:50%;
-                background:#172554;
-                display:inline-block;
-              "
-            ></span>
-
             Navy
-
           </label>
 
         </div>
 
-      </div>
 
+        <button
+          type="button"
+          onclick="
+            saveBasicSettings(
+              ${s.id},
+              this
+            )
+          "
+          style="
+            padding:11px 20px;
+            background:#2563eb;
+            color:#fff;
+            border:0;
+            border-radius:12px;
+            cursor:pointer;
+            font-weight:700;
+          "
+        >
+          Хадгалах
+        </button>
+
+      </div>
     </div>
 
 
-    <!-- ================================================
-         2. CONTACT INFORMATION
-         ================================================ -->
 
     ${settingsAccordionHeader(
       'Холбоо барих мэдээлэл',
       'settingsContactBody'
     )}
-
 
     <div
       id="settingsContactBody"
@@ -5215,10 +5073,7 @@ async function loadSettingsEditor() {
         margin-bottom:18px;
       "
     >
-
-      <div
-        style="${editorCardStyle()}"
-      >
+      <div style="${editorCardStyle()}">
 
         <label>
           Email
@@ -5230,7 +5085,6 @@ async function loadSettingsEditor() {
           value="${escapeAdminHtml(
             s.email || ''
           )}"
-          placeholder="example@email.com"
           style="${fieldStyle()}"
         >
 
@@ -5245,7 +5099,6 @@ async function loadSettingsEditor() {
           value="${escapeAdminHtml(
             s.general_phone || ''
           )}"
-          placeholder="(+976) 7700-0011"
           style="${fieldStyle()}"
         >
 
@@ -5260,7 +5113,6 @@ async function loadSettingsEditor() {
           value="${escapeAdminHtml(
             s.phone_1 || ''
           )}"
-          placeholder="8888-2328"
           style="${fieldStyle()}"
         >
 
@@ -5275,7 +5127,6 @@ async function loadSettingsEditor() {
           value="${escapeAdminHtml(
             s.phone_2 || ''
           )}"
-          placeholder="8503-8105"
           style="${fieldStyle()}"
         >
 
@@ -5287,7 +5138,6 @@ async function loadSettingsEditor() {
         <textarea
           id="setting-address"
           rows="3"
-          placeholder="Төвийн хаяг"
           style="${fieldStyle()}"
         >${escapeAdminHtml(
           s.address || ''
@@ -5304,7 +5154,6 @@ async function loadSettingsEditor() {
           value="${escapeAdminHtml(
             s.maps_url || ''
           )}"
-          placeholder="https://maps.google.com/..."
           style="${fieldStyle()}"
         >
 
@@ -5319,24 +5168,40 @@ async function loadSettingsEditor() {
           value="${escapeAdminHtml(
             s.chat_url || ''
           )}"
-          placeholder="https://m.me/... эсвэл chat линк"
           style="${fieldStyle()}"
         >
 
-      </div>
 
+        <button
+          type="button"
+          onclick="
+            saveContactSettings(
+              ${s.id},
+              this
+            )
+          "
+          style="
+            padding:11px 20px;
+            background:#2563eb;
+            color:#fff;
+            border:0;
+            border-radius:12px;
+            cursor:pointer;
+            font-weight:700;
+          "
+        >
+          Хадгалах
+        </button>
+
+      </div>
     </div>
 
 
-    <!-- ================================================
-         3. SOCIAL
-         ================================================ -->
 
     ${settingsAccordionHeader(
       'Social хаягууд',
       'settingsSocialBody'
     )}
-
 
     <div
       id="settingsSocialBody"
@@ -5345,10 +5210,7 @@ async function loadSettingsEditor() {
         margin-bottom:18px;
       "
     >
-
-      <div
-        style="${editorCardStyle()}"
-      >
+      <div style="${editorCardStyle()}">
 
         <label>
           Facebook
@@ -5360,7 +5222,6 @@ async function loadSettingsEditor() {
           value="${escapeAdminHtml(
             s.facebook_url || ''
           )}"
-          placeholder="https://facebook.com/..."
           style="${fieldStyle()}"
         >
 
@@ -5375,7 +5236,6 @@ async function loadSettingsEditor() {
           value="${escapeAdminHtml(
             s.instagram_url || ''
           )}"
-          placeholder="https://instagram.com/..."
           style="${fieldStyle()}"
         >
 
@@ -5390,24 +5250,40 @@ async function loadSettingsEditor() {
           value="${escapeAdminHtml(
             s.youtube_url || ''
           )}"
-          placeholder="https://youtube.com/..."
           style="${fieldStyle()}"
         >
 
-      </div>
 
+        <button
+          type="button"
+          onclick="
+            saveSocialSettings(
+              ${s.id},
+              this
+            )
+          "
+          style="
+            padding:11px 20px;
+            background:#2563eb;
+            color:#fff;
+            border:0;
+            border-radius:12px;
+            cursor:pointer;
+            font-weight:700;
+          "
+        >
+          Хадгалах
+        </button>
+
+      </div>
     </div>
 
 
-    <!-- ================================================
-         4. OTHER SETTINGS
-         ================================================ -->
 
     ${settingsAccordionHeader(
       'Бусад тохиргоо',
       'settingsOtherBody'
     )}
-
 
     <div
       id="settingsOtherBody"
@@ -5416,10 +5292,7 @@ async function loadSettingsEditor() {
         margin-bottom:18px;
       "
     >
-
-      <div
-        style="${editorCardStyle()}"
-      >
+      <div style="${editorCardStyle()}">
 
         <label>
           MRI төхөөрөмж
@@ -5431,7 +5304,6 @@ async function loadSettingsEditor() {
           value="${escapeAdminHtml(
             s.machine_info || ''
           )}"
-          placeholder="ANKE SuperMark 1.5T MRI"
           style="${fieldStyle()}"
         >
 
@@ -5446,48 +5318,43 @@ async function loadSettingsEditor() {
           value="${escapeAdminHtml(
             s.booking_url || ''
           )}"
-          placeholder="https://..."
           style="${fieldStyle()}"
         >
 
+
+        <button
+          type="button"
+          onclick="
+            saveOtherSettings(
+              ${s.id},
+              this
+            )
+          "
+          style="
+            padding:11px 20px;
+            background:#2563eb;
+            color:#fff;
+            border:0;
+            border-radius:12px;
+            cursor:pointer;
+            font-weight:700;
+          "
+        >
+          Хадгалах
+        </button>
+
       </div>
-
     </div>
-
-
-    <!-- ================================================
-         SAVE ALL
-         ================================================ -->
-
-    <button
-      type="button"
-      onclick="
-        saveSettings(
-          ${s.id},
-          this
-        )
-      "
-      style="
-        margin-top:8px;
-        padding:12px 22px;
-        background:#17212b;
-        color:#ffffff;
-        border:0;
-        border-radius:8px;
-        cursor:pointer;
-        font-weight:700;
-        font-size:15px;
-      "
 
   `;
 
 
   setupLogoUploader();
 
-
   showLogoPreview();
 
 }
+
 
 // =====================================================
 // SAVE BASIC SETTINGS
@@ -5499,11 +5366,8 @@ async function(
   button
 ) {
 
-  button.disabled =
-    true;
-
-  button.textContent =
-    'Хадгалж байна...';
+  button.disabled = true;
+  button.textContent = 'Хадгалж байна...';
 
 
   const siteName =
@@ -5535,9 +5399,7 @@ async function(
     || 'blue';
 
 
-  const {
-    error
-  } =
+  const { error } =
     await supabaseClient
       .from('settings')
       .update({
@@ -5555,8 +5417,7 @@ async function(
           themePreset,
 
         updated_at:
-          new Date()
-            .toISOString()
+          new Date().toISOString()
 
       })
       .eq(
@@ -5567,19 +5428,11 @@ async function(
 
   if (error) {
 
-    console.error(
-      'Basic settings save error:',
-      error
-    );
-
-    button.disabled =
-      false;
-
-    button.textContent =
-      'Алдаа';
+    button.disabled = false;
+    button.textContent = 'Алдаа';
 
     alert(
-      'Сайтын үндсэн мэдээлэл хадгалахад алдаа: ' +
+      'Хадгалахад алдаа: ' +
       error.message
     );
 
@@ -5587,10 +5440,7 @@ async function(
   }
 
 
-  setButtonSaved(
-    button
-  );
-
+  setButtonSaved(button);
 
   refreshPreviewIfOpen();
 
@@ -5607,18 +5457,13 @@ async function(
   button
 ) {
 
-  button.disabled =
-    true;
-
-  button.textContent =
-    'Хадгалж байна...';
+  button.disabled = true;
+  button.textContent = 'Хадгалж байна...';
 
 
   const email =
     document
-      .getElementById(
-        'setting-email'
-      )
+      .getElementById('setting-email')
       ?.value
       .trim()
     || '';
@@ -5684,9 +5529,7 @@ async function(
     || '';
 
 
-  const {
-    error
-  } =
+  const { error } =
     await supabaseClient
       .from('settings')
       .update({
@@ -5713,8 +5556,7 @@ async function(
           chatUrl || null,
 
         updated_at:
-          new Date()
-            .toISOString()
+          new Date().toISOString()
 
       })
       .eq(
@@ -5725,19 +5567,11 @@ async function(
 
   if (error) {
 
-    console.error(
-      'Contact settings save error:',
-      error
-    );
-
-    button.disabled =
-      false;
-
-    button.textContent =
-      'Алдаа';
+    button.disabled = false;
+    button.textContent = 'Алдаа';
 
     alert(
-      'Холбоо барих мэдээлэл хадгалахад алдаа: ' +
+      'Хадгалахад алдаа: ' +
       error.message
     );
 
@@ -5745,10 +5579,7 @@ async function(
   }
 
 
-  setButtonSaved(
-    button
-  );
-
+  setButtonSaved(button);
 
   refreshPreviewIfOpen();
 
@@ -5765,11 +5596,8 @@ async function(
   button
 ) {
 
-  button.disabled =
-    true;
-
-  button.textContent =
-    'Хадгалж байна...';
+  button.disabled = true;
+  button.textContent = 'Хадгалж байна...';
 
 
   const facebookUrl =
@@ -5802,9 +5630,7 @@ async function(
     || '';
 
 
-  const {
-    error
-  } =
+  const { error } =
     await supabaseClient
       .from('settings')
       .update({
@@ -5819,8 +5645,7 @@ async function(
           youtubeUrl || null,
 
         updated_at:
-          new Date()
-            .toISOString()
+          new Date().toISOString()
 
       })
       .eq(
@@ -5831,19 +5656,11 @@ async function(
 
   if (error) {
 
-    console.error(
-      'Social settings save error:',
-      error
-    );
-
-    button.disabled =
-      false;
-
-    button.textContent =
-      'Алдаа';
+    button.disabled = false;
+    button.textContent = 'Алдаа';
 
     alert(
-      'Social хаяг хадгалахад алдаа: ' +
+      'Хадгалахад алдаа: ' +
       error.message
     );
 
@@ -5851,10 +5668,7 @@ async function(
   }
 
 
-  setButtonSaved(
-    button
-  );
-
+  setButtonSaved(button);
 
   refreshPreviewIfOpen();
 
@@ -5871,11 +5685,8 @@ async function(
   button
 ) {
 
-  button.disabled =
-    true;
-
-  button.textContent =
-    'Хадгалж байна...';
+  button.disabled = true;
+  button.textContent = 'Хадгалж байна...';
 
 
   const machineInfo =
@@ -5898,9 +5709,7 @@ async function(
     || '';
 
 
-  const {
-    error
-  } =
+  const { error } =
     await supabaseClient
       .from('settings')
       .update({
@@ -5912,8 +5721,7 @@ async function(
           bookingUrl || null,
 
         updated_at:
-          new Date()
-            .toISOString()
+          new Date().toISOString()
 
       })
       .eq(
@@ -5924,19 +5732,11 @@ async function(
 
   if (error) {
 
-    console.error(
-      'Other settings save error:',
-      error
-    );
-
-    button.disabled =
-      false;
-
-    button.textContent =
-      'Алдаа';
+    button.disabled = false;
+    button.textContent = 'Алдаа';
 
     alert(
-      'Бусад тохиргоо хадгалахад алдаа: ' +
+      'Хадгалахад алдаа: ' +
       error.message
     );
 
@@ -5944,10 +5744,7 @@ async function(
   }
 
 
-  setButtonSaved(
-    button
-  );
-
+  setButtonSaved(button);
 
   refreshPreviewIfOpen();
 
