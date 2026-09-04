@@ -2973,7 +2973,327 @@ async function() {
 
 };
 
+// =====================================================
+// SAVE MISSION
+// =====================================================
 
+window.saveMissionSettings =
+async function(button) {
+
+  if (!aboutSettingsId) {
+
+    alert(
+      'Settings мэдээлэл ачаалагдаагүй байна.'
+    );
+
+    return;
+  }
+
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    'Хадгалж байна...';
+
+
+  const content =
+    document
+      .getElementById(
+        'aboutMissionContent'
+      )
+      ?.innerHTML
+      .trim()
+    || '';
+
+
+  const textIcon =
+    document
+      .getElementById(
+        'missionIconText'
+      )
+      ?.value
+      .trim()
+    || '';
+
+
+  const icon =
+    textIcon ||
+    missionIconValue ||
+    null;
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from('settings')
+      .update({
+
+        mission_content:
+          content || null,
+
+        mission_icon:
+          icon,
+
+        updated_at:
+          new Date()
+            .toISOString()
+
+      })
+      .eq(
+        'id',
+        aboutSettingsId
+      );
+
+
+  if (error) {
+
+    console.error(error);
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      'Алдаа';
+
+    alert(
+      'Эрхэм зорилго хадгалахад алдаа: ' +
+      error.message
+    );
+
+    return;
+  }
+
+
+  missionIconValue =
+    icon || '';
+
+
+  setButtonSaved(
+    button
+  );
+
+
+  refreshPreviewIfOpen();
+
+};
+
+
+
+// =====================================================
+// SAVE VISION
+// =====================================================
+
+window.saveVisionSettings =
+async function(button) {
+
+  if (!aboutSettingsId) {
+
+    alert(
+      'Settings мэдээлэл ачаалагдаагүй байна.'
+    );
+
+    return;
+  }
+
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    'Хадгалж байна...';
+
+
+  const content =
+    document
+      .getElementById(
+        'aboutVisionContent'
+      )
+      ?.innerHTML
+      .trim()
+    || '';
+
+
+  const textIcon =
+    document
+      .getElementById(
+        'visionIconText'
+      )
+      ?.value
+      .trim()
+    || '';
+
+
+  const icon =
+    textIcon ||
+    visionIconValue ||
+    null;
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from('settings')
+      .update({
+
+        vision_content:
+          content || null,
+
+        vision_icon:
+          icon,
+
+        updated_at:
+          new Date()
+            .toISOString()
+
+      })
+      .eq(
+        'id',
+        aboutSettingsId
+      );
+
+
+  if (error) {
+
+    console.error(error);
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      'Алдаа';
+
+    alert(
+      'Алсын хараа хадгалахад алдаа: ' +
+      error.message
+    );
+
+    return;
+  }
+
+
+  visionIconValue =
+    icon || '';
+
+
+  setButtonSaved(
+    button
+  );
+
+
+  refreshPreviewIfOpen();
+
+};
+
+
+
+// =====================================================
+// SAVE VALUES
+// =====================================================
+
+window.saveValuesSettings =
+async function(button) {
+
+  if (!aboutSettingsId) {
+
+    alert(
+      'Settings мэдээлэл ачаалагдаагүй байна.'
+    );
+
+    return;
+  }
+
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    'Хадгалж байна...';
+
+
+  const content =
+    document
+      .getElementById(
+        'aboutValuesContent'
+      )
+      ?.innerHTML
+      .trim()
+    || '';
+
+
+  const textIcon =
+    document
+      .getElementById(
+        'valuesIconText'
+      )
+      ?.value
+      .trim()
+    || '';
+
+
+  const icon =
+    textIcon ||
+    valuesIconValue ||
+    null;
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from('settings')
+      .update({
+
+        values_content:
+          content || null,
+
+        values_icon:
+          icon,
+
+        updated_at:
+          new Date()
+            .toISOString()
+
+      })
+      .eq(
+        'id',
+        aboutSettingsId
+      );
+
+
+  if (error) {
+
+    console.error(error);
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      'Алдаа';
+
+    alert(
+      'Үнэт зүйлс хадгалахад алдаа: ' +
+      error.message
+    );
+
+    return;
+  }
+
+
+  valuesIconValue =
+    icon || '';
+
+
+  setButtonSaved(
+    button
+  );
+
+
+  refreshPreviewIfOpen();
+
+};
 // =====================================================
 // ABOUT MAIN IMAGE UPLOAD
 // =====================================================
