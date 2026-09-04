@@ -754,7 +754,7 @@
               none;
 
             min-width:
-              260px;
+              210px;
           "
         >
 
@@ -790,7 +790,7 @@
 
           <span
             style="
-              font-size:18px;
+              font-size:16px;
 
               line-height:1;
 
