@@ -1343,467 +1343,564 @@
                ABOUT
                ============================== -->
 
-          <section
-            id="aboutEditor"
-            style="display:none;"
-          >
+          <section id="aboutEditor" style="display:none;">
+
+  <h2>Бидний тухай</h2>
+
+  <p>
+    Вэбсайтын “Бидний тухай” мэдээлэл,
+    зураг, эрхэм зорилго, алсын хараа,
+    үнэт зүйлс болон icon-уудыг эндээс удирдана.
+  </p>
+
+
+  <div class="admin-card">
+
+    <h3>
+      Бидний тухай мэдээлэл
+    </h3>
+
+
+    <!-- =================================================
+         ABOUT MAIN IMAGE
+         ================================================= -->
+
+    <label>
+      Үндсэн зураг
+    </label>
+
+    <div
+      id="aboutUploadBox"
+      style="
+        width:100%;
+        min-height:150px;
+        border:2px dashed #cbd5e1;
+        border-radius:14px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        cursor:pointer;
+        background:#fafcff;
+        color:#94a3b8;
+        padding:30px;
+        box-sizing:border-box;
+      "
+    >
+      Зургаа энд дарж эсвэл зөөж оруулна уу
+    </div>
+
+
+    <input
+      id="aboutImageFile"
+      type="file"
+      accept="image/jpeg,image/png,image/webp"
+      style="display:none;"
+    >
+
+
+    <div
+      id="aboutImagePreview"
+    ></div>
+
+
+    <!-- =================================================
+         ABOUT CONTENT
+         ================================================= -->
+
+    <label
+      style="
+        display:block;
+        margin-top:28px;
+        margin-bottom:8px;
+      "
+    >
+      Бидний тухай
+    </label>
+
+
+    <div class="editor-wrap">
+
+      <div class="editor-toolbar">
+
+        <select
+          onchange="
+            formatAboutText(
+              'formatBlock',
+              this.value
+            )
+          "
+        >
+          <option value="p">
+            Normal
+          </option>
+
+          <option value="h2">
+            Heading 2
+          </option>
+
+          <option value="h3">
+            Heading 3
+          </option>
+        </select>
+
 
-
-            <h2>
-              Бидний тухай
-            </h2>
-
-
-            <p>
-
-              Вэбсайтын “Бидний тухай”,
-              эрхэм зорилго, үнэт зүйлс
-              болон зургийг эндээс
-              удирдана.
-
-            </p>
-
-
-
-            <div class="admin-card">
-
-
-              <h3>
-                Бидний тухай мэдээлэл
-              </h3>
-
-
-
-              <!-- ABOUT IMAGE -->
-
-              <label>
-                Зураг
-              </label>
-
-
-              <div
-                id="aboutUploadBox"
-                style="
-                  width:100%;
-                  min-height:150px;
-                  border:
-                    2px dashed
-                    #cbd5e1;
-                  border-radius:14px;
-                  display:flex;
-                  align-items:center;
-                  justify-content:center;
-                  text-align:center;
-                  cursor:pointer;
-                  background:#fafcff;
-                  color:#94a3b8;
-                  padding:30px;
-                "
-              >
-
-                Зургаа энд дарж
-                эсвэл зөөж оруулна уу
-
-              </div>
-
-
-              <input
-                id="aboutImageFile"
-                type="file"
-                accept="
-                  image/jpeg,
-                  image/png,
-                  image/webp
-                "
-                style="display:none;"
-              >
-
-
-              <div
-                id="aboutImagePreview"
-              ></div>
-
-
-
-              <!-- MAIN ABOUT CONTENT -->
-
-              <label
-                class="about-section-label"
-              >
-
-                Бидний тухай
-
-              </label>
-
-
-              <div class="editor-wrap">
-
-
-                <div class="editor-toolbar">
-
-
-                  <select
-                    onchange="
-                      formatAboutText(
-                        'formatBlock',
-                        this.value
-                      )
-                    "
-                  >
-
-                    <option value="p">
-                      Normal
-                    </option>
-
-                    <option value="h2">
-                      Heading 2
-                    </option>
-
-                    <option value="h3">
-                      Heading 3
-                    </option>
-
-                  </select>
-
-
-                  <button
-                    type="button"
-                    onclick="
-                      formatAboutText(
-                        'bold'
-                      )
-                    "
-                  >
-                    <b>B</b>
-                  </button>
-
-
-                  <button
-                    type="button"
-                    onclick="
-                      formatAboutText(
-                        'italic'
-                      )
-                    "
-                  >
-                    <i>I</i>
-                  </button>
-
-
-                  <button
-                    type="button"
-                    onclick="
-                      formatAboutText(
-                        'underline'
-                      )
-                    "
-                  >
-                    <u>U</u>
-                  </button>
-
-
-                  <button
-                    type="button"
-                    onclick="
-                      formatAboutText(
-                        'insertUnorderedList'
-                      )
-                    "
-                  >
-                    • List
-                  </button>
-
-
-                  <button
-                    type="button"
-                    onclick="
-                      formatAboutText(
-                        'insertOrderedList'
-                      )
-                    "
-                  >
-                    1. List
-                  </button>
-
-
-                  <button
-                    type="button"
-                    onclick="
-                      addAboutLink()
-                    "
-                  >
-                    🔗
-                  </button>
-
-
-                  <button
-                    type="button"
-                    onclick="
-                      formatAboutText(
-                        'removeFormat'
-                      )
-                    "
-                  >
-                    Clear
-                  </button>
-
-
-                </div>
-
-
-                <div
-                  id="aboutContent"
-                  class="news-rich-editor"
-                  contenteditable="true"
-                  data-placeholder="
-                    Neuroscan MRI төвийн
-                    тухай мэдээллээ бичнэ үү...
-                  "
-                ></div>
-
-
-              </div>
-
-
-
-              <!-- MISSION -->
-
-              <hr class="about-divider">
-
-
-              <label
-                class="about-section-label"
-              >
-
-                Эрхэм зорилго
-
-              </label>
-
-
-              <div class="editor-wrap">
-<div
-  style="
-    margin:14px 0 18px;
-    padding:16px;
-    border:1px solid #e4e9ef;
-    border-radius:12px;
-    background:#fafcff;
-  "
->
-  <label>
-    Эрхэм зорилгын icon
-  </label>
-
-  <input
-    id="missionIconText"
-    type="text"
-    placeholder="Emoji: 🎯"
-    style="
-      width:100%;
-      padding:11px;
-      margin:8px 0 10px;
-      border:1px solid #d8dee6;
-      border-radius:8px;
-      box-sizing:border-box;
-    "
-  >
-
-  <button
-    type="button"
-    onclick="document.getElementById('missionIconFile').click()"
-  >
-    Жижиг зураг upload
-  </button>
-
-  <input
-    id="missionIconFile"
-    type="file"
-    accept="image/jpeg,image/png,image/webp"
-    style="display:none;"
-  >
-
-  <div id="missionIconPreview"></div>
-</div>
-
-                <div
-                  id="aboutMissionContent"
-                  class="news-rich-editor"
-                  contenteditable="true"
-                  data-placeholder="
-                    Эрхэм зорилгын
-                    мэдээллээ бичнэ үү...
-                  "
-                ></div>
-
-
-              </div>
-
-<hr class="about-divider">
-
-<label
-  class="about-section-label"
->
-  Алсын хараа
-</label>
-
-<div class="editor-wrap">
-<div
-  style="
-    margin:14px 0 18px;
-    padding:16px;
-    border:1px solid #e4e9ef;
-    border-radius:12px;
-    background:#fafcff;
-  "
->
-  <label>
-    Алсын харааны icon
-  </label>
-
-  <input
-    id="visionIconText"
-    type="text"
-    placeholder="Emoji: 👁️"
-    style="
-      width:100%;
-      padding:11px;
-      margin:8px 0 10px;
-      border:1px solid #d8dee6;
-      border-radius:8px;
-      box-sizing:border-box;
-    "
-  >
-
-  <button
-    type="button"
-    onclick="document.getElementById('visionIconFile').click()"
-  >
-    Жижиг зураг upload
-  </button>
-
-  <input
-    id="visionIconFile"
-    type="file"
-    accept="image/jpeg,image/png,image/webp"
-    style="display:none;"
-  >
-
-  <div id="visionIconPreview"></div>
-</div>
-  <div
-    id="aboutVisionContent"
-    class="news-rich-editor"
-    contenteditable="true"
-    data-placeholder="Алсын харааны мэдээллээ бичнэ үү..."
-  ></div>
-
-</div>
-
-              <!-- VALUES -->
-
-              <hr class="about-divider">
-
-
-              <label
-                class="about-section-label"
-              >
-
-                Үнэт зүйлс
-
-              </label>
-
-
-              <div class="editor-wrap">
-<div
-  style="
-    margin:14px 0 18px;
-    padding:16px;
-    border:1px solid #e4e9ef;
-    border-radius:12px;
-    background:#fafcff;
-  "
->
-  <label>
-    Үнэт зүйлсийн icon
-  </label>
-
-  <input
-    id="valuesIconText"
-    type="text"
-    placeholder="Emoji: 💎"
-    style="
-      width:100%;
-      padding:11px;
-      margin:8px 0 10px;
-      border:1px solid #d8dee6;
-      border-radius:8px;
-      box-sizing:border-box;
-    "
-  >
-
-  <button
-    type="button"
-    onclick="document.getElementById('valuesIconFile').click()"
-  >
-    Жижиг зураг upload
-  </button>
-
-  <input
-    id="valuesIconFile"
-    type="file"
-    accept="image/jpeg,image/png,image/webp"
-    style="display:none;"
-  >
-
-  <div id="valuesIconPreview"></div>
-</div>
-
-                <div
-                  id="aboutValuesContent"
-                  class="news-rich-editor"
-                  contenteditable="true"
-                  data-placeholder="
-                    Үнэт зүйлсийн
-                    мэдээллээ бичнэ үү...
-                  "
-                ></div>
-
-
-              </div>
-
-
-
-              <!-- SAVE ABOUT -->
-
-              <button
-                type="button"
-                onclick="
-                  saveAboutSettings()
-                "
-                style="
-                  margin-top:24px;
-                  padding:
-                    12px
-                    20px;
-                  border:0;
-                  border-radius:9px;
-                  background:#17212b;
-                  color:#ffffff;
-                  font-weight:700;
-                  cursor:pointer;
-                "
-              >
-
-                Хадгалах
-
-              </button>
-
-
-            </div>
-
-
-          </section>
-
+        <button
+          type="button"
+          onclick="
+            formatAboutText(
+              'bold'
+            )
+          "
+        >
+          <b>B</b>
+        </button>
+
+
+        <button
+          type="button"
+          onclick="
+            formatAboutText(
+              'italic'
+            )
+          "
+        >
+          <i>I</i>
+        </button>
+
+
+        <button
+          type="button"
+          onclick="
+            formatAboutText(
+              'underline'
+            )
+          "
+        >
+          <u>U</u>
+        </button>
+
+
+        <button
+          type="button"
+          onclick="
+            formatAboutText(
+              'insertUnorderedList'
+            )
+          "
+        >
+          • List
+        </button>
+
+
+        <button
+          type="button"
+          onclick="
+            formatAboutText(
+              'insertOrderedList'
+            )
+          "
+        >
+          1. List
+        </button>
+
+
+        <button
+          type="button"
+          onclick="
+            addAboutLink()
+          "
+        >
+          🔗
+        </button>
+
+
+        <button
+          type="button"
+          onclick="
+            formatAboutText(
+              'removeFormat'
+            )
+          "
+        >
+          Clear
+        </button>
+
+      </div>
+
+
+      <div
+        id="aboutContent"
+        class="news-rich-editor"
+        contenteditable="true"
+        data-placeholder="Neuroscan MRI төвийн тухай мэдээллээ бичнэ үү..."
+      ></div>
+
+    </div>
+
+
+    <!-- =================================================
+         MISSION
+         ================================================= -->
+
+    <div
+      style="
+        margin-top:34px;
+        padding-top:28px;
+        border-top:1px solid #e4e9ef;
+      "
+    >
+
+      <h3>
+        Эрхэм зорилго
+      </h3>
+
+
+      <label>
+        Icon
+      </label>
+
+
+      <p
+        style="
+          margin:6px 0 10px;
+          color:#64748b;
+          font-size:13px;
+        "
+      >
+        Emoji бичих эсвэл жижиг зураг upload хийж болно.
+      </p>
+
+
+      <input
+        id="missionIconText"
+        type="text"
+        placeholder="Жишээ: 🎯"
+        style="
+          width:100%;
+          padding:12px;
+          margin:8px 0 10px;
+          border:1px solid #d8dee6;
+          border-radius:8px;
+          box-sizing:border-box;
+          font:inherit;
+        "
+      >
+
+
+      <button
+        type="button"
+        onclick="
+          document
+            .getElementById(
+              'missionIconFile'
+            )
+            .click()
+        "
+      >
+        Жижиг зураг upload
+      </button>
+
+
+      <button
+        type="button"
+        onclick="
+          removeAboutIcon(
+            'mission'
+          )
+        "
+        style="
+          margin-left:8px;
+        "
+      >
+        Icon арилгах
+      </button>
+
+
+      <input
+        id="missionIconFile"
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        style="display:none;"
+      >
+
+
+      <div
+        id="missionIconPreview"
+      ></div>
+
+
+      <label
+        style="
+          display:block;
+          margin-top:22px;
+          margin-bottom:8px;
+        "
+      >
+        Эрхэм зорилгын текст
+      </label>
+
+
+      <div
+        id="aboutMissionContent"
+        class="news-rich-editor"
+        contenteditable="true"
+        data-placeholder="Эрхэм зорилгын текст..."
+      ></div>
+
+    </div>
+
+
+    <!-- =================================================
+         VISION
+         ================================================= -->
+
+    <div
+      style="
+        margin-top:34px;
+        padding-top:28px;
+        border-top:1px solid #e4e9ef;
+      "
+    >
+
+      <h3>
+        Алсын хараа
+      </h3>
+
+
+      <label>
+        Icon
+      </label>
+
+
+      <p
+        style="
+          margin:6px 0 10px;
+          color:#64748b;
+          font-size:13px;
+        "
+      >
+        Emoji бичих эсвэл жижиг зураг upload хийж болно.
+      </p>
+
+
+      <input
+        id="visionIconText"
+        type="text"
+        placeholder="Жишээ: 👁️"
+        style="
+          width:100%;
+          padding:12px;
+          margin:8px 0 10px;
+          border:1px solid #d8dee6;
+          border-radius:8px;
+          box-sizing:border-box;
+          font:inherit;
+        "
+      >
+
+
+      <button
+        type="button"
+        onclick="
+          document
+            .getElementById(
+              'visionIconFile'
+            )
+            .click()
+        "
+      >
+        Жижиг зураг upload
+      </button>
+
+
+      <button
+        type="button"
+        onclick="
+          removeAboutIcon(
+            'vision'
+          )
+        "
+        style="
+          margin-left:8px;
+        "
+      >
+        Icon арилгах
+      </button>
+
+
+      <input
+        id="visionIconFile"
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        style="display:none;"
+      >
+
+
+      <div
+        id="visionIconPreview"
+      ></div>
+
+
+      <label
+        style="
+          display:block;
+          margin-top:22px;
+          margin-bottom:8px;
+        "
+      >
+        Алсын харааны текст
+      </label>
+
+
+      <div
+        id="aboutVisionContent"
+        class="news-rich-editor"
+        contenteditable="true"
+        data-placeholder="Алсын харааны текст..."
+      ></div>
+
+    </div>
+
+
+    <!-- =================================================
+         VALUES
+         ================================================= -->
+
+    <div
+      style="
+        margin-top:34px;
+        padding-top:28px;
+        border-top:1px solid #e4e9ef;
+      "
+    >
+
+      <h3>
+        Үнэт зүйлс
+      </h3>
+
+
+      <label>
+        Icon
+      </label>
+
+
+      <p
+        style="
+          margin:6px 0 10px;
+          color:#64748b;
+          font-size:13px;
+        "
+      >
+        Emoji бичих эсвэл жижиг зураг upload хийж болно.
+      </p>
+
+
+      <input
+        id="valuesIconText"
+        type="text"
+        placeholder="Жишээ: 💎"
+        style="
+          width:100%;
+          padding:12px;
+          margin:8px 0 10px;
+          border:1px solid #d8dee6;
+          border-radius:8px;
+          box-sizing:border-box;
+          font:inherit;
+        "
+      >
+
+
+      <button
+        type="button"
+        onclick="
+          document
+            .getElementById(
+              'valuesIconFile'
+            )
+            .click()
+        "
+      >
+        Жижиг зураг upload
+      </button>
+
+
+      <button
+        type="button"
+        onclick="
+          removeAboutIcon(
+            'values'
+          )
+        "
+        style="
+          margin-left:8px;
+        "
+      >
+        Icon арилгах
+      </button>
+
+
+      <input
+        id="valuesIconFile"
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        style="display:none;"
+      >
+
+
+      <div
+        id="valuesIconPreview"
+      ></div>
+
+
+      <label
+        style="
+          display:block;
+          margin-top:22px;
+          margin-bottom:8px;
+        "
+      >
+        Үнэт зүйлсийн текст
+      </label>
+
+
+      <div
+        id="aboutValuesContent"
+        class="news-rich-editor"
+        contenteditable="true"
+        data-placeholder="Үнэт зүйлсийн текст..."
+      ></div>
+
+    </div>
+
+
+    <!-- =================================================
+         SAVE
+         ================================================= -->
+
+    <button
+      type="button"
+      onclick="
+        saveAboutSettings()
+      "
+      style="
+        margin-top:30px;
+        padding:12px 22px;
+        border:0;
+        border-radius:8px;
+        background:#17212b;
+        color:#ffffff;
+        font-weight:700;
+        cursor:pointer;
+      "
+    >
+      Бүгдийг хадгалах
+    </button>
+
+  </div>
+
+</section>
 
 
           <!-- ==============================
