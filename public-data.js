@@ -362,7 +362,7 @@ if (siteHeader) {
         width:100%;
         max-width:1440px;
         margin:0 auto;
-        min-height:120px;
+        min-height:135px;
         padding:16px 40px;
         box-sizing:border-box;
         display:flex;
@@ -394,7 +394,7 @@ if (siteHeader) {
           )}"
           style="
             display:block;
-            width:150px;
+            width:190px;
             height:auto;
             max-width:none;
             max-height:none;
@@ -408,7 +408,7 @@ if (siteHeader) {
 
   <span
     style="
-      font-size:20px;
+      font-size:18px;
       line-height:1;
       font-weight:700;
       letter-spacing:-0.03em;
