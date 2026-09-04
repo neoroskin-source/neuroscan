@@ -829,7 +829,7 @@ const content =
   }
 
   document.getElementById('newNewsTitle').value = '';
-  document.getElementById('newNewsContent').value = '';
+  document.getElementById('newNewsContent').innerHTML = '';
   document.getElementById('newNewsYoutube').value = '';
   document.getElementById('newNewsPublished').checked = false;
 
