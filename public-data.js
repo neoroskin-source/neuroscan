@@ -282,7 +282,134 @@
     ) {
       const s =
         settingsRows[0];
+// ===================================
+// HEADER SOCIAL LINKS
+// ===================================
 
+const siteHeader =
+  document.querySelector('.site-header');
+
+if (siteHeader) {
+
+  let socialTop =
+    document.getElementById(
+      'headerSocialLinks'
+    );
+
+  if (!socialTop) {
+
+    socialTop =
+      document.createElement('div');
+
+    socialTop.id =
+      'headerSocialLinks';
+
+    socialTop.style.cssText = `
+      width:100%;
+      display:flex;
+      justify-content:flex-end;
+      align-items:center;
+      gap:14px;
+      padding:10px 40px 0;
+      font-size:13px;
+      font-weight:600;
+      box-sizing:border-box;
+    `;
+
+    siteHeader.prepend(socialTop);
+  }
+
+  const links = [];
+
+  if (s.facebook_url) {
+    links.push(`
+      <a
+        href="${esc(s.facebook_url)}"
+        target="_blank"
+        rel="noopener noreferrer"
+        style="
+          color:#667085;
+          text-decoration:none;
+        "
+      >
+        Facebook
+      </a>
+    `);
+  }
+
+  if (s.instagram_url) {
+    links.push(`
+      <a
+        href="${esc(s.instagram_url)}"
+        target="_blank"
+        rel="noopener noreferrer"
+        style="
+          color:#667085;
+          text-decoration:none;
+        "
+      >
+        Instagram
+      </a>
+    `);
+  }
+
+  if (s.youtube_url) {
+    links.push(`
+      <a
+        href="${esc(s.youtube_url)}"
+        target="_blank"
+        rel="noopener noreferrer"
+        style="
+          color:#667085;
+          text-decoration:none;
+        "
+      >
+        YouTube
+      </a>
+    `);
+  }
+
+  if (s.chat_url) {
+    links.push(`
+      <a
+        href="${esc(s.chat_url)}"
+        target="_blank"
+        rel="noopener noreferrer"
+        style="
+          color:#667085;
+          text-decoration:none;
+        "
+      >
+        Chat
+      </a>
+    `);
+  }
+
+  socialTop.innerHTML =
+    links.join('');
+}
+
+
+// ===================================
+// REMOVE OLD BOOKING FOOTER TEXT
+// ===================================
+
+document
+  .querySelectorAll(
+    '.copyright span'
+  )
+  .forEach(span => {
+
+    if (
+      span.textContent
+        .includes(
+          'Цаг захиалгын Google Form'
+        )
+    ) {
+      span.remove();
+    }
+
+  });
 
       // ===================================
       // ABOUT PAGE
