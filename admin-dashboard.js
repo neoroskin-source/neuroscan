@@ -1315,7 +1315,10 @@ async function loadAboutEditor() {
     document.getElementById(
       'aboutMissionContent'
     );
-
+const vision =
+  document.getElementById(
+    'aboutVisionContent'
+  );
   const values =
     document.getElementById(
       'aboutValuesContent'
@@ -1382,7 +1385,10 @@ async function loadAboutEditor() {
     mission.innerHTML =
       s.mission_content || '';
   }
-
+if (vision) {
+  vision.innerHTML =
+    s.vision_content || '';
+}
   if (values) {
     values.innerHTML =
       s.values_content || '';
@@ -1485,7 +1491,14 @@ async function() {
       ?.innerHTML
       .trim()
     || '';
-
+const visionContent =
+  document
+    .getElementById(
+      'aboutVisionContent'
+    )
+    ?.innerHTML
+    .trim()
+  || '';
   const valuesContent =
     document
       .getElementById(
@@ -1548,6 +1561,8 @@ async function() {
 
         mission_content:
           missionContent,
+        vision_content:
+  visionContent || null,
 
         values_content:
           valuesContent,
@@ -1562,8 +1577,8 @@ async function() {
         aboutSettingsId
       )
       .select(
-        'id, about_content, mission_content, values_content'
-      );
+  'id, about_content, about_image_url, mission_content, vision_content, values_content'
+)
 
 
   if (error) {
