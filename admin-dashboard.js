@@ -1860,13 +1860,14 @@ async function loadSettingsEditor() {
   }
 
   const s = data[0];
-
+  logoImageUrl = s.logo_url || '';
   container.innerHTML = `
 
     <div
       style="${editorCardStyle()}"
     >
-
+setupLogoUploader();
+showLogoPreview();
       <!-- =========================
            CONTACT
            ========================= -->
