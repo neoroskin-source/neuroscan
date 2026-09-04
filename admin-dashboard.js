@@ -2113,7 +2113,69 @@ function() {
   );
 
 };
+// =====================================================
+// FORMAT ABOUT SUB SECTION TEXT
+// =====================================================
 
+window.formatAboutSectionText =
+function(
+  editorId,
+  command,
+  value = null
+) {
+
+  const editor =
+    document.getElementById(
+      editorId
+    );
+
+  if (!editor) return;
+
+  editor.focus();
+
+  document.execCommand(
+    command,
+    false,
+    value
+  );
+
+};
+
+
+// =====================================================
+// ADD LINK TO ABOUT SUB SECTION
+// =====================================================
+
+window.addAboutSectionLink =
+function(
+  editorId
+) {
+
+  const editor =
+    document.getElementById(
+      editorId
+    );
+
+  if (!editor) return;
+
+
+  const url =
+    prompt(
+      'Линк оруулна уу:'
+    );
+
+  if (!url) return;
+
+
+  editor.focus();
+
+  document.execCommand(
+    'createLink',
+    false,
+    url
+  );
+
+};
 
 // =====================================================
 // ABOUT ICON HELPERS
