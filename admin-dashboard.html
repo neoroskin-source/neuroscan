@@ -1,15 +1,26 @@
 <!doctype html>
 <html lang="mn">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Admin Dashboard | Neuroscan MRI</title>
+<head>
+
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <title>
+    Admin Dashboard | Neuroscan MRI
+  </title>
+
 
   <style>
+
     * {
       box-sizing: border-box;
     }
+
 
     body {
       margin: 0;
@@ -17,6 +28,19 @@
       background: #f5f7fa;
       color: #17212b;
     }
+
+
+    button,
+    input,
+    textarea,
+    select {
+      font-family: inherit;
+    }
+
+
+    /* =========================================
+       LOADING
+       ========================================= */
 
     #loadingScreen {
       min-height: 100vh;
@@ -27,382 +51,93 @@
       color: #667085;
     }
 
+
     #adminDashboard {
       display: none;
       min-height: 100vh;
     }
 
+
+
+    /* =========================================
+       SIDEBAR
+       ========================================= */
+
     .sidebar {
       position: fixed;
+
       top: 0;
       left: 0;
+
       width: 260px;
       height: 100vh;
+
       padding: 32px 22px;
+
       background: #17212b;
-      color: white;
+      color: #ffffff;
+
+      overflow-y: auto;
+      z-index: 100;
     }
+
 
     .brand {
       margin-bottom: 40px;
+
       font-size: 22px;
       font-weight: 800;
     }
 
+
     .sidebar button {
       width: 100%;
+
       padding: 14px 16px;
       margin-bottom: 8px;
+
       border: 0;
       border-radius: 9px;
+
       background: transparent;
       color: #d6dde5;
+
       text-align: left;
+
       font-size: 15px;
+
       cursor: pointer;
     }
+
 
     .sidebar button:hover,
     .sidebar button.active {
       background: #263442;
-      color: white;
+      color: #ffffff;
     }
+
 
     .logout-btn {
       position: absolute;
+
       left: 22px;
       right: 22px;
       bottom: 28px;
+
       width: calc(100% - 44px) !important;
+
       background: #ffffff !important;
       color: #17212b !important;
+
       text-align: center !important;
       font-weight: 700;
     }
 
-    .content {
-      margin-left: 260px;
-      padding: 48px;
-    }
-
-    .content h1 {
-      margin-top: 0;
-      font-size: 32px;
-    }
-
-    .subtitle {
-      color: #667085;
-      margin-bottom: 34px;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 20px;
-    }
-
-    .card {
-      background: white;
-      border: 1px solid #e4e9ef;
-      border-radius: 16px;
-      padding: 28px;
-    }
-
-    .card h2 {
-      margin: 0 0 10px;
-      font-size: 20px;
-    }
-
-    .card p {
-      margin: 0;
-      color: #667085;
-      line-height: 1.6;
-    }
-
-    /* =========================
-       NEWS ADMIN UI
-       ========================= */
-
-    #newsEditor {
-      max-width: 1100px;
-    }
-
-    #newsEditor > h2 {
-      font-size: 30px;
-      margin-bottom: 8px;
-    }
-
-    #newsEditor > p {
-      color: #667085;
-      margin-bottom: 24px;
-    }
-
-    #newsEditor .admin-card {
-      background: #ffffff;
-      border: 1px solid #e4e9ef;
-      border-radius: 18px;
-      padding: 30px;
-      margin-top: 20px;
-      margin-bottom: 28px;
-      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
-    }
-
-    #newsEditor .admin-card h3 {
-      margin: 0 0 26px;
-      font-size: 24px;
-      color: #17212b;
-    }
-
-    #newsEditor .admin-card label {
-      display: block;
-      margin: 18px 0 8px;
-      font-size: 15px;
-      font-weight: 700;
-      color: #263442;
-    }
-
-    #newsEditor .admin-card input[type="text"],
-    #newsEditor .admin-card input[type="url"] {
-      width: 100%;
-      display: block;
-      padding: 14px 16px;
-      border: 1px solid #ccd5df;
-      border-radius: 10px;
-      background: #ffffff;
-      color: #17212b;
-      font-family: Arial, sans-serif;
-      font-size: 16px;
-      outline: none;
-      transition: border-color .2s, box-shadow .2s;
-    }
-
-    #newsEditor .admin-card input[type="text"]:focus,
-    #newsEditor .admin-card input[type="url"]:focus {
-      border-color: #4f8cff;
-      box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.12);
-    }
-
-    #newsUploadBox {
-      width: 100%;
-      min-height: 150px;
-      border: 2px dashed #cbd5e1 !important;
-      border-radius: 14px !important;
-      padding: 36px !important;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      cursor: pointer;
-      margin-bottom: 12px;
-      color: #94a3b8;
-      background: #fafcff;
-      transition: background .2s, border-color .2s;
-    }
-
-    #newsUploadBox:hover {
-      background: #f4f8ff;
-      border-color: #8ab4ff !important;
-    }
-
-    #newsImagePreview {
-      margin-top: 12px;
-    }
-
-    #newsEditor .admin-card label:has(input[type="checkbox"]) {
-      display: flex !important;
-      align-items: center;
-      gap: 10px;
-      margin-top: 18px;
-      cursor: pointer;
-    }
-
-    #newsEditor .admin-card input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      cursor: pointer;
-    }
-
-    #newsEditor .admin-card > button {
-      margin-top: 18px !important;
-      border: 0;
-      border-radius: 10px;
-      background: #10b981;
-      color: #ffffff;
-      padding: 13px 24px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: opacity .2s, transform .2s;
-    }
-
-    #newsEditor .admin-card > button:hover {
-      opacity: .92;
-      transform: translateY(-1px);
-    }
-
-    #newsList {
-      margin-top: 28px;
-    }
-
-    /* =========================
-       RICH TEXT EDITOR
-       ========================= */
-
-    .editor-wrap {
-      width: 100%;
-      border: 1px solid #ccd5df;
-      border-radius: 10px;
-      overflow: hidden;
-      background: #ffffff;
-    }
-
-    .editor-toolbar {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 4px;
-      padding: 8px;
-      border-bottom: 1px solid #e4e9ef;
-      background: #fafafa;
-    }
-
-    .editor-toolbar button,
-    .editor-toolbar select {
-      width: auto !important;
-      margin: 0 !important;
-      padding: 8px 10px !important;
-      border: 0 !important;
-      border-radius: 6px !important;
-      background: transparent !important;
-      color: #17212b !important;
-      font-size: 14px !important;
-      font-weight: 600 !important;
-      cursor: pointer;
-    }
-
-    .editor-toolbar button:hover,
-    .editor-toolbar select:hover {
-      background: #eef2f7 !important;
-    }
-
-    .editor-toolbar select {
-      border: 1px solid #e4e9ef !important;
-      background: #ffffff !important;
-    }
-
-    .news-rich-editor {
-      min-height: 240px;
-      padding: 18px;
-      outline: none;
-      line-height: 1.7;
-      font-size: 16px;
-      color: #17212b;
-    }
-
-    .news-rich-editor:empty:before {
-      content: attr(data-placeholder);
-      color: #98a2b3;
-      pointer-events: none;
-    }
-
-    .news-rich-editor h2,
-    .news-rich-editor h3,
-    .news-rich-editor p {
-      margin-top: 0;
-    }
-
-    @media (max-width: 800px) {
-      .sidebar {
-        position: static;
-        width: 100%;
-        height: auto;
-      }
-
-      .logout-btn {
-        position: static;
-        width: 100% !important;
-        margin-top: 20px;
-      }
-
-      .content {
-        margin-left: 0;
-        padding: 24px;
-      }
-
-      .cards {
-        grid-template-columns: 1fr;
-      }
-
-      #newsEditor .admin-card {
-        padding: 20px;
-      }
-
-      .editor-toolbar {
-        gap: 2px;
-      }
-    }
 
 
-    /* =========================
-       ADMIN TOP ACTIONS / LIVE PREVIEW
-       ========================= */
-
-    .admin-top-actions {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 20px;
-    }
-
-    #previewToggleButton {
-      border: 1px solid #d8dee6;
-      background: #ffffff;
-      color: #17212b;
-      padding: 11px 18px;
-      border-radius: 10px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    #previewToggleButton:hover {
-      background: #f3f6f9;
-    }
-
-    #livePreviewPanel {
-      background: #ffffff;
-      border: 1px solid #e4e9ef;
-      border-radius: 16px;
-      overflow: hidden;
-      margin-bottom: 28px;
-    }
-
-    .preview-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 18px;
-      border-bottom: 1px solid #e4e9ef;
-    }
-
-    .preview-header button {
-      border: 0;
-      background: #17212b;
-      color: #ffffff;
-      padding: 8px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    #livePreviewFrame {
-      width: 100%;
-      height: 650px;
-      border: 0;
-      display: block;
-      background: #ffffff;
-    }
-
-    /* =========================
-       SERVICES SIDEBAR SUBMENU
-       ========================= */
+    /* =========================================
+       SERVICES SUBMENU
+       ========================================= */
 
     #servicesButton {
       display: flex;
@@ -410,514 +145,2072 @@
       justify-content: space-between;
     }
 
+
     #servicesSubmenu {
-      padding: 2px 0 10px 12px;
+      padding:
+        2px
+        0
+        10px
+        12px;
     }
+
 
     .service-submenu-button {
       width: 100%;
+
+      padding:
+        9px
+        14px !important;
+
+      margin-bottom:
+        3px !important;
+
       border: 0;
-      background: transparent;
-      color: #aeb8c4;
-      text-align: left;
-      padding: 9px 14px !important;
-      margin-bottom: 3px !important;
       border-radius: 8px;
+
+      background: transparent;
+
+      color: #aeb8c4;
+
+      text-align: left;
+
+      font-size:
+        13px !important;
+
       cursor: pointer;
-      font-size: 13px !important;
     }
+
 
     .service-submenu-button:hover,
     .service-submenu-button.active {
-      background: #263442 !important;
-      color: #ffffff !important;
+      background:
+        #263442 !important;
+
+      color:
+        #ffffff !important;
+    }
+
+
+
+    /* =========================================
+       MAIN CONTENT
+       ========================================= */
+
+    .content {
+      margin-left: 260px;
+
+      padding: 48px;
+
+      min-height: 100vh;
+    }
+
+
+    .content h1 {
+      margin-top: 0;
+
+      font-size: 32px;
+    }
+
+
+    .subtitle {
+      color: #667085;
+      margin: 0;
+    }
+
+
+
+    /* =========================================
+       TOP HEADER
+       ========================================= */
+
+    .admin-header-row {
+
+      display: flex;
+
+      align-items: flex-start;
+
+      justify-content: space-between;
+
+      gap: 30px;
+
+      margin-bottom: 30px;
+    }
+
+
+    .admin-header-row h1 {
+      margin:
+        0
+        0
+        8px;
+    }
+
+
+    #previewToggleButton {
+
+      flex-shrink: 0;
+
+      border:
+        1px solid
+        #d8dee6;
+
+      background:
+        #ffffff;
+
+      color:
+        #17212b;
+
+      padding:
+        11px
+        18px;
+
+      border-radius:
+        10px;
+
+      font-size:
+        14px;
+
+      font-weight:
+        700;
+
+      cursor:
+        pointer;
+    }
+
+
+    #previewToggleButton:hover {
+      background:
+        #f1f5f9;
+    }
+
+
+
+    /* =========================================
+       EDITOR + LIVE PREVIEW
+       ========================================= */
+
+    #adminWorkArea {
+
+      width: 100%;
+
+      display: flex;
+
+      align-items: flex-start;
+
+      gap: 24px;
+    }
+
+
+    #adminEditorColumn {
+
+      flex: 1;
+
+      width: 100%;
+
+      min-width: 0;
+    }
+
+
+    #livePreviewPanel {
+
+      width: 46%;
+
+      min-width: 430px;
+
+      position: sticky;
+
+      top: 24px;
+
+      background:
+        #ffffff;
+
+      border:
+        1px solid
+        #e4e9ef;
+
+      border-radius:
+        16px;
+
+      overflow: hidden;
+    }
+
+
+    .preview-header {
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content:
+        space-between;
+
+      gap: 12px;
+
+      padding:
+        13px
+        16px;
+
+      border-bottom:
+        1px solid
+        #e4e9ef;
+    }
+
+
+    .preview-header strong {
+      font-size: 15px;
+    }
+
+
+    .preview-header button {
+
+      width: auto;
+
+      border: 0;
+
+      background:
+        #17212b;
+
+      color:
+        #ffffff;
+
+      padding:
+        8px
+        12px;
+
+      border-radius:
+        7px;
+
+      font-size:
+        13px;
+
+      cursor:
+        pointer;
+    }
+
+
+    #livePreviewFrame {
+
+      display: block;
+
+      width: 100%;
+
+      height: 760px;
+
+      border: 0;
+
+      background:
+        #ffffff;
+    }
+
+
+
+    /* =========================================
+       GENERIC ADMIN CARD
+       ========================================= */
+
+    .admin-card {
+
+      background:
+        #ffffff;
+
+      border:
+        1px solid
+        #e4e9ef;
+
+      border-radius:
+        16px;
+
+      padding:
+        26px;
+
+      margin-top:
+        20px;
+
+      margin-bottom:
+        28px;
+    }
+
+
+    .admin-card h3 {
+
+      margin:
+        0
+        0
+        22px;
+
+      color:
+        #17212b;
+    }
+
+
+    .admin-card > label {
+
+      display: block;
+
+      margin:
+        18px
+        0
+        8px;
+
+      font-size:
+        15px;
+
+      font-weight:
+        700;
+
+      color:
+        #263442;
+    }
+
+
+
+    /* =========================================
+       DASHBOARD CARDS
+       ========================================= */
+
+    .cards {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          2,
+          minmax(0, 1fr)
+        );
+
+      gap: 20px;
+    }
+
+
+    .card {
+
+      background:
+        #ffffff;
+
+      border:
+        1px solid
+        #e4e9ef;
+
+      border-radius:
+        16px;
+
+      padding:
+        28px;
+    }
+
+
+    .card h2 {
+
+      margin:
+        0
+        0
+        10px;
+
+      font-size:
+        20px;
+    }
+
+
+    .card p {
+
+      margin: 0;
+
+      color:
+        #667085;
+
+      line-height:
+        1.6;
+    }
+
+
+
+    /* =========================================
+       RICH TEXT EDITOR
+       ========================================= */
+
+    .editor-wrap {
+
+      width: 100%;
+
+      border:
+        1px solid
+        #ccd5df;
+
+      border-radius:
+        10px;
+
+      overflow:
+        hidden;
+
+      background:
+        #ffffff;
+    }
+
+
+    .editor-toolbar {
+
+      display: flex;
+
+      align-items:
+        center;
+
+      flex-wrap:
+        wrap;
+
+      gap: 4px;
+
+      padding:
+        8px;
+
+      border-bottom:
+        1px solid
+        #e4e9ef;
+
+      background:
+        #fafafa;
+    }
+
+
+    .editor-toolbar button,
+    .editor-toolbar select {
+
+      width:
+        auto !important;
+
+      margin:
+        0 !important;
+
+      padding:
+        8px
+        10px !important;
+
+      border:
+        0 !important;
+
+      border-radius:
+        6px !important;
+
+      background:
+        transparent !important;
+
+      color:
+        #17212b !important;
+
+      font-size:
+        14px !important;
+
+      font-weight:
+        600 !important;
+
+      cursor:
+        pointer;
+    }
+
+
+    .editor-toolbar button:hover,
+    .editor-toolbar select:hover {
+
+      background:
+        #eef2f7 !important;
+    }
+
+
+    .editor-toolbar select {
+
+      border:
+        1px solid
+        #e4e9ef !important;
+
+      background:
+        #ffffff !important;
+    }
+
+
+    .news-rich-editor {
+
+      min-height:
+        210px;
+
+      padding:
+        18px;
+
+      outline:
+        none;
+
+      line-height:
+        1.7;
+
+      font-size:
+        16px;
+
+      color:
+        #17212b;
+    }
+
+
+    .news-rich-editor:empty:before {
+
+      content:
+        attr(
+          data-placeholder
+        );
+
+      color:
+        #98a2b3;
+
+      pointer-events:
+        none;
+    }
+
+
+    .news-rich-editor h2,
+    .news-rich-editor h3,
+    .news-rich-editor p {
+
+      margin-top:
+        0;
+    }
+
+
+
+    /* =========================================
+       ABOUT
+       ========================================= */
+
+    #aboutEditor {
+      max-width: 1100px;
+    }
+
+
+    #aboutUploadBox:hover {
+
+      background:
+        #f4f8ff !important;
+
+      border-color:
+        #8ab4ff !important;
+    }
+
+
+    .about-divider {
+
+      border: 0;
+
+      border-top:
+        1px solid
+        #e4e9ef;
+
+      margin:
+        32px
+        0;
+    }
+
+
+    .about-section-label {
+
+      display: block;
+
+      margin:
+        22px
+        0
+        8px;
+
+      font-size:
+        15px;
+
+      font-weight:
+        700;
+
+      color:
+        #263442;
+    }
+
+
+
+    /* =========================================
+       NEWS
+       ========================================= */
+
+    #newsEditor {
+      max-width: 1100px;
+    }
+
+
+    #newsEditor > h2 {
+
+      font-size:
+        30px;
+
+      margin-bottom:
+        8px;
+    }
+
+
+    #newsEditor > p {
+
+      color:
+        #667085;
+
+      margin-bottom:
+        24px;
+    }
+
+
+    #newsEditor .admin-card {
+
+      box-shadow:
+        0
+        8px
+        24px
+        rgba(
+          15,
+          23,
+          42,
+          0.04
+        );
+    }
+
+
+    #newsEditor .admin-card input[type="text"],
+    #newsEditor .admin-card input[type="url"] {
+
+      width:
+        100%;
+
+      display:
+        block;
+
+      padding:
+        14px
+        16px;
+
+      border:
+        1px solid
+        #ccd5df;
+
+      border-radius:
+        10px;
+
+      background:
+        #ffffff;
+
+      color:
+        #17212b;
+
+      font-size:
+        16px;
+
+      outline:
+        none;
+    }
+
+
+    #newsEditor .admin-card input[type="text"]:focus,
+    #newsEditor .admin-card input[type="url"]:focus {
+
+      border-color:
+        #4f8cff;
+
+      box-shadow:
+        0
+        0
+        0
+        3px
+        rgba(
+          79,
+          140,
+          255,
+          0.12
+        );
+    }
+
+
+    #newsUploadBox {
+
+      width:
+        100%;
+
+      min-height:
+        150px;
+
+      border:
+        2px dashed
+        #cbd5e1;
+
+      border-radius:
+        14px;
+
+      padding:
+        36px;
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      text-align:
+        center;
+
+      cursor:
+        pointer;
+
+      margin-bottom:
+        12px;
+
+      color:
+        #94a3b8;
+
+      background:
+        #fafcff;
+    }
+
+
+    #newsUploadBox:hover {
+
+      background:
+        #f4f8ff;
+
+      border-color:
+        #8ab4ff;
+    }
+
+
+    #newsImagePreview {
+
+      margin-top:
+        12px;
+    }
+
+
+    #newsEditor
+    .admin-card
+    label:has(
+      input[type="checkbox"]
+    ) {
+
+      display:
+        flex !important;
+
+      align-items:
+        center;
+
+      gap:
+        10px;
+
+      cursor:
+        pointer;
+    }
+
+
+    #newsEditor
+    .admin-card
+    input[type="checkbox"] {
+
+      width:
+        18px;
+
+      height:
+        18px;
+
+      cursor:
+        pointer;
+    }
+
+
+    #newsEditor
+    .admin-card
+    > button {
+
+      margin-top:
+        18px;
+
+      border:
+        0;
+
+      border-radius:
+        10px;
+
+      background:
+        #10b981;
+
+      color:
+        #ffffff;
+
+      padding:
+        13px
+        24px;
+
+      font-size:
+        16px;
+
+      font-weight:
+        700;
+
+      cursor:
+        pointer;
+    }
+
+
+    #newsList {
+      margin-top: 28px;
+    }
+
+
+
+    /* =========================================
+       RESPONSIVE
+       ========================================= */
+
+    @media
+    (max-width: 1200px) {
+
+      #adminWorkArea {
+        display:
+          block;
+      }
+
+
+      #livePreviewPanel {
+
+        width:
+          100%;
+
+        min-width:
+          0;
+
+        position:
+          static;
+
+        margin-top:
+          24px;
+      }
+
+    }
+
+
+    @media
+    (max-width: 800px) {
+
+      .sidebar {
+
+        position:
+          static;
+
+        width:
+          100%;
+
+        height:
+          auto;
+      }
+
+
+      .logout-btn {
+
+        position:
+          static;
+
+        width:
+          100% !important;
+
+        margin-top:
+          20px;
+      }
+
+
+      .content {
+
+        margin-left:
+          0;
+
+        padding:
+          24px;
+      }
+
+
+      .admin-header-row {
+
+        flex-direction:
+          column;
+
+        align-items:
+          stretch;
+      }
+
+
+      #previewToggleButton {
+        width: 100%;
+      }
+
+
+      .cards {
+
+        grid-template-columns:
+          1fr;
+      }
+
+
+      .editor-toolbar {
+        gap: 2px;
+      }
+
     }
 
   </style>
+
 </head>
+
+
 
 <body>
 
+
+  <!-- ======================================
+       LOADING
+       ====================================== -->
+
   <div id="loadingScreen">
+
     Админ эрхийг шалгаж байна...
+
   </div>
+
+
+
+  <!-- ======================================
+       ADMIN DASHBOARD
+       ====================================== -->
 
   <div id="adminDashboard">
 
+
+    <!-- ====================================
+         SIDEBAR
+         ==================================== -->
+
     <aside class="sidebar">
 
+
       <div class="brand">
+
         NEUROSCAN ADMIN
+
       </div>
+
+
+
+      <!-- SERVICES -->
 
       <div class="sidebar-group">
 
+
         <button
           id="servicesButton"
+          type="button"
           onclick="toggleServicesMenu()"
         >
-          <span>Үйлчилгээ</span>
-          <span id="servicesArrow">⌄</span>
+
+          <span>
+            Үйлчилгээ
+          </span>
+
+          <span id="servicesArrow">
+            ⌄
+          </span>
+
         </button>
+
 
         <div
           id="servicesSubmenu"
           style="display:none;"
         ></div>
 
+
       </div>
+
+
+
+      <!-- DOCTORS -->
 
       <button
         id="doctorsButton"
-        onclick="openAdminSection('doctors')"
+        type="button"
+        onclick="
+          openAdminSection(
+            'doctors'
+          )
+        "
       >
+
         Эмч мэргэжилтэн
+
       </button>
+
+
+
+      <!-- ABOUT -->
 
       <button
         id="aboutButton"
-        onclick="openAdminSection('about')"
+        type="button"
+        onclick="
+          openAdminSection(
+            'about'
+          )
+        "
       >
+
         Бидний тухай
+
       </button>
+
+
+
+      <!-- NEWS -->
 
       <button
         id="newsButton"
-        onclick="openAdminSection('news')"
+        type="button"
+        onclick="
+          openAdminSection(
+            'news'
+          )
+        "
       >
+
         Мэдээ
+
       </button>
+
+
+
+      <!-- SETTINGS -->
 
       <button
         id="settingsButton"
-        onclick="openAdminSection('settings')"
+        type="button"
+        onclick="
+          openAdminSection(
+            'settings'
+          )
+        "
       >
+
         Тохиргоо
+
       </button>
+
+
+
+      <!-- LOGOUT -->
 
       <button
         id="logoutButton"
+        type="button"
         class="logout-btn"
       >
+
         Гарах
+
       </button>
+
 
     </aside>
 
+
+
+    <!-- ====================================
+         MAIN
+         ==================================== -->
+
     <main class="content">
 
-      <div class="admin-top-actions">
+
+      <!-- TOP HEADER -->
+
+      <div class="admin-header-row">
+
+
+        <div>
+
+          <h1>
+            Удирдлагын хэсэг
+          </h1>
+
+          <p class="subtitle">
+
+            Neuroscan MRI вэбсайтын
+            мэдээллийг эндээс удирдана.
+
+          </p>
+
+        </div>
+
+
         <button
           id="previewToggleButton"
           type="button"
           onclick="toggleLivePreview()"
         >
-          🌐 Live site preview
-        </button>
-      </div>
 
-      <div
-        id="livePreviewPanel"
-        style="display:none;"
-      >
-        <div class="preview-header">
-          <strong>NEUROSCAN Live Preview</strong>
+          🌐 Сайтыг харах
 
-          <button
-            type="button"
-            onclick="refreshLivePreview()"
-          >
-            ↻ Шинэчлэх
-          </button>
-        </div>
-
-        <iframe
-          id="livePreviewFrame"
-          title="Neuroscan website preview"
-        ></iframe>
-      </div>
-
-      <h1>Удирдлагын хэсэг</h1>
-
-      <p class="subtitle">
-        Neuroscan MRI вэбсайтын мэдээллийг эндээс удирдана.
-      </p>
-
-      <section id="servicesEditor" style="display:none;">
-
-        <h2>Үйлчилгээний мэдээлэл засах</h2>
-
-        <p>
-          MRI үйлчилгээний үнэ болон тайлбарыг эндээс засна.
-        </p>
-
-        <div id="servicesList">
-          Мэдээлэл ачаалж байна...
-        </div>
-
-      </section>
-
-      <section id="doctorsEditor" style="display:none;">
-
-        <h2>Эмч мэргэжилтэн</h2>
-
-        <p>
-          2 эмчийн мэдээллийг эндээс засна.
-        </p>
-
-        <div id="doctorsList">
-          Мэдээлэл ачаалж байна...
-        </div>
-
-      </section>
-<section id="aboutEditor" style="display:none;">
-
-  <h2>Бидний тухай</h2>
-
-  <p>
-    Вэбсайтын “Бидний тухай” мэдээлэл болон зургийг эндээс удирдана.
-  </p>
-
-  <div class="admin-card">
-
-    <h3>Бидний тухай мэдээлэл</h3>
-
-    <label>
-      Зураг
-    </label>
-
-    <div
-      id="aboutUploadBox"
-      style="
-        width:100%;
-        min-height:150px;
-        border:2px dashed #cbd5e1;
-        border-radius:14px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        text-align:center;
-        cursor:pointer;
-        background:#fafcff;
-        color:#94a3b8;
-        padding:30px;
-      "
-    >
-      Зургаа энд дарж эсвэл зөөж оруулна уу
-    </div>
-
-    <input
-      id="aboutImageFile"
-      type="file"
-      accept="image/jpeg,image/png,image/webp"
-      style="display:none;"
-    >
-
-    <div id="aboutImagePreview"></div>
-
-    <label style="margin-top:22px;">
-      Бидний тухай
-    </label>
-
-    <div class="editor-wrap">
-
-      <div class="editor-toolbar">
-
-        <select onchange="formatAboutText('formatBlock', this.value)">
-          <option value="p">Normal</option>
-          <option value="h2">Heading 2</option>
-          <option value="h3">Heading 3</option>
-        </select>
-
-        <button type="button" onclick="formatAboutText('bold')">
-          <b>B</b>
         </button>
 
-        <button type="button" onclick="formatAboutText('italic')">
-          <i>I</i>
-        </button>
-
-        <button type="button" onclick="formatAboutText('underline')">
-          <u>U</u>
-        </button>
-
-        <button type="button" onclick="formatAboutText('insertUnorderedList')">
-          • List
-        </button>
-
-        <button type="button" onclick="formatAboutText('insertOrderedList')">
-          1. List
-        </button>
-
-        <button type="button" onclick="addAboutLink()">
-          🔗
-        </button>
-
-        <button type="button" onclick="formatAboutText('removeFormat')">
-          Clear
-        </button>
 
       </div>
 
-      <div
-        id="aboutContent"
-        class="news-rich-editor"
-        contenteditable="true"
-        data-placeholder="Neuroscan MRI төвийн тухай мэдээллээ бичнэ үү..."
-      ></div>
 
-    </div>
 
-    <button
-      type="button"
-      onclick="saveAboutSettings()"
-      style="margin-top:20px;"
-    >
-      Хадгалах
-    </button>
+      <!-- ==================================
+           WORK AREA
+           LEFT EDITOR + RIGHT PREVIEW
+           ================================== -->
 
-  </div>
+      <div id="adminWorkArea">
 
-</section>
-      <section id="newsEditor" style="display:none;">
-        <h2>Мэдээ</h2>
 
-        <p>
-          Мэдээ нэмэх, засах, нийтлэх болон устгах.
-        </p>
+        <!-- ================================
+             LEFT EDITOR
+             ================================ -->
 
-        <div class="admin-card">
+        <div id="adminEditorColumn">
 
-          <h3>Шинэ мэдээ</h3>
 
-          <label for="newNewsTitle">
-            Гарчиг
-          </label>
 
-          <input
-            id="newNewsTitle"
-            type="text"
-            placeholder="Гарчиг оруулна уу"
-          >
+          <!-- ==============================
+               SERVICES
+               ============================== -->
 
-          <label>
-            Агуулга
-          </label>
-
-          <div class="editor-wrap">
-
-            <div class="editor-toolbar">
-
-              <select onchange="formatNewsText('formatBlock', this.value)">
-                <option value="p">Normal</option>
-                <option value="h2">Heading 2</option>
-                <option value="h3">Heading 3</option>
-              </select>
-
-              <button
-                type="button"
-                onclick="formatNewsText('bold')"
-                title="Bold"
-              >
-                <b>B</b>
-              </button>
-
-              <button
-                type="button"
-                onclick="formatNewsText('italic')"
-                title="Italic"
-              >
-                <i>I</i>
-              </button>
-
-              <button
-                type="button"
-                onclick="formatNewsText('underline')"
-                title="Underline"
-              >
-                <u>U</u>
-              </button>
-
-              <button
-                type="button"
-                onclick="formatNewsText('strikeThrough')"
-                title="Strike"
-              >
-                S
-              </button>
-
-              <button
-                type="button"
-                onclick="formatNewsText('insertUnorderedList')"
-                title="Bullet list"
-              >
-                • List
-              </button>
-
-              <button
-                type="button"
-                onclick="formatNewsText('insertOrderedList')"
-                title="Numbered list"
-              >
-                1. List
-              </button>
-
-              <button
-                type="button"
-                onclick="formatNewsText('justifyLeft')"
-                title="Left"
-              >
-                ←
-              </button>
-
-              <button
-                type="button"
-                onclick="formatNewsText('justifyCenter')"
-                title="Center"
-              >
-                ↔
-              </button>
-
-              <button
-                type="button"
-                onclick="formatNewsText('justifyRight')"
-                title="Right"
-              >
-                →
-              </button>
-
-              <button
-                type="button"
-                onclick="addNewsLink()"
-                title="Link"
-              >
-                🔗
-              </button>
-
-              <button
-                type="button"
-                onclick="formatNewsText('removeFormat')"
-                title="Clear formatting"
-              >
-                Clear
-              </button>
-
-            </div>
-
-            <div
-              id="newNewsContent"
-              class="news-rich-editor"
-              contenteditable="true"
-              data-placeholder="Мэдээний агуулгаа бичнэ үү..."
-            ></div>
-
-          </div>
-
-          <label for="newNewsYoutube">
-            YouTube линк
-          </label>
-
-          <input
-            id="newNewsYoutube"
-            type="url"
-            placeholder="https://youtube.com/..."
-          >
-
-          <label>
-            Зураг
-          </label>
-
-          <div id="newsUploadBox">
-            Зургаа энд дарж эсвэл зөөж оруулна уу
-          </div>
-
-          <input
-            id="newsImageFile"
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
+          <section
+            id="servicesEditor"
             style="display:none;"
           >
 
-          <div id="newsImagePreview"></div>
+            <h2>
+              Үйлчилгээний мэдээлэл засах
+            </h2>
 
-          <label>
-            <input
-              id="newNewsPublished"
-              type="checkbox"
-            >
-            Нийтлэх
-          </label>
+            <p>
+              MRI үйлчилгээний үнэ болон
+              тайлбарыг эндээс засна.
+            </p>
 
-          <button
-            type="button"
-            onclick="createNewsFromEditor()"
+
+            <div id="servicesList">
+
+              Мэдээлэл ачаалж байна...
+
+            </div>
+
+          </section>
+
+
+
+          <!-- ==============================
+               DOCTORS
+               ============================== -->
+
+          <section
+            id="doctorsEditor"
+            style="display:none;"
           >
-            Хадгалах
-          </button>
+
+            <h2>
+              Эмч мэргэжилтэн
+            </h2>
+
+            <p>
+              Эмчийн мэдээллийг эндээс
+              засна.
+            </p>
+
+
+            <div id="doctorsList">
+
+              Мэдээлэл ачаалж байна...
+
+            </div>
+
+          </section>
+
+
+
+          <!-- ==============================
+               ABOUT
+               ============================== -->
+
+          <section
+            id="aboutEditor"
+            style="display:none;"
+          >
+
+
+            <h2>
+              Бидний тухай
+            </h2>
+
+
+            <p>
+
+              Вэбсайтын “Бидний тухай”,
+              эрхэм зорилго, үнэт зүйлс
+              болон зургийг эндээс
+              удирдана.
+
+            </p>
+
+
+
+            <div class="admin-card">
+
+
+              <h3>
+                Бидний тухай мэдээлэл
+              </h3>
+
+
+
+              <!-- ABOUT IMAGE -->
+
+              <label>
+                Зураг
+              </label>
+
+
+              <div
+                id="aboutUploadBox"
+                style="
+                  width:100%;
+                  min-height:150px;
+                  border:
+                    2px dashed
+                    #cbd5e1;
+                  border-radius:14px;
+                  display:flex;
+                  align-items:center;
+                  justify-content:center;
+                  text-align:center;
+                  cursor:pointer;
+                  background:#fafcff;
+                  color:#94a3b8;
+                  padding:30px;
+                "
+              >
+
+                Зургаа энд дарж
+                эсвэл зөөж оруулна уу
+
+              </div>
+
+
+              <input
+                id="aboutImageFile"
+                type="file"
+                accept="
+                  image/jpeg,
+                  image/png,
+                  image/webp
+                "
+                style="display:none;"
+              >
+
+
+              <div
+                id="aboutImagePreview"
+              ></div>
+
+
+
+              <!-- MAIN ABOUT CONTENT -->
+
+              <label
+                class="about-section-label"
+              >
+
+                Бидний тухай
+
+              </label>
+
+
+              <div class="editor-wrap">
+
+
+                <div class="editor-toolbar">
+
+
+                  <select
+                    onchange="
+                      formatAboutText(
+                        'formatBlock',
+                        this.value
+                      )
+                    "
+                  >
+
+                    <option value="p">
+                      Normal
+                    </option>
+
+                    <option value="h2">
+                      Heading 2
+                    </option>
+
+                    <option value="h3">
+                      Heading 3
+                    </option>
+
+                  </select>
+
+
+                  <button
+                    type="button"
+                    onclick="
+                      formatAboutText(
+                        'bold'
+                      )
+                    "
+                  >
+                    <b>B</b>
+                  </button>
+
+
+                  <button
+                    type="button"
+                    onclick="
+                      formatAboutText(
+                        'italic'
+                      )
+                    "
+                  >
+                    <i>I</i>
+                  </button>
+
+
+                  <button
+                    type="button"
+                    onclick="
+                      formatAboutText(
+                        'underline'
+                      )
+                    "
+                  >
+                    <u>U</u>
+                  </button>
+
+
+                  <button
+                    type="button"
+                    onclick="
+                      formatAboutText(
+                        'insertUnorderedList'
+                      )
+                    "
+                  >
+                    • List
+                  </button>
+
+
+                  <button
+                    type="button"
+                    onclick="
+                      formatAboutText(
+                        'insertOrderedList'
+                      )
+                    "
+                  >
+                    1. List
+                  </button>
+
+
+                  <button
+                    type="button"
+                    onclick="
+                      addAboutLink()
+                    "
+                  >
+                    🔗
+                  </button>
+
+
+                  <button
+                    type="button"
+                    onclick="
+                      formatAboutText(
+                        'removeFormat'
+                      )
+                    "
+                  >
+                    Clear
+                  </button>
+
+
+                </div>
+
+
+                <div
+                  id="aboutContent"
+                  class="news-rich-editor"
+                  contenteditable="true"
+                  data-placeholder="
+                    Neuroscan MRI төвийн
+                    тухай мэдээллээ бичнэ үү...
+                  "
+                ></div>
+
+
+              </div>
+
+
+
+              <!-- MISSION -->
+
+              <hr class="about-divider">
+
+
+              <label
+                class="about-section-label"
+              >
+
+                Эрхэм зорилго
+
+              </label>
+
+
+              <div class="editor-wrap">
+
+
+                <div
+                  id="aboutMissionContent"
+                  class="news-rich-editor"
+                  contenteditable="true"
+                  data-placeholder="
+                    Эрхэм зорилгын
+                    мэдээллээ бичнэ үү...
+                  "
+                ></div>
+
+
+              </div>
+
+
+
+              <!-- VALUES -->
+
+              <hr class="about-divider">
+
+
+              <label
+                class="about-section-label"
+              >
+
+                Үнэт зүйлс
+
+              </label>
+
+
+              <div class="editor-wrap">
+
+
+                <div
+                  id="aboutValuesContent"
+                  class="news-rich-editor"
+                  contenteditable="true"
+                  data-placeholder="
+                    Үнэт зүйлсийн
+                    мэдээллээ бичнэ үү...
+                  "
+                ></div>
+
+
+              </div>
+
+
+
+              <!-- SAVE ABOUT -->
+
+              <button
+                type="button"
+                onclick="
+                  saveAboutSettings()
+                "
+                style="
+                  margin-top:24px;
+                  padding:
+                    12px
+                    20px;
+                  border:0;
+                  border-radius:9px;
+                  background:#17212b;
+                  color:#ffffff;
+                  font-weight:700;
+                  cursor:pointer;
+                "
+              >
+
+                Хадгалах
+
+              </button>
+
+
+            </div>
+
+
+          </section>
+
+
+
+          <!-- ==============================
+               NEWS
+               ============================== -->
+
+          <section
+            id="newsEditor"
+            style="display:none;"
+          >
+
+
+            <h2>
+              Мэдээ
+            </h2>
+
+
+            <p>
+              Мэдээ нэмэх, засах,
+              нийтлэх болон устгах.
+            </p>
+
+
+
+            <div class="admin-card">
+
+
+              <h3>
+                Шинэ мэдээ
+              </h3>
+
+
+
+              <label
+                for="newNewsTitle"
+              >
+                Гарчиг
+              </label>
+
+
+              <input
+                id="newNewsTitle"
+                type="text"
+                placeholder="
+                  Гарчиг оруулна уу
+                "
+              >
+
+
+
+              <label>
+                Агуулга
+              </label>
+
+
+              <div class="editor-wrap">
+
+
+                <div class="editor-toolbar">
+
+
+                  <select
+                    onchange="
+                      formatNewsText(
+                        'formatBlock',
+                        this.value
+                      )
+                    "
+                  >
+
+                    <option value="p">
+                      Normal
+                    </option>
+
+                    <option value="h2">
+                      Heading 2
+                    </option>
+
+                    <option value="h3">
+                      Heading 3
+                    </option>
+
+                  </select>
+
+
+
+                  <button
+                    type="button"
+                    onclick="
+                      formatNewsText(
+                        'bold'
+                      )
+                    "
+                    title="Bold"
+                  >
+                    <b>B</b>
+                  </button>
+
+
+
+                  <button
+                    type="button"
+                    onclick="
+                      formatNewsText(
+                        'italic'
+                      )
+                    "
+                    title="Italic"
+                  >
+                    <i>I</i>
+                  </button>
+
+
+
+                  <button
+                    type="button"
+                    onclick="
+                      formatNewsText(
+                        'underline'
+                      )
+                    "
+                    title="Underline"
+                  >
+                    <u>U</u>
+                  </button>
+
+
+
+                  <button
+                    type="button"
+                    onclick="
+                      formatNewsText(
+                        'strikeThrough'
+                      )
+                    "
+                  >
+                    S
+                  </button>
+
+
+
+                  <button
+                    type="button"
+                    onclick="
+                      formatNewsText(
+                        'insertUnorderedList'
+                      )
+                    "
+                  >
+                    • List
+                  </button>
+
+
+
+                  <button
+                    type="button"
+                    onclick="
+                      formatNewsText(
+                        'insertOrderedList'
+                      )
+                    "
+                  >
+                    1. List
+                  </button>
+
+
+
+                  <button
+                    type="button"
+                    onclick="
+                      formatNewsText(
+                        'justifyLeft'
+                      )
+                    "
+                  >
+                    ←
+                  </button>
+
+
+
+                  <button
+                    type="button"
+                    onclick="
+                      formatNewsText(
+                        'justifyCenter'
+                      )
+                    "
+                  >
+                    ↔
+                  </button>
+
+
+
+                  <button
+                    type="button"
+                    onclick="
+                      formatNewsText(
+                        'justifyRight'
+                      )
+                    "
+                  >
+                    →
+                  </button>
+
+
+
+                  <button
+                    type="button"
+                    onclick="
+                      addNewsLink()
+                    "
+                  >
+                    🔗
+                  </button>
+
+
+
+                  <button
+                    type="button"
+                    onclick="
+                      formatNewsText(
+                        'removeFormat'
+                      )
+                    "
+                  >
+                    Clear
+                  </button>
+
+
+                </div>
+
+
+
+                <div
+                  id="newNewsContent"
+                  class="news-rich-editor"
+                  contenteditable="true"
+                  data-placeholder="
+                    Мэдээний агуулгаа
+                    бичнэ үү...
+                  "
+                ></div>
+
+
+              </div>
+
+
+
+              <label
+                for="newNewsYoutube"
+              >
+
+                YouTube линк
+
+              </label>
+
+
+              <input
+                id="newNewsYoutube"
+                type="url"
+                placeholder="
+                  https://youtube.com/...
+                "
+              >
+
+
+
+              <label>
+                Зураг
+              </label>
+
+
+              <div id="newsUploadBox">
+
+                Зургаа энд дарж
+                эсвэл зөөж оруулна уу
+
+              </div>
+
+
+              <input
+                id="newsImageFile"
+                type="file"
+                accept="
+                  image/jpeg,
+                  image/png,
+                  image/webp
+                "
+                style="display:none;"
+              >
+
+
+              <div
+                id="newsImagePreview"
+              ></div>
+
+
+
+              <label>
+
+                <input
+                  id="newNewsPublished"
+                  type="checkbox"
+                >
+
+                Нийтлэх
+
+              </label>
+
+
+
+              <button
+                type="button"
+                onclick="
+                  createNewsFromEditor()
+                "
+              >
+
+                Хадгалах
+
+              </button>
+
+
+            </div>
+
+
+
+            <div id="newsList">
+
+              Мэдээлэл ачаалж байна...
+
+            </div>
+
+
+          </section>
+
+
+
+          <!-- ==============================
+               SETTINGS
+               ============================== -->
+
+          <section
+            id="settingsEditor"
+            style="display:none;"
+          >
+
+
+            <h2>
+              Тохиргоо
+            </h2>
+
+
+            <p>
+
+              Сайтын үндсэн мэдээлэл,
+              холбоо барих мэдээлэл,
+              social хаяг болон
+              цаг захиалгын холбоос.
+
+            </p>
+
+
+            <div id="settingsForm">
+
+              Мэдээлэл ачаалж байна...
+
+            </div>
+
+
+          </section>
+
+
+
+          <!-- ==============================
+               DASHBOARD CARDS
+               ============================== -->
+
+          <div
+            class="cards"
+            id="dashboardCards"
+          >
+
+
+            <div class="card">
+
+              <h2>
+                Үйлчилгээ
+              </h2>
+
+              <p>
+
+                MRI үйлчилгээний
+                тайлбар болон үнийг
+                засах.
+
+              </p>
+
+            </div>
+
+
+
+            <div class="card">
+
+              <h2>
+                Эмч мэргэжилтэн
+              </h2>
+
+              <p>
+
+                Эмчийн нэр, мэргэжил,
+                туршлага болон
+                танилцуулгыг засах.
+
+              </p>
+
+            </div>
+
+
+
+            <div class="card">
+
+              <h2>
+                Бидний тухай
+              </h2>
+
+              <p>
+
+                Танилцуулга, эрхэм
+                зорилго, үнэт зүйлсийг
+                удирдах.
+
+              </p>
+
+            </div>
+
+
+
+            <div class="card">
+
+              <h2>
+                Мэдээ
+              </h2>
+
+              <p>
+
+                Шинэ мэдээ нэмэх,
+                засах болон устгах.
+
+              </p>
+
+            </div>
+
+
+
+            <div class="card">
+
+              <h2>
+                Тохиргоо
+              </h2>
+
+              <p>
+
+                Холбоо барих болон
+                сайтын тохиргоог
+                удирдах.
+
+              </p>
+
+            </div>
+
+
+          </div>
+
 
         </div>
+        <!-- /adminEditorColumn -->
 
-        <div id="newsList">
-          Мэдээлэл ачаалж байна...
-        </div>
 
-      </section>
 
-      <section id="settingsEditor" style="display:none;">
+        <!-- ================================
+             RIGHT LIVE PREVIEW
+             ================================ -->
 
-        <h2>Тохиргоо</h2>
+        <aside
+          id="livePreviewPanel"
+          style="display:none;"
+        >
 
-        <p>
-          Холбоо барих мэдээлэл болон цаг захиалгын холбоос.
-        </p>
 
-        <div id="settingsForm">
-          Мэдээлэл ачаалж байна...
-        </div>
+          <div class="preview-header">
 
-      </section>
 
-      <div
-        class="cards"
-        id="dashboardCards"
-      >
+            <strong>
+              Сайтын харагдац
+            </strong>
 
-        <div class="card">
-          <h2>Үйлчилгээ</h2>
-          <p>
-            MRI үйлчилгээний тайлбар болон үнийг засах.
-          </p>
-        </div>
 
-        <div class="card">
-          <h2>Эмч мэргэжилтэн</h2>
-          <p>
-            Эмчийн нэр, мэргэжил, туршлага болон танилцуулгыг засах.
-          </p>
-        </div>
+            <button
+              type="button"
+              onclick="
+                refreshLivePreview()
+              "
+            >
 
-        <div class="card">
-          <h2>Мэдээ</h2>
-          <p>
-            Шинэ мэдээ нэмэх, засах болон устгах.
-          </p>
-        </div>
+              ↻ Шинэчлэх
 
-        <div class="card">
-          <h2>Тохиргоо</h2>
-          <p>
-            Холбоо барих мэдээлэл болон цаг захиалгын холбоосыг удирдах.
-          </p>
-        </div>
+            </button>
+
+
+          </div>
+
+
+
+          <iframe
+            id="livePreviewFrame"
+            title="Neuroscan сайт"
+          ></iframe>
+
+
+        </aside>
+
 
       </div>
+      <!-- /adminWorkArea -->
+
 
     </main>
 
+
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="admin-dashboard.js?v=26"></script>
+
+
+  <!-- ======================================
+       SCRIPTS
+       ====================================== -->
+
+  <script
+    src="
+      https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2
+    "
+  ></script>
+
+
+  <script
+    src="admin-dashboard.js?v=27"
+  ></script>
+
 
 </body>
+
 </html>
