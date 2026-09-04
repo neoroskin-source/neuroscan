@@ -162,8 +162,7 @@
     }
 
     #newsEditor .admin-card input[type="text"],
-    #newsEditor .admin-card input[type="url"],
-    #newsEditor .admin-card textarea {
+    #newsEditor .admin-card input[type="url"] {
       width: 100%;
       display: block;
       padding: 14px 16px;
@@ -178,16 +177,9 @@
     }
 
     #newsEditor .admin-card input[type="text"]:focus,
-    #newsEditor .admin-card input[type="url"]:focus,
-    #newsEditor .admin-card textarea:focus {
+    #newsEditor .admin-card input[type="url"]:focus {
       border-color: #4f8cff;
       box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.12);
-    }
-
-    #newsEditor .admin-card textarea {
-      min-height: 220px;
-      resize: vertical;
-      line-height: 1.6;
     }
 
     #newsUploadBox {
@@ -252,6 +244,73 @@
       margin-top: 28px;
     }
 
+    /* =========================
+       RICH TEXT EDITOR
+       ========================= */
+
+    .editor-wrap {
+      width: 100%;
+      border: 1px solid #ccd5df;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .editor-toolbar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 8px;
+      border-bottom: 1px solid #e4e9ef;
+      background: #fafafa;
+    }
+
+    .editor-toolbar button,
+    .editor-toolbar select {
+      width: auto !important;
+      margin: 0 !important;
+      padding: 8px 10px !important;
+      border: 0 !important;
+      border-radius: 6px !important;
+      background: transparent !important;
+      color: #17212b !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      cursor: pointer;
+    }
+
+    .editor-toolbar button:hover,
+    .editor-toolbar select:hover {
+      background: #eef2f7 !important;
+    }
+
+    .editor-toolbar select {
+      border: 1px solid #e4e9ef !important;
+      background: #ffffff !important;
+    }
+
+    .news-rich-editor {
+      min-height: 240px;
+      padding: 18px;
+      outline: none;
+      line-height: 1.7;
+      font-size: 16px;
+      color: #17212b;
+    }
+
+    .news-rich-editor:empty:before {
+      content: attr(data-placeholder);
+      color: #98a2b3;
+      pointer-events: none;
+    }
+
+    .news-rich-editor h2,
+    .news-rich-editor h3,
+    .news-rich-editor p {
+      margin-top: 0;
+    }
+
     @media (max-width: 800px) {
       .sidebar {
         position: static;
@@ -277,6 +336,10 @@
       #newsEditor .admin-card {
         padding: 20px;
       }
+
+      .editor-toolbar {
+        gap: 2px;
+      }
     }
   </style>
 </head>
@@ -295,19 +358,32 @@
         NEUROSCAN ADMIN
       </div>
 
-      <button class="active" id="servicesButton" onclick="openAdminSection('services')">
+      <button
+        class="active"
+        id="servicesButton"
+        onclick="openAdminSection('services')"
+      >
         Үйлчилгээ
       </button>
 
-      <button id="doctorsButton" onclick="openAdminSection('doctors')">
+      <button
+        id="doctorsButton"
+        onclick="openAdminSection('doctors')"
+      >
         Эмч мэргэжилтэн
       </button>
 
-      <button id="newsButton" onclick="openAdminSection('news')">
+      <button
+        id="newsButton"
+        onclick="openAdminSection('news')"
+      >
         Мэдээ
       </button>
 
-      <button id="settingsButton" onclick="openAdminSection('settings')">
+      <button
+        id="settingsButton"
+        onclick="openAdminSection('settings')"
+      >
         Тохиргоо
       </button>
 
@@ -343,9 +419,17 @@
       </section>
 
       <section id="doctorsEditor" style="display:none;">
+
         <h2>Эмч мэргэжилтэн</h2>
-        <p>2 эмчийн мэдээллийг эндээс засна.</p>
-        <div id="doctorsList">Мэдээлэл ачаалж байна...</div>
+
+        <p>
+          2 эмчийн мэдээллийг эндээс засна.
+        </p>
+
+        <div id="doctorsList">
+          Мэдээлэл ачаалж байна...
+        </div>
+
       </section>
 
       <section id="newsEditor" style="display:none;">
@@ -370,15 +454,118 @@
             placeholder="Гарчиг оруулна уу"
           >
 
-          <label for="newNewsContent">
+          <label>
             Агуулга
           </label>
 
-          <textarea
-            id="newNewsContent"
-            rows="10"
-            placeholder="Мэдээний агуулга"
-          ></textarea>
+          <div class="editor-wrap">
+
+            <div class="editor-toolbar">
+
+              <select onchange="formatNewsText('formatBlock', this.value)">
+                <option value="p">Normal</option>
+                <option value="h2">Heading 2</option>
+                <option value="h3">Heading 3</option>
+              </select>
+
+              <button
+                type="button"
+                onclick="formatNewsText('bold')"
+                title="Bold"
+              >
+                <b>B</b>
+              </button>
+
+              <button
+                type="button"
+                onclick="formatNewsText('italic')"
+                title="Italic"
+              >
+                <i>I</i>
+              </button>
+
+              <button
+                type="button"
+                onclick="formatNewsText('underline')"
+                title="Underline"
+              >
+                <u>U</u>
+              </button>
+
+              <button
+                type="button"
+                onclick="formatNewsText('strikeThrough')"
+                title="Strike"
+              >
+                S
+              </button>
+
+              <button
+                type="button"
+                onclick="formatNewsText('insertUnorderedList')"
+                title="Bullet list"
+              >
+                • List
+              </button>
+
+              <button
+                type="button"
+                onclick="formatNewsText('insertOrderedList')"
+                title="Numbered list"
+              >
+                1. List
+              </button>
+
+              <button
+                type="button"
+                onclick="formatNewsText('justifyLeft')"
+                title="Left"
+              >
+                ←
+              </button>
+
+              <button
+                type="button"
+                onclick="formatNewsText('justifyCenter')"
+                title="Center"
+              >
+                ↔
+              </button>
+
+              <button
+                type="button"
+                onclick="formatNewsText('justifyRight')"
+                title="Right"
+              >
+                →
+              </button>
+
+              <button
+                type="button"
+                onclick="addNewsLink()"
+                title="Link"
+              >
+                🔗
+              </button>
+
+              <button
+                type="button"
+                onclick="formatNewsText('removeFormat')"
+                title="Clear formatting"
+              >
+                Clear
+              </button>
+
+            </div>
+
+            <div
+              id="newNewsContent"
+              class="news-rich-editor"
+              contenteditable="true"
+              data-placeholder="Мэдээний агуулгаа бичнэ үү..."
+            ></div>
+
+          </div>
 
           <label for="newNewsYoutube">
             YouTube линк
@@ -444,7 +631,10 @@
 
       </section>
 
-      <div class="cards" id="dashboardCards">
+      <div
+        class="cards"
+        id="dashboardCards"
+      >
 
         <div class="card">
           <h2>Үйлчилгээ</h2>
@@ -481,7 +671,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="admin-dashboard.js?v=21"></script>
+  <script src="admin-dashboard.js?v=22"></script>
 
 </body>
 </html>
