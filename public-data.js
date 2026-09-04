@@ -2090,7 +2090,54 @@ if (
 
       const s =
         settingsRows[0];
+// ===================================
+// APPLY THEME PRESET
+// ===================================
 
+const themePresets = {
+  blue: {
+    primary: '#2563b8',
+    dark: '#1e3a5f',
+    soft: '#eaf3fb'
+  },
+
+  teal: {
+    primary: '#0f766e',
+    dark: '#134e4a',
+    soft: '#ecfdf5'
+  },
+
+  green: {
+    primary: '#15803d',
+    dark: '#14532d',
+    soft: '#f0fdf4'
+  },
+
+  navy: {
+    primary: '#172554',
+    dark: '#0f172a',
+    soft: '#eef2ff'
+  }
+};
+
+const selectedTheme =
+  themePresets[s.theme_preset] ||
+  themePresets.blue;
+
+document.documentElement.style.setProperty(
+  '--theme-primary',
+  selectedTheme.primary
+);
+
+document.documentElement.style.setProperty(
+  '--theme-dark',
+  selectedTheme.dark
+);
+
+document.documentElement.style.setProperty(
+  '--theme-soft',
+  selectedTheme.soft
+);
 
       // ---------------------------------
       // TOP HEADER
