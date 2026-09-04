@@ -798,7 +798,8 @@
   </div>
 `;
     // ---------------------------------
-// MOVE ORIGINAL NAV INTO TOP BAR
+// MOVE ONLY TOP-LEVEL NAV ITEMS
+// KEEP DROPDOWNS INTACT
 // ---------------------------------
 
 const topNavigation =
@@ -808,7 +809,7 @@ const topNavigation =
 
 const originalNav =
   [...siteHeader.querySelectorAll(
-    'nav, .nav, .navbar'
+    'nav, .nav, .navbar, .nav-links'
   )]
   .find(el =>
     !el.closest('#neuroscanTopBar')
@@ -819,38 +820,75 @@ if (
   originalNav
 ) {
 
-  const navLinks =
-    [
-      ...originalNav.querySelectorAll(
-        'a'
-      )
-    ];
-
-  navLinks.forEach(link => {
-
-    link.style.fontSize =
-      '14px';
-
-    link.style.fontWeight =
-      '600';
-
-    link.style.padding =
-      '6px 4px';
-
-    link.style.whiteSpace =
-      'nowrap';
-
-    link.style.textDecoration =
-      'none';
-
-    topNavigation.appendChild(
-      link
-    );
-  });
-
+  // original nav-ийг бүхлээр нь top bar руу шилжүүлнэ
+  topNavigation.appendChild(
+    originalNav
+  );
 
   originalNav.style.display =
-    'none';
+    'flex';
+
+  originalNav.style.alignItems =
+    'center';
+
+  originalNav.style.justifyContent =
+    'center';
+
+  originalNav.style.gap =
+    '18px';
+
+  originalNav.style.width =
+    '100%';
+
+  originalNav.style.padding =
+    '0';
+
+  originalNav.style.margin =
+    '0';
+
+  originalNav.style.border =
+    '0';
+
+  originalNav.style.background =
+    'transparent';
+
+
+  // Зөвхөн top-level item-уудын хэмжээг тохируулна
+  [
+    ...originalNav.children
+  ].forEach(item => {
+
+    item.style.margin =
+      '0';
+
+    item.style.padding =
+      '0';
+
+    const topLink =
+      item.matches('a')
+        ? item
+        : item.querySelector(
+            ':scope > a'
+          );
+
+    if (topLink) {
+
+      topLink.style.fontSize =
+        '13px';
+
+      topLink.style.fontWeight =
+        '600';
+
+      topLink.style.padding =
+        '7px 2px';
+
+      topLink.style.whiteSpace =
+        'nowrap';
+
+      topLink.style.textDecoration =
+        'none';
+    }
+  });
 }
     // ---------------------------------
     // SOCIAL LINKS
